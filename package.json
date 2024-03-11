@@ -1,0 +1,32 @@
+{
+  "name": "lemac-project",
+  "version": "0.0.0",
+  "description": "Hs project for lemac meant to control and keep track of the lab's usage",
+  "private": true,
+  "scripts": {
+    "format": "prettier \"**/*.{js,vue}\" --write",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HackerSchool/lemac-project.git"
+  },
+  "author": "HackerSchool",
+  "bugs": {
+    "url": "https://github.com/HackerSchool/lemac-project/issues"
+  },
+  "homepage": "https://github.com/HackerSchool/lemac-project#readme",
+  "devDependencies": {
+    "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.8.0",
+    "prettier": "2.2.1"
+  },
+  "dependencies": {
+    "file-saver": "^2.0.5",
+    "vue-ics": "^0.1.4"
+  }
+}
