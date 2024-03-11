@@ -2,7 +2,7 @@
 name: Outdated Content
 about: There's outdated information displayed on the website.
 title: ''
-labels: documentation
+labels: outdated content
 assignees: diogomsmiranda
 
 ---
