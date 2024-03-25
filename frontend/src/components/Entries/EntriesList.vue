@@ -3,6 +3,7 @@
     <v-toolbar flat>
       <v-toolbar-title> Lab Entries </v-toolbar-title>
       <v-divider class="mx-4" inset vertical></v-divider>
+      <v-text-field class="mt-6" label="Filter Workstations" v-model="search"></v-text-field>
       <v-spacer></v-spacer>
       <v-dialog v-model="dialogAdd" max-width="550px">
         <template #activator="{ on, attrs }">
@@ -56,7 +57,7 @@
     </v-toolbar>
     <v-list>
       <template v-if="entries.length > 0">
-        <div v-for="(entry, index) in entries" :key="entry.id + 'b'">
+        <div v-for="(entry, index) in filteredEntries" :key="entry.id + 'b'">
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="mb-2">
@@ -214,6 +215,7 @@ export default {
   data() {
     return {
       entries: [],
+      search: '',
       numberList: [null],
       workstations: [],
       editedItem: {
@@ -238,6 +240,17 @@ export default {
         (this.entries[this.editedIndex]?.observations ?? '').length === 0
         ? 'Add Observations'
         : 'Edit Observations';
+    },
+    filteredEntries() {
+      if (!this.search.trim()) {
+        // If search is empty, return all entries
+        return this.entries;
+      } else {
+        // Filter entries based on search
+        return this.entries.filter((entry) =>
+          entry.workstation.name.toLowerCase().includes(this.search.toLowerCase())
+        );
+      }
     },
   },
   watch: {
