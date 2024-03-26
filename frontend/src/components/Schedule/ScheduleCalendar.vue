@@ -257,11 +257,16 @@
             </v-form>
           </v-card>
         </v-dialog>
-        <v-dialog v-if="getPermission === 1" v-model="dialogOffDays" max-width="450px" transition="dialog-transition">
-            <template #activator="{ on, attrs }">
-              <v-btn color="secondary" v-bind="attrs" v-on="on">Edit off days</v-btn>
-            </template>
-            <v-date-picker
+        <v-dialog
+          v-if="getPermission === 1"
+          v-model="dialogOffDays"
+          max-width="450px"
+          transition="dialog-transition"
+        >
+          <template #activator="{ on, attrs }">
+            <v-btn color="secondary" v-bind="attrs" v-on="on">Edit off days</v-btn>
+          </template>
+          <v-date-picker
             v-model="dates"
             class="py-3"
             full-width
@@ -436,6 +441,15 @@ export default {
     events = events.map((val) => {
       let user = this.users.find((user) => user.id == val.userId);
       if (!user) user = this.inactive_users.find((user) => user.id == val.userId);
+      if (user === undefined)
+        return {
+          name: 'Unknown',
+          start: this.toTimestamp(val.entry),
+          end: this.toTimestamp(val.exit),
+          color: '#000000',
+          details: val,
+          timed: true,
+        };
 
       return {
         name: user.name,
