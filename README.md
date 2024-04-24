@@ -21,4 +21,4 @@ npm run serve
 npm run build
 ```
 
-Project first started by [Hacker School](https://github.com/HackerSchool), and after picked up by [Hugo Teixeira](https://github.com/Timber1900).
+Project first started by [Hacker School](https://github.com/HackerSchool), and later picked up by [Hugo Teixeira](https://github.com/Timber1900) and [Diogo Miranda](https://github.com/diogomsmiranda).
