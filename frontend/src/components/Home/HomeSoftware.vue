@@ -21,24 +21,27 @@
     </div>
     <Solidworks v-if="selected_software == 'Solidworks'" />
     <Siemens_NX v-if="selected_software == 'Siemens NX'" />
+    <SolidEdge v-if="selected_software == 'SolidEdge'" />
   </div>
 </template>
 
 <script>
 import Solidworks from '@/components/Home/Softwares/Solidworks.vue';
 import Siemens_NX from '@/components/Home/Softwares/Siemens_NX.vue';
+import SolidEdge from '@/components/Home/Softwares/SolidEdge.vue';
 
 export default {
   name: 'HomeSoftware',
   components: {
     Solidworks,
     Siemens_NX,
+    SolidEdge,
   },
   props: {
     personData: Object,
   },
   data: () => ({
-    items: ['Solidworks', 'Siemens NX'],
+    items: ['Solidworks', 'Siemens NX', 'SolidEdge'],
     selected_software: 'Solidworks',
   }),
   methods: {
