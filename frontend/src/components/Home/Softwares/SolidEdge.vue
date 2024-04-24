@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col items-start justify-start w-full">
-    <h2 class="m-6 text-4xl font-semibold">SOLIDWORKS 2023</h2>
+    <h2 class="m-6 text-4xl font-semibold">SOLIDEDGE 2024 Update 4</h2>
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
       <a :href="url">{{ url }}</a>
     </span>
     <span class="indent-12">
-      <span class="text-xl font-medium">Serial Number: </span>
-      {{ serial }}
+      <span class="text-xl font-medium">Password: </span>
+      {{ pass }}
     </span>
     <h3 class="m-4 text-3xl font-medium">Installation Steps:</h3>
     <div class="grid w-full grid-cols-5 grid-rows-1 h-[40vh]">
@@ -59,36 +59,32 @@
 </template>
 
 <script>
-import photo1 from '@/../public/Solidworks/Solidworks_Step_1.png';
-import photo2 from '@/../public/Solidworks/Solidworks_Step_2.png';
-import photo3 from '@/../public/Solidworks/Solidworks_Step_3.png';
-import photo4 from '@/../public/Solidworks/Solidworks_Step_4.png';
+import photo1 from '@/../public/SolidEdge/SolidEdge_Step_1.png';
+import photo2 from '@/../public/SolidEdge/SolidEdge_Step_2.png';
+import photo3 from '@/../public/SolidEdge/SolidEdge_Step_3.png';
 
 export default {
-  name: 'Solidworks',
+  name: 'SolidEdge',
   components: {},
   props: {},
   data: () => ({
     url: null,
-    serial: null,
+    pass: null,
     currentPlace: 0,
     installInstructions: [''],
-    installPhotos: [photo1, photo2, photo3, photo4],
+    installPhotos: [photo1, photo2, photo3],
   }),
   mounted() {
     this.test();
   },
   methods: {
     test() {
-      this.url = process.env.VUE_APP_SOLIDWORKS_URL;
-      this.serial = process.env.VUE_APP_SOLIDWORKS_LICENSE;
+      this.url = process.env.VUE_APP_SOLIDEDGE4_URL;
+      this.pass = process.env.VUE_APP_SOLIDEDGE4_PASS;
 
       this.installInstructions = [
-        `<p class="mb-0">The installation process has to be executed while connected to Eduroam on Tecnico's VPN. </p>
-          <p>Go to the <a href='${process.env.VUE_APP_SOLIDWORKS_URL}'>Download URL</a> and insert your data and download the SOLIDWORKS 2023 installer. (images shown ahead might be sujected to change)</p>`,
-        'Execute the install executable and insert the serial number in the designated area. Make sure that there are no other serial numbers inserted.',
-        "Remove 'SOLIDWORKS Eletrical' from the products to install",
-        "Accept the license agreement and click the 'Download and Install' button",
+        `<p>Go to the <a href='${process.env.VUE_APP_SOLIDEDGE4_URL}'>Download URL</a> and insert the password an install the password. (images shown ahead might be sujected to change)</p>`,
+        `<p>After the page finish loading, open the "UDP04" folder and select the "Solid_Edge_MSI_Update0004.exe" file.</p> <p>This will start the download of the update automatically.</p>`,
       ];
     },
   },
