@@ -64,7 +64,8 @@ export default {
         name.includes('Naval') ||
         name.includes('Materiais') ||
         name.includes('Ambiente') ||
-        name.includes('Energia')
+        name.includes('Energia') ||
+        name.includes('Biomédica')
       );
     },
   },
