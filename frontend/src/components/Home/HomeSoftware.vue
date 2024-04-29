@@ -19,8 +19,8 @@
         <v-select v-model="selected_software" :items="items" label="Software"></v-select>
       </div>
     </div>
-    <Solidworks v-if="selected_software == 'Solidworks'" />
-    <Siemens_NX v-if="selected_software == 'Siemens NX'" />
+    <Solidworks v-if="selected_software == 'Solidworks' && isDEMStudent(getCourse(personData))" />
+    <Siemens_NX v-if="selected_software == 'Siemens NX' && isDEMStudent(getCourse(personData))" />
     <SolidEdge v-if="selected_software == 'SolidEdge'" />
   </div>
 </template>
@@ -55,6 +55,17 @@ export default {
       });
 
       return role.registrations[0]?.name;
+    },
+
+    isDEMStudent(name) {
+      return (
+        name.includes('AeroEspacial') ||
+        name.includes('Mecanica') ||
+        name.includes('Naval') ||
+        name.includes('Materiais') ||
+        name.includes('Ambiente') ||
+        name.includes('Energia')
+      );
     },
   },
 };

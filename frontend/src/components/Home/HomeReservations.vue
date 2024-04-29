@@ -1,8 +1,7 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-
-    <v-sheet height="64">
+      <v-sheet height="64">
         <v-toolbar flat>
           <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
@@ -19,7 +18,7 @@
           <v-menu bottom right offset-y>
             <template #activator="{ on, attrs }">
               <v-btn color="secondary" v-bind="attrs" v-on="on" class="mr-3">
-                <span>{{filter == '' ? 'Room' : filter}}</span>
+                <span>{{ filter == '' ? 'Room' : filter }}</span>
                 <v-icon right> mdi-menu-down </v-icon>
               </v-btn>
             </template>
@@ -59,9 +58,9 @@
             </v-list>
           </v-menu>
         </v-toolbar>
-    </v-sheet>
+      </v-sheet>
 
-    <v-sheet height="75vh">
+      <v-sheet height="75vh">
         <v-calendar
           ref="calendar"
           v-model="focus"
@@ -76,13 +75,13 @@
           interval-count="14"
           first-interval="8"
         >
-        <template #interval="{ weekday, hour, date }">
+          <template #interval="{ weekday, hour, date }">
             <div
               v-if="hour < 9 || hour >= 21"
               style="height: 100%; width: 100%; background-color: #f2f2f2"
             ></div>
             <div v-else style="height: 100%; width: 100%"></div>
-        </template>
+          </template>
         </v-calendar>
         <v-menu
           v-model="selectedOpen"
@@ -103,40 +102,32 @@
               </p>
               <p>
                 Entry:
-                {{
-                  formatTime(selectedEvent.details.entry)
-                }}
+                {{ formatTime(selectedEvent.details.entry) }}
               </p>
               <p>
                 Exit:
-                {{
-                  formatTime(selectedEvent.details.exit)
-                }}
+                {{ formatTime(selectedEvent.details.exit) }}
               </p>
-              <p v-if="typeof selectedEvent.details.id !== 'number'">Description: {{ selectedEvent.details.description }}</p>
+              <p v-if="typeof selectedEvent.details.id !== 'number'">
+                Description: {{ selectedEvent.details.description }}
+              </p>
             </v-card-text>
           </v-card>
         </v-menu>
-    </v-sheet>
-  </v-col>
-
+      </v-sheet>
+    </v-col>
   </v-row>
-
 </template>
 
 <script>
-  import {
-    getHoursFenix,
-    getHours,
-  } from '@/api/room_hours.api';
-  import { getEvents } from '@/api/room_events.api';
-  import moment from 'moment';
+import { getHoursFenix, getHours } from '@/api/room_hours.api';
+import { getEvents } from '@/api/room_events.api';
+import moment from 'moment';
 
-
-  export default {
-    name: 'HomeReservations',
-    components: {},
-    data: () => ({
+export default {
+  name: 'HomeReservations',
+  components: {},
+  data: () => ({
     focus: '',
     type: 'week',
     typeToLabel: {
@@ -169,51 +160,49 @@
     name: '',
     ist_id: '',
     filter: '',
-    filteredEvents: []
+    filteredEvents: [],
   }),
   watch: {
     events() {
       if (this.filter === '') {
-        this.filteredEvents = [...this.events]
+        this.filteredEvents = [...this.events];
       } else {
-        this.filteredEvents = this.events.filter(val => val.details.room == this.filter);
+        this.filteredEvents = this.events.filter((val) => val.details.room == this.filter);
       }
     },
     filter() {
       if (this.filter === '') {
-        this.filteredEvents = [...this.events]
+        this.filteredEvents = [...this.events];
       } else {
-        this.filteredEvents = this.events.filter(val => val.details.room == this.filter);
+        this.filteredEvents = this.events.filter((val) => val.details.room == this.filter);
       }
-    }
-  },
-  mounted() {
     },
-      methods: {
-        viewDay({ date }) {
-        this.focus = date;
-        this.type = 'day';
-      },
-      getEventColor(event) {
-        if (event.givenKey) {
-          return `${event.color} darken-4`;
-        } else {
-          return event.color;
-        }
-      },
+  },
+  mounted() {},
+  methods: {
+    viewDay({ date }) {
+      this.focus = date;
+      this.type = 'day';
+    },
+    getEventColor(event) {
+      if (event.givenKey) {
+        return `${event.color} darken-4`;
+      } else {
+        return event.color;
+      }
+    },
 
-      setToday() {
-        this.focus = '';
-      },
+    setToday() {
+      this.focus = '';
+    },
 
-      prev() {
-        this.$refs.calendar.prev();
-      },
+    prev() {
+      this.$refs.calendar.prev();
+    },
 
-      next() {
-        this.$refs.calendar.next();
-      },
-
+    next() {
+      this.$refs.calendar.next();
+    },
 
     showEvent({ nativeEvent, event }) {
       const open = () => {
@@ -267,8 +256,8 @@
 
         events.push({
           name: event.title,
-          start: moment(event.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(event.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: moment(event.entry).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
+          end: moment(event.exit).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
           color: this.colors[event.room],
           timed: true,
           id: event.id,
@@ -285,24 +274,32 @@
       let date;
       let curDate = this.focus ? new Date(this.focus) : new Date();
 
-      if(curDate.getDay() == 0 || (curDate.getDay() == 6)) {
+      if (curDate.getDay() == 0 || curDate.getDay() == 6) {
         curDate.setDate(curDate.getDate() + 2);
       }
 
-      if(this.focus) {
-        date = new Intl.DateTimeFormat('pt-PT',{month:'2-digit',day:'2-digit', year:'numeric'}).format(curDate);
+      if (this.focus) {
+        date = new Intl.DateTimeFormat('pt-PT', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+        }).format(curDate);
       } else {
-        date = new Intl.DateTimeFormat('pt-PT',{month:'2-digit',day:'2-digit', year:'numeric'}).format(curDate);
+        date = new Intl.DateTimeFormat('pt-PT', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+        }).format(curDate);
       }
 
-      const data = (await getHoursFenix({date})).data;
+      const data = (await getHoursFenix({ date })).data;
 
       for (const event of data) {
         if (!this.events.find((el) => el.id === event.id)) {
           events.push({
             name: event.title,
-            start: moment(event.entry).format("YYYY-MM-DD HH:mm"),
-            end: moment(event.exit).format("YYYY-MM-DD HH:mm"),
+            start: moment(event.entry).format('YYYY-MM-DD HH:mm'),
+            end: moment(event.exit).format('YYYY-MM-DD HH:mm'),
             color: this.colors[event.room],
             timed: true,
             id: event.id,
@@ -316,8 +313,8 @@
     },
 
     formatTime(time) {
-      return moment(time).utcOffset("+0000").format("HH:mm");
-    }
+      return moment(time).utcOffset('+0000').format('HH:mm');
     },
-  };
-  </script>
+  },
+};
+</script>
