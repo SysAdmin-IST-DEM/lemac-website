@@ -3,16 +3,11 @@
 </template>
 
 <script>
-  export default {
-    name: 'HomeAbout',
-    components: {},
-    data: () => ({
-
-    }),
-    mounted() {
-    },
-    methods: {
-
-    },
-  };
-  </script>
+export default {
+  name: 'HomeAbout',
+  components: {},
+  data: () => ({}),
+  mounted() {},
+  methods: {},
+};
+</script>
