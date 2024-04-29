@@ -59,8 +59,8 @@ export default {
 
     isDEMStudent(name) {
       return (
-        name.includes('AeroEspacial') ||
-        name.includes('Mecanica') ||
+        name.includes('Aeroespacial') ||
+        name.includes('Mecânica') ||
         name.includes('Naval') ||
         name.includes('Materiais') ||
         name.includes('Ambiente') ||
