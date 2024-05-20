@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-start justify-start w-full">
-    <h2 class="m-6 text-4xl font-semibold">SOLIDEDGE 2024 Update 4</h2>
+    <h2 class="m-6 text-4xl font-semibold">SOLIDEDGE 2024 Update</h2>
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
       <a :href="url">{{ url }}</a>
@@ -83,7 +83,7 @@ export default {
       this.pass = process.env.VUE_APP_SOLIDEDGE4_PASS;
 
       this.installInstructions = [
-        `<p>Go to the <a href='${process.env.VUE_APP_SOLIDEDGE4_URL}'>Download URL</a> and insert the password an install the password. (images shown ahead might be sujected to change)</p>`,
+        `<p>Go to the <a href='${process.env.VUE_APP_SOLIDEDGE4_URL}'>Download URL</a> and insert the password an install the update (the most recent) based on the steps that follow. (images shown ahead might be sujected to change)</p>`,
         `<p>After the page finish loading, open the "UDP04" folder and select the "Solid_Edge_MSI_Update0004.exe" file.</p> <p>This will start the download of the update automatically.</p>`,
       ];
     },
