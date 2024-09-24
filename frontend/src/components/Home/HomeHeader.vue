@@ -18,13 +18,11 @@
           Software DEM
         </h2>
       </router-link>
-      <!--
       <router-link to="/printing">
         <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-          3D Printing
+          3DPrinting
         </h2>
       </router-link>
-       -->
     </v-row>
     <v-spacer />
     <div v-if="!getId">

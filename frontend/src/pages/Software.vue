@@ -13,6 +13,7 @@
 
 <script>
 import HomeHeader from '@/components/Home/HomeHeader.vue';
+import { apiLogin } from '@/api/auth.api';
 import { getFenixInfo } from '@/api/auth.api';
 import { mapActions } from 'vuex';
 import HomeSoftware from '@/components/Home/HomeSoftware.vue';
@@ -56,8 +57,6 @@ export default {
         this.userData = data;
         this.personKey++;
       } catch (e) {
-        console.log(e);
-
         this.$notify({
           type: 'error',
           title: 'Unauthorized user',
