@@ -11,7 +11,7 @@
 }
 
 .pc-laptop {
-  @apply border bg-[#88d6a0] border-[#a5a5a5]
+  @apply border bg-[#5abc9d] border-[#a5a5a5]
 }
 
 .pc-semiactive {
