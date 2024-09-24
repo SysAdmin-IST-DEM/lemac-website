@@ -36,7 +36,7 @@
     </p>
 
     <p style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 2em">
-      We are lemac!
+      We are LEMAC!
     </p>
   </div>
 </template>
