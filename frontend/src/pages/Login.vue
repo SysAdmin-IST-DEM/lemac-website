@@ -7,7 +7,13 @@
         lab today.
       </v-card-subtitle>
       <v-card-text>
-        <LoginTimePicker @setStart="setStart" @setEnd="setEnd" @setSafeAmount="setSafeAmount" @setEntryNumber="setEntryNumber" @setExitNumber="setExitNumber"/>
+        <LoginTimePicker
+          @setStart="setStart"
+          @setEnd="setEnd"
+          @setSafeAmount="setSafeAmount"
+          @setEntryNumber="setEntryNumber"
+          @setExitNumber="setExitNumber"
+        />
       </v-card-text>
       <v-spacer vertical />
       <v-divider horizontal></v-divider>

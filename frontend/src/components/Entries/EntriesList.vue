@@ -70,7 +70,7 @@
                 <v-icon left right small>mdi-clock</v-icon>
                 {{ new Date(entry.createdAt).toLocaleString('pt-PT') }}
                 <v-icon left right small>mdi-text</v-icon>
-                {{entry.observations}}
+                {{ entry.observations }}
               </v-list-item-subtitle>
             </v-list-item-content>
             <v-list-item-action>
@@ -164,45 +164,45 @@
     </v-list>
 
     <v-dialog v-model="editEntryModal" max-width="550px" v-if="editEntryModal">
-        <v-card>
-          <v-form ref="formAdd" lazy-validation @submit.prevent="save">
-            <v-card-title>
-              <span class="headline"> Edit Registration </span>
-            </v-card-title>
-            <v-card-text>
-              <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    v-model="editingEntry.number"
-                    :rules="[(v) => !!v || 'IST Id is required']"
-                    label="Id"
-                    type="number"
-                    required
-                    filled
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="6" class="flex items-center justify-center">
-                  <v-autocomplete
-                    v-model="editingEntry.workstationId"
-                    label="Workstation"
-                    :items="workstations"
-                    item-text="name"
-                    item-value="id"
-                    :rules="[(v) => !!v || 'Workstation is required']"
-                    required
-                    filled
-                  ></v-autocomplete>
-                </v-col>
-              </v-row>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="close"> Cancel </v-btn>
-              <v-btn color="primary" text @click="edit"> Edit </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-dialog>
+      <v-card>
+        <v-form ref="formAdd" lazy-validation @submit.prevent="save">
+          <v-card-title>
+            <span class="headline"> Edit Registration </span>
+          </v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col cols="6">
+                <v-text-field
+                  v-model="editingEntry.number"
+                  :rules="[(v) => !!v || 'IST Id is required']"
+                  label="Id"
+                  type="number"
+                  required
+                  filled
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6" class="flex items-center justify-center">
+                <v-autocomplete
+                  v-model="editingEntry.workstationId"
+                  label="Workstation"
+                  :items="workstations"
+                  item-text="name"
+                  item-value="id"
+                  :rules="[(v) => !!v || 'Workstation is required']"
+                  required
+                  filled
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="close"> Cancel </v-btn>
+            <v-btn color="primary" text @click="edit"> Edit </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -231,7 +231,7 @@ export default {
       dialogClose: false,
       editedIndex: -1,
       editEntryModal: false,
-      editingEntry: null
+      editingEntry: null,
     };
   },
   computed: {
@@ -288,7 +288,7 @@ export default {
     async loadWorkstations() {
       this.$loading.show();
       let { data } = await getWorkstations();
-      data = data.sort((v1, v2) => v1.name.match(/\d+/)[0] < v2.name.match(/\d+/)[0] ? -1 : 1);
+      data = data.sort((v1, v2) => (v1.name.match(/\d+/)[0] < v2.name.match(/\d+/)[0] ? -1 : 1));
 
       let available = data.filter((x) => x.occupation == 0 && x.occupation != x.capacity);
       let partlyAvailable = data.filter((x) => x.occupation > 0 && x.occupation < x.capacity);
@@ -303,7 +303,6 @@ export default {
 
       this.workstations = workstationsSorted;
       this.$loading.hide();
-
     },
     // close entry methods
     closeCancel() {
@@ -315,11 +314,13 @@ export default {
     async closeConfirm() {
       try {
         this.users = (await getLemacUsers()).data;
-        const user = this.users.find(val => 'ist1' + val.ist_id === this.entries[this.editedIndex].istId);
-        if(user) {
+        const user = this.users.find(
+          (val) => 'ist1' + val.ist_id === this.entries[this.editedIndex].istId
+        );
+        if (user) {
           const newUserData = user;
 
-          newUserData.state = "offline";
+          newUserData.state = 'offline';
           await setLemacUser(newUserData);
         }
 
@@ -370,8 +371,7 @@ export default {
     async save() {
       if (!this.$refs.formAdd.validate()) return;
       try {
-        for(const number of this.numberList) {
-
+        for (const number of this.numberList) {
           const { data } = await addEntry({
             istId: 'ist1' + number,
             workstationId: this.newItem.workstationId,
@@ -380,10 +380,10 @@ export default {
           this.entries.push(data);
 
           this.users = (await getLemacUsers()).data;
-          const user = this.users.find(val => 'ist1' + val.ist_id === data.istId);
-          if(user) {
+          const user = this.users.find((val) => 'ist1' + val.ist_id === data.istId);
+          if (user) {
             const newUserData = user;
-            newUserData.state = "online";
+            newUserData.state = 'online';
             await setLemacUser(newUserData);
           }
 
@@ -429,8 +429,8 @@ export default {
 
       this.editEntryModal = true;
       this.editingEntry = entry;
-      this.editingEntry.number = this.editingEntry.istId.split("ist1")[1];
-    }
+      this.editingEntry.number = this.editingEntry.istId.split('ist1')[1];
+    },
   },
 };
 </script>

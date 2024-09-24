@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     login() {
-
       window.location = `${process.env.VUE_APP_FENIX_BASE_URL}oauth/userdialog?client_id=${process.env.VUE_APP_FENIX_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_FENIX_REDIRECT_URL}`;
     },
     //only runs after fenix login
@@ -59,7 +58,6 @@ export default {
       this.logoutUser();
       this.loadingOut = false;
       window.open('https://fenix.tecnico.ulisboa.pt/logout', '_blank').focus();
-
     },
     ...mapActions('user', ['loginUser', 'logoutUser']),
   },
