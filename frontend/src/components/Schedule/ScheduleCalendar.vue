@@ -366,16 +366,26 @@ export default {
     switchValue: false,
     events: [],
     colors: {
-      15: '#fbbc04',
-      16: '#eb6212',
-      3: '#93c47d',
-      17: '#ff0000',
-      5: '#9900ff',
-      6: '#ff00ff',
-      7: '#4a86e8',
-      8: '#d9d9d9',
-      9: '#d9d9d9',
-      10: '#999999',
+      1: '#ffcc00', // New color
+      2: '#3366cc', // New color
+      3: '#93c47d', // Existing color
+      4: '#cc0033', // New color
+      5: '#9900ff', // Existing color
+      6: '#ff00ff', // Existing color
+      7: '#4a86e8', // Existing color
+      8: '#d9d9d9', // Existing color
+      9: '#adf096', // Existing color
+      10: '#999999', // Existing color
+      11: '#00cc66', // New color
+      12: '#ff9933', // New color
+      13: '#6699ff', // New color
+      14: '#ff66b2', // New color
+      15: '#fbbc04', // Existing color
+      16: '#eb6212', // Existing color
+      17: '#ff0000', // Existing color
+      18: '#00ccff', // New color
+      19: '#cc99ff', // New color
+      20: '#ff6699', // New color
     },
     dragEvent: null,
     lastEvent: '',

@@ -15,7 +15,7 @@
 }
 
 .pc-semiactive {
-  @apply border bg-stripes bg-repeat
+  @apply border bg-stripes bg-repeat bg-[#f7825b]
 }
 
 .pc-active {
