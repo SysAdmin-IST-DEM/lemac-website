@@ -309,7 +309,7 @@ export default {
       { text: 'Remote', value: 'remote' },
     ],
     typeColors: {
-      active: 'yellow darken-2',
+      active: 'green',
       disabled: 'red',
       remote: 'blue',
     },
