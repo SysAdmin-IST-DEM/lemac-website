@@ -277,11 +277,15 @@ export default {
         formData.append('price', this.price.toFixed(2));
         formData.append('notes', this.notes);
 
-        const response = await axios.post('http://localhost:3000/submit', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await axios.post(
+          'http://lemac.dem.tecnico.ulisboa.pt:3000/submit',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
 
         if (response.status == 200)
           this.$notify({
