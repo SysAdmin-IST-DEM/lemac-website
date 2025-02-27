@@ -1,9 +1,9 @@
 <template>
   <div v-if="getPermission === 1">
     <v-tabs grow>
-      <v-tab key="1">Personal Hours</v-tab>
-      <v-tab key="2">Calendar</v-tab>
-      <v-tab key="3">Hour Table</v-tab>
+      <v-tab key="1"> Personal Hours </v-tab>
+      <v-tab key="2"> Calendar </v-tab>
+      <v-tab key="3"> Hour Table </v-tab>
       <v-tab-item>
         <v-container v-if="hours">
           <HourTable :prop-hours="hours" />
@@ -55,7 +55,7 @@ export default {
 
     const data = response.data.map((val) => {
       val.sold_amount = val.exit_number - val.entry_number;
-      val.user = users.find(user => user.id == val.userId).name;
+      val.user = users.find((user) => user.id == val.userId).name;
 
       return val;
     });

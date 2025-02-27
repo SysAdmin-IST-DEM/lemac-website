@@ -51,7 +51,7 @@ module.exports = {
       );
       return response.access_token;
     } catch (e) {
-      console.log(e)
+      console.log(e);
       return;
     }
   },

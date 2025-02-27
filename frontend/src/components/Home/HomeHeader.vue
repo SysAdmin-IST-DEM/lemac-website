@@ -4,7 +4,7 @@
       <router-link to="/">
         <h2 class="mx-3 primary--text">LEMAC</h2>
       </router-link>
-      <v-divider vertical></v-divider>
+      <v-divider vertical />
       <router-link to="/about">
         <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">About</h2>
       </router-link>

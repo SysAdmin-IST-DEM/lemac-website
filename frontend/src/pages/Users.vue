@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-tabs grow>
-      <v-tab key="1">Monitors</v-tab>
-      <v-tab key="2">Users</v-tab>
+      <v-tab key="1"> Monitors </v-tab>
+      <v-tab key="2"> Users </v-tab>
 
       <v-tab-item>
         <v-container v-if="monitors" class="mt-6">

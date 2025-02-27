@@ -3,34 +3,34 @@
     <OfflineModal
       v-if="modelType == 'offline'"
       :close="close"
-      :entryStations="entryStations"
+      :entry-stations="entryStations"
       :select="select"
-      :userData="userData"
-      :entryModal="entryModal"
+      :user-data="userData"
+      :entry-modal="entryModal"
     />
     <OnlineModal
       v-if="modelType == 'online'"
       :close="close"
-      :entryStations="entryStations"
+      :entry-stations="entryStations"
       :select="select"
-      :userData="userData"
-      :entryModal="entryModal"
+      :user-data="userData"
+      :entry-modal="entryModal"
     />
     <InBreak
       v-if="modelType == 'in_break'"
       :close="close"
-      :entryStations="entryStations"
+      :entry-stations="entryStations"
       :select="select"
-      :userData="userData"
-      :entryModal="entryModal"
+      :user-data="userData"
+      :entry-modal="entryModal"
     />
     <CreateUser
       v-if="modelType == 'create_user'"
       :close="close"
-      :entryStations="entryStations"
+      :entry-stations="entryStations"
       :select="select"
       :mifare_id="mifare_id"
-      :entryModal="entryModal"
+      :entry-modal="entryModal"
     />
     <div class="grid overflow-hidden lg:grid-rows-8 grid-rows-9 grid-cols-18">
       <div
@@ -38,10 +38,13 @@
       >
         Monitor
         <div class="absolute my-auto right-[-48px]">
-          <v-icon size="48" color="black"> mdi-account </v-icon>
+          <v-icon
+size="48" color="black"> mdi-account </v-icon>
         </div>
       </div>
-      <div :class="[val.class]" v-for="val in stations">
+      <div
+v-for="val in stations" :class="[val.class]"
+>
         {{ val.number !== -1 ? val.number : '' }}
       </div>
       <div class="row-span-3 col-span-18 xl:row-span-2">
@@ -95,51 +98,6 @@ import { addEntry, getEntries, updateEntry } from '@/api/entries.api';
 
 export default {
   name: 'RoomMap',
-  async mounted() {
-    await this.update();
-    setInterval(this.update, 30000);
-    this.socket = new WebSocket(process.env.VUE_APP_BASE_URL_WS || 'ws://localhost:5000');
-
-    this.socket.onopen = (e) => {
-      this.socket.send('Socket Open');
-    };
-
-    const keepSocketAlive = () => {
-      try {
-        this.socket.send('ping');
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    setInterval(keepSocketAlive, 1000);
-
-    this.socket.addEventListener('message', async (event) => {
-      const mifareId = event.data;
-      if (mifareId === 'pong') return;
-
-      try {
-        this.userData = (await getLemacUser(mifareId)).data;
-        this.modelType = this.userData.state;
-      } catch (error) {
-        console.log('test');
-        this.mifare_id = mifareId;
-        this.modelType = 'create_user';
-      }
-
-      this.entryModal = true;
-      this.entryStations = JSON.parse(JSON.stringify(this.stations));
-    });
-    this.socket.addEventListener('close', (event) => {
-      console.log(event);
-      setTimeout(() => {}, 10000);
-      this.socket = new WebSocket(process.env.VUE_APP_BASE_URL_WS || 'ws://localhost:5000');
-    });
-  },
-
-  destroyed() {
-    console.log('Test');
-    this.socket.close();
-  },
   components: {
     OfflineModal,
     OnlineModal,
@@ -148,102 +106,10 @@ export default {
   },
   data: () => ({
     order: [
-      30,
-      28,
-      -1,
-      26,
-      24,
-      -1,
-      22,
-      20,
-      -1,
-      18,
-      16,
-      -1,
-      14,
-      12,
-      -1,
-      -1,
-      10,
-      7,
-      29,
-      27,
-      -1,
-      25,
-      23,
-      -1,
-      21,
-      19,
-      -1,
-      17,
-      15,
-      -1,
-      13,
-      11,
-      -1,
-      -1,
-      9,
-      6,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      8,
-      5,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      31,
-      33,
-      -1,
-      35,
-      37,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      4,
-      2,
-      32,
-      34,
-      -1,
-      36,
-      38,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      3,
-      1,
+      30, 28, -1, 26, 24, -1, 22, 20, -1, 18, 16, -1, 14, 12, -1, -1, 10, 7, 29, 27, -1, 25, 23, -1,
+      21, 19, -1, 17, 15, -1, 13, 11, -1, -1, 9, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+      -1, -1, -1, -1, 8, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+      31, 33, -1, 35, 37, -1, -1, -1, -1, -1, 4, 2, 32, 34, -1, 36, 38, -1, -1, -1, -1, -1, 3, 1,
     ],
     classData: [
       'l',
@@ -355,6 +221,51 @@ export default {
     userData: null,
     mifare_id: null,
   }),
+  async mounted() {
+    await this.update();
+    setInterval(this.update, 30000);
+    this.socket = new WebSocket(process.env.VUE_APP_BASE_URL_WS || 'ws://localhost:5000');
+
+    this.socket.onopen = (e) => {
+      this.socket.send('Socket Open');
+    };
+
+    const keepSocketAlive = () => {
+      try {
+        this.socket.send('ping');
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    setInterval(keepSocketAlive, 1000);
+
+    this.socket.addEventListener('message', async (event) => {
+      const mifareId = event.data;
+      if (mifareId === 'pong') return;
+
+      try {
+        this.userData = (await getLemacUser(mifareId)).data;
+        this.modelType = this.userData.state;
+      } catch (error) {
+        console.log('test');
+        this.mifare_id = mifareId;
+        this.modelType = 'create_user';
+      }
+
+      this.entryModal = true;
+      this.entryStations = JSON.parse(JSON.stringify(this.stations));
+    });
+    this.socket.addEventListener('close', (event) => {
+      console.log(event);
+      setTimeout(() => {}, 10000);
+      this.socket = new WebSocket(process.env.VUE_APP_BASE_URL_WS || 'ws://localhost:5000');
+    });
+  },
+
+  unmounted() {
+    console.log('Test');
+    this.socket.close();
+  },
   methods: {
     async update() {
       const { data } = await getWorkstations();
@@ -387,8 +298,8 @@ export default {
           this.classData[index] == 'l'
             ? `!border-r-2 !border-r-black ${returnVal.class}`
             : this.classData[index] == 'r'
-            ? `!border-l-2 !border-l-black ${returnVal.class}`
-            : `${returnVal.class}`;
+              ? `!border-l-2 !border-l-black ${returnVal.class}`
+              : `${returnVal.class}`;
 
         return returnVal;
       });

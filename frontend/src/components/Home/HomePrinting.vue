@@ -3,25 +3,27 @@
     <v-card class="max-w-6xl px-4 mx-auto" @submit.prevent>
       <h1 class="w-full m-6 text-4xl font-medium text-center">3D Printing submission form:</h1>
       <v-row class="gap-4 mx-0">
-        <v-text-field v-model="firstName" :rules="rules" label="First name"></v-text-field>
-        <v-text-field v-model="lastName" :rules="rules" label="Last Name"></v-text-field>
+        <v-text-field
+v-model="firstName" :rules="rules" label="First name" />
+        <v-text-field
+v-model="lastName" :rules="rules" label="Last Name" />
       </v-row>
       <v-row class="gap-4 mx-0">
-        <v-text-field v-model="tecnicoId" :rules="rules" label="IST ID"></v-text-field>
-        <v-text-field v-model="webmail" :rules="rules" label="Técnico Webmail"></v-text-field>
+        <v-text-field
+v-model="tecnicoId" :rules="rules" label="IST ID" />
+        <v-text-field
+v-model="webmail" :rules="rules" label="Técnico Webmail" />
       </v-row>
       <v-row class="gap-4 mx-0">
         <div class="w-48">
-          <v-select v-model="chosen_unit" :items="units" label="Unit of file"></v-select>
+          <v-select
+v-model="chosen_unit" :items="units" label="Unit of file" />
         </div>
-        <v-file-input
-          v-model="file"
-          label="Model STL"
-          accept=".stl,.step,.stp"
-          @change="test"
-        ></v-file-input>
+        <v-file-input v-model="file"
+label="Model STL" accept=".stl,.step,.stp" @change="test" />
         <div>
-          <v-select v-model="chosen_material" :items="materials" label="Material"></v-select>
+          <v-select
+v-model="chosen_material" :items="materials" label="Material" />
         </div>
       </v-row>
       <v-row class="gap-4 mx-0">
@@ -33,7 +35,7 @@
             outlined
             maxlength="350"
             counter
-          ></v-textarea>
+          />
         </div>
       </v-row>
       <div class="flex flex-col items-start justify-start gap-4 mx-0 my-4">
@@ -46,7 +48,8 @@
           ><b class="text-xl">Price (€):</b> {{ price?.toFixed(2) ?? 0 }}</span
         >
       </div>
-      <v-btn type="submit" block class="mt-2" @click="submitDialog">Submit</v-btn>
+      <v-btn
+type="submit" block class="mt-2" @click="submitDialog"> Submit </v-btn>
     </v-card>
     <print-dialog
       ref="printDialog"

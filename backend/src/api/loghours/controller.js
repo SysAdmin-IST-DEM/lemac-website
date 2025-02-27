@@ -37,11 +37,11 @@ module.exports = {
   getHours: async (database, month, year) => {
     try {
       let results;
-      if(month == -1) {
+      if (month == -1) {
         [results] = await database.execute(
-          'SELECT l.*, u.name FROM log_hours l LEFT JOIN users u USING (user_id)',
+          'SELECT l.*, u.name FROM log_hours l LEFT JOIN users u USING (user_id)'
         );
-      }  else {
+      } else {
         [results] = await database.execute(
           'SELECT l.*, u.name FROM log_hours l LEFT JOIN users u USING (user_id) WHERE YEAR(l.entry)=? AND MONTH(l.entry)=?',
           [year, month]
