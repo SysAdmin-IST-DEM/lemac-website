@@ -3,7 +3,8 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
+          <v-btn
+class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
             <v-icon small> mdi-chevron-left </v-icon>
           </v-btn>
@@ -13,11 +14,11 @@
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
+          <v-spacer />
 
           <v-menu bottom right offset-y>
             <template #activator="{ on, attrs }">
-              <v-btn color="secondary" v-bind="attrs" v-on="on" class="mr-3">
+              <v-btn color="secondary" v-bind="attrs" class="mr-3" v-on="on">
                 <span>{{ filter == '' ? 'Room' : filter }}</span>
                 <v-icon right> mdi-menu-down </v-icon>
               </v-btn>
@@ -68,19 +69,20 @@
           :events="filteredEvents"
           :event-color="getEventColor"
           :type="type"
+          interval-count="14"
+          first-interval="8"
           @click:more="viewDay"
           @click:date="viewDay"
           @change="updateRange"
           @click:event="showEvent"
-          interval-count="14"
-          first-interval="8"
         >
           <template #interval="{ weekday, hour, date }">
             <div
               v-if="hour < 9 || hour >= 21"
               style="height: 100%; width: 100%; background-color: #f2f2f2"
-            ></div>
-            <div v-else style="height: 100%; width: 100%"></div>
+            />
+            <div
+v-else style="height: 100%; width: 100%" />
           </template>
         </v-calendar>
         <v-menu
@@ -91,10 +93,10 @@
         >
           <v-card v-if="selectedElement" color="grey lighten-4" min-width="250px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title v-if="selectedElement">{{
-                selectedEvent.details.title
-              }}</v-toolbar-title>
-              <v-spacer></v-spacer>
+              <v-toolbar-title v-if="selectedElement">
+                selectedEvent.details.title }}
+              </v-toolbar-title>
+              <v-spacer />
             </v-toolbar>
             <v-card-text>
               <p>

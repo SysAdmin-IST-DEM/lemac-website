@@ -13,9 +13,7 @@ module.exports = {
   },
   getHours: async (database, month, year) => {
     try {
-      const [
-        results,
-      ] = await database.execute(
+      const [results] = await database.execute(
         'SELECT l.*, u.name FROM `room_hours` l LEFT JOIN users u USING (user_id) WHERE YEAR(l.entry)=? AND MONTH(l.entry)=?',
         [year, month]
       );

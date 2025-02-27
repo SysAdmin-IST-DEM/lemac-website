@@ -1,9 +1,9 @@
 <template>
   <v-app id="app" style="width: 100%; height: 100%">
     <notifications />
-    <component :is="$route.meta.navBar"></component>
+    <component :is="$route.meta.navBar" />
     <v-main>
-      <router-view></router-view>
+      <router-view />
     </v-main>
   </v-app>
 </template>

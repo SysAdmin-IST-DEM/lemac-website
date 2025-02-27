@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "Hs project for lemac meant to control and keep track of the lab's usage",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
     "format": "prettier \"**/*.{js,vue}\" --write",
     "lint": "eslint .",
@@ -18,15 +22,15 @@
   },
   "homepage": "https://github.com/HackerSchool/lemac-project#readme",
   "devDependencies": {
-    "eslint": "^7.23.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-vue": "^7.8.0",
-    "prettier": "2.2.1"
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-vue": "^9.32.0",
+    "prettier": "3.5.1"
   },
   "dependencies": {
     "file-saver": "^2.0.5",
     "vue-ics": "^0.1.4"
-  }
+  },
+  "packageManager": "yarn@4.6.0"
 }

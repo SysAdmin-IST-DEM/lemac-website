@@ -9,12 +9,12 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 
 const asyncHandlerEntrances = (fn, ws_server) => {
   return (req, res, next) => {
-    return Promise.resolve(fn(req, res, ws_server, next)).catch(next)
-  }
+    return Promise.resolve(fn(req, res, ws_server, next)).catch(next);
+  };
 };
 
 module.exports = {
   asyncHandler,
   errorHandler,
-  asyncHandlerEntrances
+  asyncHandlerEntrances,
 };

@@ -3,7 +3,8 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
+          <v-btn
+class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
             <v-icon small> mdi-chevron-left </v-icon>
           </v-btn>
@@ -13,7 +14,7 @@
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <div style="display: flex; justify-items: center; align-items: center; padding: 0 1em">
             <v-switch
               v-model="switchValue"
@@ -23,7 +24,7 @@
               inset
               hide-details
               label="Edit mode"
-            ></v-switch>
+            />
           </div>
 
           <v-menu bottom right offset-y>
@@ -80,8 +81,9 @@
             <div
               v-if="weekday == 0 || weekday == 6 || hour < 9 || hour >= 21 || testDate(date)"
               style="height: 100%; width: 100%; background-color: #f2f2f2"
-            ></div>
-            <div v-else style="height: 100%; width: 100%"></div>
+            />
+            <div
+v-else style="height: 100%; width: 100%" />
           </template>
           <template #event="{ event, timed }">
             <div
@@ -113,8 +115,9 @@
                   v-if="hover && switchValue"
                   color="white"
                   @mousedown.stop="extendBottom(event)"
-                  >mdi-menu</v-icon
                 >
+                  mdi-menu
+                </v-icon>
                 <v-btn
                   v-if="hover && switchValue"
                   fab
@@ -123,7 +126,7 @@
                   style="position: absolute; bottom: 0; right: 0; margin: auto auto 0 0; padding: 0"
                   @click="deleteHour(event)"
                 >
-                  <v-icon color="red">mdi-close</v-icon>
+                  <v-icon color="red"> mdi-close </v-icon>
                 </v-btn>
               </div>
             </v-hover>
@@ -135,12 +138,13 @@
                 'v-current-time': new Date().getDate() == new Date(date).getDate(),
               }"
               :style="{ top: nowY }"
-            ></div>
+            />
           </template>
         </v-calendar>
       </v-sheet>
       <v-sheet class="flex flex-row items-center justify-start py-3">
-        <v-btn color="secondary" class="mx-3" @click="downloadCalender">Download</v-btn>
+        <v-btn
+color="secondary" class="mx-3" @click="downloadCalender"> Download </v-btn>
         <v-dialog
           v-if="getPermission === 1"
           v-model="dialogOffset"
@@ -148,7 +152,8 @@
           transition="dialog-transition"
         >
           <template #activator="{ on, attrs }">
-            <v-btn color="secondary" class="mr-3" v-bind="attrs" v-on="on">Targets</v-btn>
+            <v-btn
+color="secondary" class="mr-3" v-bind="attrs" v-on="on"> Targets </v-btn>
           </template>
           <v-card>
             <v-form>
@@ -165,8 +170,9 @@
                       medium
                       class="col-span-2 col-start-1 row-span-1 row-start-2"
                       @click="startEdit(i)"
-                      >Edit Target</v-btn
                     >
+                      Edit Target
+                    </v-btn>
                     <p class="col-span-3 row-span-1 my-auto">
                       {{ formatDate(target.date_start) }} to {{ formatDate(target.date_end) }}
                     </p>
@@ -180,9 +186,9 @@
                 <div class="grid w-full grid-cols-5">
                   <v-dialog v-model="targetDialog" max-width="500px" transition="dialog-transition">
                     <template #activator="{ on, attrs }">
-                      <v-btn class="col-span-3" color="primary" v-bind="attrs" v-on="on"
-                        >Add Target</v-btn
-                      >
+                      <v-btn class="col-span-3" color="primary" v-bind="attrs" v-on="on">
+                        Add Target
+                      </v-btn>
                     </template>
                     <v-card>
                       <v-card-title primary-title> Create new target </v-card-title>
@@ -190,10 +196,10 @@
                         <v-menu
                           ref="menu3"
                           v-model="menu3"
+                          v-model:return-value="targetDate"
                           :close-on-content-click="false"
                           :close-on-click="false"
                           :nudge-right="40"
-                          :return-value.sync="targetDate"
                           transition="scale-transition"
                           offset-y
                         >
@@ -205,7 +211,7 @@
                               required
                               v-bind="attrs"
                               v-on="on"
-                            ></v-text-field>
+                            />
                           </template>
                           <v-date-picker
                             v-if="menu3"
@@ -215,21 +221,21 @@
                             :reactive="true"
                           >
                             <v-spacer />
-                            <v-btn text color="success" @click="menu3 = false"> Cancel </v-btn>
+                            <v-btn
+text color="success" @click="menu3 = false"> Cancel </v-btn>
                             <v-btn text color="secondary" @click="$refs.menu3.save(targetDate)">
                               OK
                             </v-btn>
                           </v-date-picker>
                         </v-menu>
-                        <v-text-field
-                          v-model="targetHours"
-                          type="number"
-                          label="Target Hours"
-                        ></v-text-field>
+                        <v-text-field v-model="targetHours"
+type="number" label="Target Hours" />
                       </v-card-text>
                       <v-card-actions>
-                        <v-btn color="primary" @click="createTarget()">Add target</v-btn>
-                        <v-btn color="error" @click="closeCreateTarget()">Cancel</v-btn>
+                        <v-btn
+color="primary" @click="createTarget()"> Add target </v-btn>
+                        <v-btn
+color="error" @click="closeCreateTarget()"> Cancel </v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -239,8 +245,9 @@
                       color="primary"
                       medium
                       @click="() => (startIndex = startIndex - 4 < 0 ? 0 : startIndex - 4)"
-                      >{{ '<' }}</v-btn
                     >
+                      {{ '<' }}
+                    </v-btn>
                     <v-btn
                       color="primary"
                       medium
@@ -249,8 +256,9 @@
                           (startIndex =
                             startIndex + 4 >= userTargets.length ? startIndex : startIndex + 4)
                       "
-                      >{{ '>' }}</v-btn
                     >
+                      {{ '>' }}
+                    </v-btn>
                   </div>
                 </div>
               </v-card-actions>
@@ -264,7 +272,8 @@
           transition="dialog-transition"
         >
           <template #activator="{ on, attrs }">
-            <v-btn color="secondary" v-bind="attrs" v-on="on">Edit off days</v-btn>
+            <v-btn
+color="secondary" v-bind="attrs" v-on="on"> Edit off days </v-btn>
           </template>
           <v-date-picker
             v-model="dates"
@@ -273,7 +282,7 @@
             multiple
             no-title
             @input="updateDates()"
-          ></v-date-picker>
+          />
         </v-dialog>
         <span class="inline-block grow">
           <p style="text-align: center; margin: auto">{{ active_user.name }}</p>
@@ -290,10 +299,10 @@
           <v-menu
             ref="editCalender"
             v-model="editCalender"
+            v-model:return-value="targetDate"
             :close-on-content-click="false"
             :close-on-click="false"
             :nudge-right="40"
-            :return-value.sync="targetDate"
             transition="scale-transition"
             offset-y
           >
@@ -305,7 +314,7 @@
                 required
                 v-bind="attrs"
                 v-on="on"
-              ></v-text-field>
+              />
             </template>
             <v-date-picker
               v-if="editCalender"
@@ -315,18 +324,23 @@
               :reactive="true"
             >
               <v-spacer />
-              <v-btn text color="success" @click="editCalender = false"> Cancel </v-btn>
+              <v-btn
+text color="success" @click="editCalender = false"> Cancel </v-btn>
               <v-btn text color="secondary" @click="$refs.editCalender.save(targetDate)">
                 OK
               </v-btn>
             </v-date-picker>
           </v-menu>
-          <v-text-field v-model="targetHours" type="number" label="Target Hours"></v-text-field>
+          <v-text-field
+v-model="targetHours" type="number" label="Target Hours" />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="finishEditTarget()">Edit target</v-btn>
-          <v-btn color="error" @click="closeEditTarget()">Cancel</v-btn>
-          <v-btn class="ml-auto" color="error" @click="deleteTarget()">Delete Target</v-btn>
+          <v-btn
+color="primary" @click="finishEditTarget()"> Edit target </v-btn>
+          <v-btn
+color="error" @click="closeEditTarget()"> Cancel </v-btn>
+          <v-btn
+class="ml-auto" color="error" @click="deleteTarget()"> Delete Target </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
