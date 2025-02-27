@@ -3,7 +3,8 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
+          <v-btn
+class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
           <v-btn fab text small color="grey darken-2" @click="prev">
             <v-icon small> mdi-chevron-left </v-icon>
           </v-btn>
@@ -13,10 +14,11 @@
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-dialog v-model="dialog" max-width="550px" transition="dialog-transition">
             <template #activator="{ on, attrs }">
-              <v-btn color="secondary" class="mr-4" v-bind="attrs" v-on="on">Add event</v-btn>
+              <v-btn
+color="secondary" class="mr-4" v-bind="attrs" v-on="on"> Add event </v-btn>
             </template>
             <v-card>
               <v-form ref="form" lazy-validation @submit.prevent="save">
@@ -27,10 +29,10 @@
                       <v-menu
                         ref="menu3"
                         v-model="menu3"
+                        v-model:return-value="editedItem.date"
                         :close-on-content-click="false"
                         :close-on-click="false"
                         :nudge-right="40"
-                        :return-value.sync="editedItem.date"
                         transition="scale-transition"
                         offset-y
                       >
@@ -44,7 +46,7 @@
                             :rules="[() => !!editedItem.date || 'This field is required']"
                             v-bind="attrs"
                             v-on="on"
-                          ></v-text-field>
+                          />
                         </template>
                         <v-date-picker
                           v-if="menu3"
@@ -53,7 +55,8 @@
                           :reactive="true"
                         >
                           <v-spacer />
-                          <v-btn text color="success" @click="menu3 = false"> Cancel </v-btn>
+                          <v-btn
+text color="success" @click="menu3 = false"> Cancel </v-btn>
                           <v-btn text color="secondary" @click="$refs.menu3.save(editedItem.date)">
                             OK
                           </v-btn>
@@ -65,10 +68,10 @@
                         <v-menu
                           ref="menu"
                           v-model="menu"
+                          v-model:return-value="editedItem.entry"
                           :close-on-content-click="false"
                           :close-on-click="false"
                           :nudge-right="40"
-                          :return-value.sync="editedItem.entry"
                           transition="scale-transition"
                           offset-y
                           max-width="290px"
@@ -84,7 +87,7 @@
                               :rules="[() => !!editedItem.entry || 'This field is required']"
                               v-bind="attrs"
                               v-on="on"
-                            ></v-text-field>
+                            />
                           </template>
                           <v-time-picker
                             v-if="menu"
@@ -95,7 +98,8 @@
                             format="24hr"
                           >
                             <v-spacer />
-                            <v-btn text color="success" @click="menu = false"> Cancel </v-btn>
+                            <v-btn
+text color="success" @click="menu = false"> Cancel </v-btn>
                             <v-btn
                               text
                               color="secondary"
@@ -106,16 +110,16 @@
                           </v-time-picker>
                         </v-menu>
                       </v-col>
-                      <v-spacer></v-spacer>
+                      <v-spacer />
                       <!--Exit hours menu-->
                       <v-col cols="11" sm="5">
                         <v-menu
                           ref="menu2"
                           v-model="menu2"
+                          v-model:return-value="editedItem.exit"
                           :close-on-content-click="false"
                           :close-on-click="false"
                           :nudge-right="40"
-                          :return-value.sync="editedItem.exit"
                           transition="scale-transition"
                           offset-y
                           max-width="290px"
@@ -131,7 +135,7 @@
                               :rules="[() => !!editedItem.exit || 'This field is required']"
                               v-bind="attrs"
                               v-on="on"
-                            ></v-text-field>
+                            />
                           </template>
                           <v-time-picker
                             v-if="menu2"
@@ -142,7 +146,8 @@
                             format="24hr"
                           >
                             <v-spacer />
-                            <v-btn text color="success" @click="menu2 = false"> Cancel </v-btn>
+                            <v-btn
+text color="success" @click="menu2 = false"> Cancel </v-btn>
                             <v-btn
                               text
                               color="secondary"
@@ -163,8 +168,8 @@
                         label="Name for reservation"
                         required
                         :rules="[() => !!name || 'This field is required']"
-                      ></v-text-field>
-                      <v-spacer></v-spacer>
+                      />
+                      <v-spacer />
                       <v-text-field
                         id="ist_id"
                         ref="ist_id_field"
@@ -173,7 +178,7 @@
                         label="Ist ID (ist1*)"
                         required
                         :rules="[() => !!ist_id || 'This field is required']"
-                      ></v-text-field>
+                      />
                     </v-row>
                     <v-row>
                       <v-select
@@ -182,14 +187,16 @@
                         label="Room"
                         required
                         :rules="[() => !!items || 'This field is required']"
-                      ></v-select>
+                      />
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" text @click="close"> Cancel </v-btn>
-                  <v-btn color="primary" text @click="save"> Save </v-btn>
+                  <v-spacer />
+                  <v-btn
+color="primary" text @click="close"> Cancel </v-btn>
+                  <v-btn
+color="primary" text @click="save"> Save </v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
@@ -197,8 +204,8 @@
 
           <v-menu bottom right offset-y>
             <template #activator="{ on, attrs }">
-              <v-btn color="secondary" v-bind="attrs" v-on="on" class="mr-3">
-                <span>{{filter == '' ? 'Room' : filter}}</span>
+              <v-btn color="secondary" v-bind="attrs" class="mr-3" v-on="on">
+                <span>{{ filter == '' ? 'Room' : filter }}</span>
                 <v-icon right> mdi-menu-down </v-icon>
               </v-btn>
             </template>
@@ -246,26 +253,30 @@
           :events="filteredEvents"
           :event-color="getEventColor"
           :type="type"
+          interval-count="14"
+          first-interval="8"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
           @change="updateRange"
-          interval-count="14"
-          first-interval="8"
         >
           <template #interval="{ weekday, hour, date }">
-              <div
-                v-if="hour < 9 || hour >= 21"
-                style="height: 100%; width: 100%; background-color: #f2f2f2"
-              ></div>
-              <div v-else style="height: 100%; width: 100%"></div>
-            </template>
+            <div
+              v-if="hour < 9 || hour >= 21"
+              style="height: 100%; width: 100%; background-color: #f2f2f2"
+            />
+            <div
+v-else style="height: 100%; width: 100%" />
+          </template>
           <template #event="{ event, timed }">
             <div
               class="v-event-timed-container"
               style="user-select: none; background-color: inherit; position: relative"
             >
-              <div class="truncate" style="padding-left: 0.5em; background-color: inherit; color: white">
+              <div
+                class="truncate"
+                style="padding-left: 0.5em; background-color: inherit; color: white"
+              >
                 <strong>{{ event.name }}</strong>
                 <br />
                 {{ fTime(event.start, event.end) }}
@@ -281,10 +292,10 @@
         >
           <v-card v-if="selectedElement" color="grey lighten-4" min-width="250px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title v-if="selectedElement">{{
-                selectedEvent.details.title
-              }}</v-toolbar-title>
-              <v-spacer></v-spacer>
+              <v-toolbar-title v-if="selectedElement">
+                {{ selectedEvent.details.title }}
+              </v-toolbar-title>
+              <v-spacer />
             </v-toolbar>
             <v-card-text>
               <p>
@@ -292,15 +303,11 @@
               </p>
               <p>
                 Entry:
-                {{
-                  formatTime(selectedEvent.details.entry)
-                }}
+                {{ formatTime(selectedEvent.details.entry) }}
               </p>
               <p>
                 Exit:
-                {{
-                  formatTime(selectedEvent.details.exit)
-                }}
+                {{ formatTime(selectedEvent.details.exit) }}
               </p>
               <span v-if="typeof selectedEvent.details.id === 'number'">
                 <b>Oberservations:</b>
@@ -328,10 +335,10 @@
                           <v-menu
                             ref="menu4"
                             v-model="menu4"
+                            v-model:return-value="editedItem.date"
                             :close-on-content-click="false"
                             :close-on-click="false"
                             :nudge-right="40"
-                            :return-value.sync="editedItem.date"
                             transition="scale-transition"
                             offset-y
                           >
@@ -345,7 +352,7 @@
                                 :rules="[() => !!editedItem.date || 'This field is required']"
                                 v-bind="attrs"
                                 v-on="on"
-                              ></v-text-field>
+                              />
                             </template>
                             <v-date-picker
                               v-if="menu4"
@@ -354,7 +361,8 @@
                               :reactive="true"
                             >
                               <v-spacer />
-                              <v-btn text color="success" @click="menu4 = false"> Cancel </v-btn>
+                              <v-btn
+text color="success" @click="menu4 = false"> Cancel </v-btn>
                               <v-btn
                                 text
                                 color="secondary"
@@ -370,10 +378,10 @@
                             <v-menu
                               ref="menu5"
                               v-model="menu5"
+                              v-model:return-value="editedItem.entry"
                               :close-on-content-click="false"
                               :close-on-click="false"
                               :nudge-right="40"
-                              :return-value.sync="editedItem.entry"
                               transition="scale-transition"
                               offset-y
                               max-width="290px"
@@ -389,7 +397,7 @@
                                   :rules="[() => !!editedItem.entry || 'This field is required']"
                                   v-bind="attrs"
                                   v-on="on"
-                                ></v-text-field>
+                                />
                               </template>
                               <v-time-picker
                                 v-if="menu5"
@@ -400,7 +408,8 @@
                                 format="24hr"
                               >
                                 <v-spacer />
-                                <v-btn text color="success" @click="menu5 = false"> Cancel </v-btn>
+                                <v-btn
+text color="success" @click="menu5 = false"> Cancel </v-btn>
                                 <v-btn
                                   text
                                   color="secondary"
@@ -411,16 +420,16 @@
                               </v-time-picker>
                             </v-menu>
                           </v-col>
-                          <v-spacer></v-spacer>
+                          <v-spacer />
                           <!--Exit hours menu-->
                           <v-col cols="11" sm="5">
                             <v-menu
                               ref="menu6"
                               v-model="menu6"
+                              v-model:return-value="editedItem.exit"
                               :close-on-content-click="false"
                               :close-on-click="false"
                               :nudge-right="40"
-                              :return-value.sync="editedItem.exit"
                               transition="scale-transition"
                               offset-y
                               max-width="290px"
@@ -436,7 +445,7 @@
                                   :rules="[() => !!editedItem.exit || 'This field is required']"
                                   v-bind="attrs"
                                   v-on="on"
-                                ></v-text-field>
+                                />
                               </template>
                               <v-time-picker
                                 v-if="menu6"
@@ -447,7 +456,8 @@
                                 format="24hr"
                               >
                                 <v-spacer />
-                                <v-btn text color="success" @click="menu6 = false"> Cancel </v-btn>
+                                <v-btn
+text color="success" @click="menu6 = false"> Cancel </v-btn>
                                 <v-btn
                                   text
                                   color="secondary"
@@ -468,8 +478,8 @@
                             label="Name for reservation"
                             required
                             :rules="[() => !!name || 'This field is required']"
-                          ></v-text-field>
-                          <v-spacer></v-spacer>
+                          />
+                          <v-spacer />
                           <v-text-field
                             id="ist_id"
                             ref="ist_id_field"
@@ -478,7 +488,7 @@
                             label="Ist ID (ist1*)"
                             required
                             :rules="[() => !!ist_id || 'This field is required']"
-                          ></v-text-field>
+                          />
                         </v-row>
                         <v-row>
                           <v-select
@@ -487,25 +497,30 @@
                             label="Room"
                             required
                             :rules="[() => !!roomDropdown || 'This field is required']"
-                          ></v-select>
+                          />
                         </v-row>
                       </v-container>
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="close"> Cancel </v-btn>
-                      <v-btn color="primary" text @click="update"> Update </v-btn>
+                      <v-spacer />
+                      <v-btn
+color="primary" text @click="close"> Cancel </v-btn>
+                      <v-btn
+color="primary" text @click="update"> Update </v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card>
               </v-dialog>
 
-              <v-spacer></v-spacer>
-              <v-btn v-if="!selectedEvent.givenKey" color="primary" text @click="giveKey()"
-                >Give key</v-btn
-              >
-              <v-btn v-else color="primary" text @click="giveKey()">Receive key</v-btn>
-              <v-btn color="primary" text @click="deleteEvent(selectedEvent.details)">Delete</v-btn>
+              <v-spacer />
+              <v-btn v-if="!selectedEvent.givenKey" color="primary" text @click="giveKey()">
+                Give key
+              </v-btn>
+              <v-btn
+v-else color="primary" text @click="giveKey()"> Receive key </v-btn>
+              <v-btn color="primary" text @click="deleteEvent(selectedEvent.details)">
+                Delete
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>
@@ -560,7 +575,7 @@ export default {
     ist_id: '',
     filter: 'SDM',
     filteredEvents: [],
-    }),
+  }),
   watch: {
     dialogCard(visible) {
       if (visible) {
@@ -581,18 +596,18 @@ export default {
     },
     events() {
       if (this.filter === '') {
-        this.filteredEvents = [...this.events]
+        this.filteredEvents = [...this.events];
       } else {
-        this.filteredEvents = this.events.filter(val => val.details.room == this.filter);
+        this.filteredEvents = this.events.filter((val) => val.details.room == this.filter);
       }
     },
     filter() {
       if (this.filter === '') {
-        this.filteredEvents = [...this.events]
+        this.filteredEvents = [...this.events];
       } else {
-        this.filteredEvents = this.events.filter(val => val.details.room == this.filter);
+        this.filteredEvents = this.events.filter((val) => val.details.room == this.filter);
       }
-    }
+    },
   },
   mounted() {
     this.$refs.calendar.checkChange();
@@ -602,7 +617,7 @@ export default {
       const startDate = moment(start);
       const endDate = moment(end);
 
-      return `${startDate.format("HH:mm")} - ${endDate.format("HH:mm")}`;
+      return `${startDate.format('HH:mm')} - ${endDate.format('HH:mm')}`;
     },
 
     viewDay({ date }) {
@@ -682,8 +697,8 @@ export default {
 
         events.push({
           name: event.title,
-          start: moment(event.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(event.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: moment(event.entry).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
+          end: moment(event.exit).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
           color: this.colors[event.room],
           timed: true,
           id: event.id,
@@ -705,8 +720,8 @@ export default {
           found = true;
           return {
             name: event.title,
-            start: moment(event.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-            end: moment(event.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+            start: moment(event.entry).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
+            end: moment(event.exit).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
             color: this.colors[event.room],
             timed: true,
             id: event.id,
@@ -721,8 +736,8 @@ export default {
       if (!found) {
         let ev = {
           name: event.title,
-          start: moment(event.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(event.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: moment(event.entry).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
+          end: moment(event.exit).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
           color: this.colors[event.room],
           timed: true,
           id: event.id,
@@ -738,24 +753,32 @@ export default {
 
       let curDate = this.focus ? new Date(this.focus) : new Date();
 
-      if(curDate.getDay() == 0 || (curDate.getDay() == 6)) {
+      if (curDate.getDay() == 0 || curDate.getDay() == 6) {
         curDate.setDate(curDate.getDate() + 2);
       }
 
-      if(this.focus) {
-        date = new Intl.DateTimeFormat('pt-PT',{month:'2-digit',day:'2-digit', year:'numeric'}).format(curDate);
+      if (this.focus) {
+        date = new Intl.DateTimeFormat('pt-PT', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+        }).format(curDate);
       } else {
-        date = new Intl.DateTimeFormat('pt-PT',{month:'2-digit',day:'2-digit', year:'numeric'}).format(curDate);
+        date = new Intl.DateTimeFormat('pt-PT', {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+        }).format(curDate);
       }
 
-      const data = (await getHoursFenix({date})).data;
+      const data = (await getHoursFenix({ date })).data;
 
       for (const event of data) {
         if (!this.events.find((el) => el.id === event.id)) {
           events.push({
             name: event.title,
-            start: moment(event.entry).format("YYYY-MM-DD HH:mm"),
-            end: moment(event.exit).format("YYYY-MM-DD HH:mm"),
+            start: moment(event.entry).format('YYYY-MM-DD HH:mm'),
+            end: moment(event.exit).format('YYYY-MM-DD HH:mm'),
             color: this.colors[event.room],
             timed: true,
             id: event.id,
@@ -903,8 +926,8 @@ export default {
     },
 
     formatTime(time) {
-      return moment(time).format("HH:mm");
-    }
+      return moment(time).format('HH:mm');
+    },
   },
 };
 </script>

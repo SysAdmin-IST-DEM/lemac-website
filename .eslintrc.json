@@ -2,11 +2,7 @@
   "extends": ["prettier"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-      "endOfLine": "auto"
-      }]
+    "prettier/prettier": "warn"
   },
   "env": {
     "node": true
@@ -25,11 +21,14 @@
     {
       "files": ["frontend/**"],
       "extends": [
-        "plugin:vue/recommended",
+        "plugin:vue/vue3-recommended",
         "eslint:recommended",
         "prettier",
         "plugin:prettier/recommended"
-      ]
+      ],
+      "rules": {
+        "prettier/prettier": "warn"
+      }
     }
   ]
 }

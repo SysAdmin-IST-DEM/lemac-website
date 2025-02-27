@@ -16,32 +16,36 @@
             v-if="currentPlace > 0"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             large
-            @click="() => this.currentPlace--"
-            >mdi-menu-left</v-icon
+            @click="() => currentPlace--"
           >
+            mdi-menu-left
+          </v-icon>
           <v-icon
-            disabled
             v-if="currentPlace <= 0"
+            disabled
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             large
-            >mdi-menu-left</v-icon
           >
+            mdi-menu-left
+          </v-icon>
 
           <v-icon
             v-if="currentPlace < installInstructions.length - 1"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             large
-            @click="() => this.currentPlace++"
-            >mdi-menu-right</v-icon
+            @click="() => currentPlace++"
           >
+            mdi-menu-right
+          </v-icon>
 
           <v-icon
             v-if="currentPlace >= installInstructions.length - 1"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             large
             disabled
-            >mdi-menu-right</v-icon
           >
+            mdi-menu-right
+          </v-icon>
         </div>
       </div>
       <div class="flex items-center col-span-3 p-2">
@@ -61,7 +65,7 @@ import photo3 from '@/../public/Siemens_NX/NX_Step_3.png';
 import photo4 from '@/../public/Siemens_NX/NX_Step_4.png';
 
 export default {
-  name: 'Siemens_NX',
+  name: 'SiemensNX',
   components: {},
   props: {},
   data: () => ({

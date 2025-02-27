@@ -14,7 +14,7 @@ var corsOptions = {
   origin: process.env.URL,
 };
 
-console.log(corsOptions.origin)
+console.log(corsOptions.origin);
 
 const port = process.env.PORT || 5000;
 
@@ -22,19 +22,18 @@ const app = express();
 
 const wsServer = new ws.Server({ noServer: true });
 
-wsServer.on('connection', socket => {
-  socket.on('message', message => {
-    if(message.toString() === "ping") {
-      socket.send("pong");
+wsServer.on('connection', (socket) => {
+  socket.on('message', (message) => {
+    if (message.toString() === 'ping') {
+      socket.send('pong');
       return;
     }
 
-    console.log(message.toString())
+    console.log(message.toString());
   });
-  socket.on('close',  (e) => console.log(e.toString()));
-  socket.on('error',  (e) => console.error(e.toString()));
+  socket.on('close', (e) => console.log(e.toString()));
+  socket.on('error', (e) => console.error(e.toString()));
 });
-
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -49,7 +48,7 @@ const server = app.listen(port, () => {
 });
 
 server.on('upgrade', (request, socket, head) => {
-  wsServer.handleUpgrade(request, socket, head, socket => {
+  wsServer.handleUpgrade(request, socket, head, (socket) => {
     wsServer.emit('connection', socket, request);
   });
 });

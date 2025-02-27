@@ -29,7 +29,7 @@ module.exports = {
 
     const fenixData = await controller.getFenixData(code);
 
-    if(fenixData) {
+    if (fenixData) {
       res.json(fenixData);
       return;
     }

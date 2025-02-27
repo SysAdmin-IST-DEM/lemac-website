@@ -1,6 +1,5 @@
 import { getAuthToken } from '@/api/httpClient.api';
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/pages/Home.vue';
 import Login from '@/pages/Login.vue';
 import NotFoundPage from '@/pages/404.vue';
@@ -16,9 +15,6 @@ import About from '@/pages/About.vue';
 import Reservations from '@/pages/Reservations.vue';
 import Software from '@/pages/Software.vue';
 import Printing from '@/pages/Printing.vue';
-
-
-Vue.use(VueRouter);
 
 const routes = [
   {
@@ -106,15 +102,15 @@ const routes = [
     }
   },
   {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     name: 'page-not-found',
     component: NotFoundPage,
     meta: { title: 'Page Not Found', noAuth: true },
   },
 ];
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   base: process.env.BASE_URL || '/',
   redirect: '/',
   routes,
