@@ -278,7 +278,7 @@ export default {
         formData.append('notes', this.notes);
 
         const response = await axios.post(
-          'https://lemac.dem.tecnico.ulisboa.pt/submit',
+          'http://lemac.dem.tecnico.ulisboa.pt/submit',
           formData,
           {
             headers: {
@@ -296,8 +296,8 @@ export default {
       } catch (error) {
         this.$notify({
           type: 'error',
-          title: 'Submission Failed',
-          text: `${error} An error occurred while submitting please contact support or LEMAC staff.`,
+          title: 'Submission failed',
+          text: `An error occurred while submitting please contact support or LEMAC staff.`,
         });
       } finally {
         this.$refs.printDialog.loading = false;
