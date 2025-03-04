@@ -278,7 +278,7 @@ export default {
         formData.append('notes', this.notes);
 
         const response = await axios.post(
-          'http://lemac.dem.tecnico.ulisboa.pt/submit',
+          'https://lemac.dem.tecnico.ulisboa.pt/submit',
           formData,
           {
             headers: {
