@@ -21,7 +21,7 @@
     </div>
     <Solidworks v-if="selected_software == 'Solidworks' && isDEMStudent(getCourse(personData))" />
     <Siemens_NX v-if="selected_software == 'Siemens NX' && isDEMStudent(getCourse(personData))" />
-    <SolidEdge v-if="selected_software == 'SolidEdge'" />
+    <SolidEdge v-if="selected_software == 'SolidEdge' && isDEMStudent(getCourse(personData))" />
   </div>
 </template>
 
