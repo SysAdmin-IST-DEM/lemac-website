@@ -15,7 +15,7 @@
           <v-icon
             v-if="currentPlace > 0"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
-            large
+            size="large"
             @click="() => currentPlace--"
           >
             mdi-menu-left
@@ -24,7 +24,7 @@
             v-if="currentPlace <= 0"
             disabled
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
-            large
+            size="large"
           >
             mdi-menu-left
           </v-icon>
@@ -32,7 +32,7 @@
           <v-icon
             v-if="currentPlace < installInstructions.length - 1"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
-            large
+            size="large"
             @click="() => currentPlace++"
           >
             mdi-menu-right
@@ -41,7 +41,7 @@
           <v-icon
             v-if="currentPlace >= installInstructions.length - 1"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
-            large
+            size="large"
             disabled
           >
             mdi-menu-right

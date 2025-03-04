@@ -5,22 +5,22 @@
         <v-toolbar flat>
           <v-btn
 class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="prev">
-            <v-icon small> mdi-chevron-left </v-icon>
+          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="prev">
+            <v-icon size="small"> mdi-chevron-left </v-icon>
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small> mdi-chevron-right </v-icon>
+          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="next">
+            <v-icon size="small"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
           <v-spacer />
 
-          <v-menu bottom right offset-y>
-            <template #activator="{ on, attrs }">
-              <v-btn color="secondary" v-bind="attrs" class="mr-3" v-on="on">
+          <v-menu location="bottom right"  offset-y>
+            <template #activator="{ props }">
+              <v-btn color="secondary" class="mr-3" v-bind="props">
                 <span>{{ filter == '' ? 'Room' : filter }}</span>
-                <v-icon right> mdi-menu-down </v-icon>
+                <v-icon end> mdi-menu-down </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -39,11 +39,11 @@ class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
             </v-list>
           </v-menu>
 
-          <v-menu bottom right offset-y>
-            <template #activator="{ on, attrs }">
-              <v-btn color="secondary" v-bind="attrs" v-on="on">
+          <v-menu location="bottom right"  offset-y>
+            <template #activator="{ props }">
+              <v-btn color="secondary" v-bind="props">
                 <span>{{ typeToLabel[type] }}</span>
-                <v-icon right> mdi-menu-down </v-icon>
+                <v-icon end> mdi-menu-down </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -91,7 +91,7 @@ v-else style="height: 100%; width: 100%" />
           :activator="selectedElement"
           offset-x
         >
-          <v-card v-if="selectedElement" color="grey lighten-4" min-width="250px" flat>
+          <v-card v-if="selectedElement" color="grey-lighten-4" min-width="250px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
               <v-toolbar-title v-if="selectedElement">
                 selectedEvent.details.title }}

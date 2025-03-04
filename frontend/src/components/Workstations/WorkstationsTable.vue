@@ -17,15 +17,15 @@ class="mx-4" inset vertical />
 append-icon="mdi-magnify" label="Search" hide-details />
         <v-spacer />
         <v-dialog v-model="dialog_filter" max-width="550px">
-          <template #activator="{ on, attrs }">
-            <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="attrs" v-on="on">
+          <template #activator="{ props }">
+            <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
               Filters
             </v-btn>
           </template>
           <v-card>
             <v-form ref="form_filter" lazy-validation @submit.prevent="save">
               <v-card-title>
-                <span class="headline"> Filter </span>
+                <span class="text-h5"> Filter </span>
               </v-card-title>
               <v-card-text>
                 <v-select
@@ -40,7 +40,7 @@ append-icon="mdi-magnify" label="Search" hide-details />
                       v-model="select_all"
                       class="ml-4"
                       label="Select all"
-                      @change="selectAll"
+                      @update:model-value="selectAll"
                     />
                   </div>
                   <v-divider slot="prepend-item" class="mt-2" />
@@ -55,25 +55,25 @@ label="Filter all with issues" />
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-color="primary" text @click="clear_filter"> Clear Filter </v-btn>
+color="primary" variant="text" @click="clear_filter"> Clear Filter </v-btn>
                 <v-btn
-color="primary" text @click="close_filter"> Cancel </v-btn>
+color="primary" variant="text" @click="close_filter"> Cancel </v-btn>
                 <v-btn
-color="primary" text @click="save_filter"> Save </v-btn>
+color="primary" variant="text" @click="save_filter"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
         <v-dialog v-if="getPermission === 1" v-model="dialog" max-width="550px">
-          <template #activator="{ on, attrs }">
-            <v-btn color="secondary" dark class="mb-2" v-bind="attrs" v-on="on">
+          <template #activator="{ props }">
+            <v-btn color="secondary" dark class="mb-2" v-bind="props">
               New Workstation
             </v-btn>
           </template>
           <v-card>
             <v-form ref="form" lazy-validation @submit.prevent="save">
               <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
+                <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
               <v-card-text>
                 <v-row>
@@ -83,7 +83,7 @@ color="primary" text @click="save_filter"> Save </v-btn>
                       :rules="[(v) => !!v || 'Workstation name is required']"
                       label="Name"
                       required
-                      filled
+                      variant="filled"
                     />
                   </v-col>
                   <v-col cols="6">
@@ -92,7 +92,7 @@ color="primary" text @click="save_filter"> Save </v-btn>
                       label="Capacity"
                       type="number"
                       required
-                      filled
+                      variant="filled"
                     />
                   </v-col>
                   <v-col cols="6">
@@ -101,7 +101,7 @@ color="primary" text @click="save_filter"> Save </v-btn>
                       label="Type"
                       required
                       :items="types"
-                      filled
+                      variant="filled"
                     />
                   </v-col>
                 </v-row>
@@ -109,24 +109,24 @@ color="primary" text @click="save_filter"> Save </v-btn>
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-color="primary" text @click="close"> Cancel </v-btn>
+color="primary" variant="text" @click="close"> Cancel </v-btn>
                 <v-btn
-color="primary" text @click="save"> Save </v-btn>
+color="primary" variant="text" @click="save"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline">
+            <v-card-title class="text-h5">
               Are you sure you want to delete this item?
             </v-card-title>
             <v-card-actions>
               <v-spacer />
               <v-btn
-color="primary" text @click="closeDelete"> Cancel </v-btn>
+color="primary" variant="text" @click="closeDelete"> Cancel </v-btn>
               <v-btn
-color="error" text @click="deleteItemConfirm"> OK </v-btn>
+color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
               <v-spacer />
             </v-card-actions>
           </v-card>
@@ -134,11 +134,11 @@ color="error" text @click="deleteItemConfirm"> OK </v-btn>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-icon v-if="getPermission === 1" small class="mr-2" @click="editItem(item)">
+      <v-icon v-if="getPermission === 1" size="small" class="mr-2" @click="editItem(item)">
         mdi-pencil
       </v-icon>
       <v-icon
-v-if="getPermission === 1" small @click="deleteItem(item)"> mdi-delete </v-icon>
+v-if="getPermission === 1" size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template #[`item.capacity`]="{ item }">
       {{ `${item.occupation} / ${item.capacity}` }}
@@ -169,29 +169,29 @@ v-if="getPermission === 1" small @click="deleteItem(item)"> mdi-delete </v-icon>
             </div>
             <div class="mx-4 my-auto">
               <v-dialog v-if="getPermission === 1" v-model="dialog_software" max-width="550px">
-                <template #activator="{ on, attrs }">
-                  <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="attrs" v-on="on">
+                <template #activator="{ props }">
+                  <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
                     Add a software
                   </v-btn>
                 </template>
                 <v-card>
                   <v-form ref="form_software" lazy-validation @submit.prevent="save">
                     <v-card-title>
-                      <span class="headline"> Add a software </span>
+                      <span class="text-h5"> Add a software </span>
                     </v-card-title>
                     <v-card-text>
                       <v-text-field
                         v-model="software_to_add"
                         label="Software to add"
-                        outlined
+                        variant="outlined"
                         :rules="[(v) => !!v || 'Software is required']"
                       />
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer />
                       <v-btn
-color="primary" text @click="close_software_dialog"> Cancel </v-btn>
-                      <v-btn color="primary" text @click="() => save_software(item)">
+color="primary" variant="text" @click="close_software_dialog"> Cancel </v-btn>
+                      <v-btn color="primary" variant="text" @click="() => save_software(item)">
                         Add Software
                       </v-btn>
                     </v-card-actions>
@@ -219,38 +219,38 @@ color="primary" text @click="close_software_dialog"> Cancel </v-btn>
                     class="self-end my-auto ml-4 min-w-max"
                     hide-details
                     label="Mark resolved"
-                    @change="(e) => change_issue_status(e, item, i)"
+                    @update:model-value="(e) => change_issue_status(e, item, i)"
                   />
                 </li>
               </ul>
             </div>
             <div class="mx-4 my-auto">
               <v-dialog v-model="dialog_issue" max-width="550px">
-                <template #activator="{ on, attrs }">
-                  <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="attrs" v-on="on">
+                <template #activator="{ props }">
+                  <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
                     Report issue
                   </v-btn>
                 </template>
                 <v-card>
                   <v-form ref="form_issue" lazy-validation @submit.prevent="save">
                     <v-card-title>
-                      <span class="headline"> Report issue </span>
+                      <span class="text-h5"> Report issue </span>
                     </v-card-title>
                     <v-card-text>
                       <h4 class="mb-2 text-lg font-normal">Please describe the issue:</h4>
                       <v-textarea
                         v-model="issue_description"
                         label="Description"
-                        outlined
+                        variant="outlined"
                         :rules="[(v) => !!v || 'Description is required']"
                       />
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer />
                       <v-btn
-color="primary" text @click="close_issue_dialog"> Cancel </v-btn>
+color="primary" variant="text" @click="close_issue_dialog"> Cancel </v-btn>
                       <v-btn
-color="primary" text @click="() => save_issue(item)"> Report </v-btn>
+color="primary" variant="text" @click="() => save_issue(item)"> Report </v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card>

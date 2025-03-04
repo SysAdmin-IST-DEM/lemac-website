@@ -3,7 +3,7 @@
     <v-card>
       <v-form ref="formAdd" lazy-validation @submit.prevent="save">
         <v-card-title>
-          <span class="headline"> Entrance </span>
+          <span class="text-h5"> Entrance </span>
         </v-card-title>
         <v-card-text>
           <div class="grid overflow-hidden lg:grid-rows-8 grid-rows-9 grid-cols-18">
@@ -71,9 +71,9 @@ LTI-PC
         </v-card-text>
         <v-card-actions>
           <v-btn
-color="green" large dark class="px-8" @click="save"> Submit </v-btn>
+color="green" size="large" dark class="px-8" @click="save"> Submit </v-btn>
           <v-btn
-color="light-gray" large dark class="px-8" @click="close"> Close </v-btn>
+color="light-gray" size="large" dark class="px-8" @click="close"> Close </v-btn>
         </v-card-actions>
       </v-form>
     </v-card>

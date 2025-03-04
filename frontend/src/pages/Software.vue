@@ -5,7 +5,7 @@
       <v-row v-if="userData == null" class="flex items-center justify-center gap-4 m-4">
         <p class="mb-0 text-xl">Please login in order to request a software:</p>
         <v-btn
-color="primary" small @click="loginFenix"> Authenticate </v-btn>
+color="primary" size="small" @click="loginFenix"> Authenticate </v-btn>
       </v-row>
       <HomeSoftware v-if="userComputed" :person-data="userComputed" />
     </v-container>

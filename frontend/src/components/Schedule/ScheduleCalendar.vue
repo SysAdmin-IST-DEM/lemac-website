@@ -5,11 +5,11 @@
         <v-toolbar flat>
           <v-btn
 class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="prev">
-            <v-icon small> mdi-chevron-left </v-icon>
+          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="prev">
+            <v-icon size="small"> mdi-chevron-left </v-icon>
           </v-btn>
-          <v-btn fab text small color="grey darken-2" @click="next">
-            <v-icon small> mdi-chevron-right </v-icon>
+          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="next">
+            <v-icon size="small"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
@@ -27,11 +27,11 @@ class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
             />
           </div>
 
-          <v-menu bottom right offset-y>
-            <template #activator="{ on, attrs }">
-              <v-btn style="margin: 0 1em" color="secondary" v-bind="attrs" v-on="on">
+          <v-menu location="bottom right"  offset-y>
+            <template #activator="{ props }">
+              <v-btn style="margin: 0 1em" color="secondary" v-bind="props">
                 <span>{{ active_user.name }}</span>
-                <v-icon right> mdi-menu-down </v-icon>
+                <v-icon end> mdi-menu-down </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -42,11 +42,11 @@ class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-menu bottom right offset-y>
-            <template #activator="{ on, attrs }">
-              <v-btn color="secondary" v-bind="attrs" v-on="on">
+          <v-menu location="bottom right"  offset-y>
+            <template #activator="{ props }">
+              <v-btn color="secondary" v-bind="props">
                 <span>{{ typeToLabel[type] }}</span>
-                <v-icon right> mdi-menu-down </v-icon>
+                <v-icon end> mdi-menu-down </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -120,9 +120,9 @@ v-else style="height: 100%; width: 100%" />
                 </v-icon>
                 <v-btn
                   v-if="hover && switchValue"
-                  fab
-                  text
-                  small
+                  icon
+                  variant="text"
+                  size="small"
                   style="position: absolute; bottom: 0; right: 0; margin: auto auto 0 0; padding: 0"
                   @click="deleteHour(event)"
                 >
@@ -151,9 +151,9 @@ color="secondary" class="mx-3" @click="downloadCalender"> Download </v-btn>
           max-width="650px"
           transition="dialog-transition"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-btn
-color="secondary" class="mr-3" v-bind="attrs" v-on="on"> Targets </v-btn>
+color="secondary" class="mr-3" v-bind="props"> Targets </v-btn>
           </template>
           <v-card>
             <v-form>
@@ -167,7 +167,7 @@ color="secondary" class="mr-3" v-bind="attrs" v-on="on"> Targets </v-btn>
                   <div class="grid grid-cols-5 grid-rows-2">
                     <v-btn
                       color="primary"
-                      medium
+                      size="medium"
                       class="col-span-2 col-start-1 row-span-1 row-start-2"
                       @click="startEdit(i)"
                     >
@@ -185,8 +185,8 @@ color="secondary" class="mr-3" v-bind="attrs" v-on="on"> Targets </v-btn>
               <v-card-actions>
                 <div class="grid w-full grid-cols-5">
                   <v-dialog v-model="targetDialog" max-width="500px" transition="dialog-transition">
-                    <template #activator="{ on, attrs }">
-                      <v-btn class="col-span-3" color="primary" v-bind="attrs" v-on="on">
+                    <template #activator="{ props }">
+                      <v-btn class="col-span-3" color="primary" v-bind="props">
                         Add Target
                       </v-btn>
                     </template>
@@ -198,19 +198,19 @@ color="secondary" class="mr-3" v-bind="attrs" v-on="on"> Targets </v-btn>
                           v-model="menu3"
                           v-model:return-value="targetDate"
                           :close-on-content-click="false"
-                          :close-on-click="false"
+                          persistent
                           :nudge-right="40"
                           transition="scale-transition"
                           offset-y
                         >
-                          <template #activator="{ on, attrs }">
+                          <template #activator="{ props }">
                             <v-text-field
                               v-model="targetDate"
                               label="Date for reservation"
                               prepend-icon="mdi-calendar"
                               required
-                              v-bind="attrs"
-                              v-on="on"
+                             
+                              v-bind="props"
                             />
                           </template>
                           <v-date-picker
@@ -222,8 +222,8 @@ color="secondary" class="mr-3" v-bind="attrs" v-on="on"> Targets </v-btn>
                           >
                             <v-spacer />
                             <v-btn
-text color="success" @click="menu3 = false"> Cancel </v-btn>
-                            <v-btn text color="secondary" @click="$refs.menu3.save(targetDate)">
+variant="text" color="success" @click="menu3 = false"> Cancel </v-btn>
+                            <v-btn variant="text" color="secondary" @click="$refs.menu3.save(targetDate)">
                               OK
                             </v-btn>
                           </v-date-picker>
@@ -243,14 +243,14 @@ color="error" @click="closeCreateTarget()"> Cancel </v-btn>
                   <div class="flex col-span-2 col-start-4 gap-2 ml-auto">
                     <v-btn
                       color="primary"
-                      medium
+                      size="medium"
                       @click="() => (startIndex = startIndex - 4 < 0 ? 0 : startIndex - 4)"
                     >
                       {{ '<' }}
                     </v-btn>
                     <v-btn
                       color="primary"
-                      medium
+                      size="medium"
                       @click="
                         () =>
                           (startIndex =
@@ -271,9 +271,9 @@ color="error" @click="closeCreateTarget()"> Cancel </v-btn>
           max-width="450px"
           transition="dialog-transition"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-btn
-color="secondary" v-bind="attrs" v-on="on"> Edit off days </v-btn>
+color="secondary" v-bind="props"> Edit off days </v-btn>
           </template>
           <v-date-picker
             v-model="dates"
@@ -301,19 +301,19 @@ color="secondary" v-bind="attrs" v-on="on"> Edit off days </v-btn>
             v-model="editCalender"
             v-model:return-value="targetDate"
             :close-on-content-click="false"
-            :close-on-click="false"
+            persistent
             :nudge-right="40"
             transition="scale-transition"
             offset-y
           >
-            <template #activator="{ on, attrs }">
+            <template #activator="{ props }">
               <v-text-field
                 v-model="targetDate"
                 label="Date for reservation"
                 prepend-icon="mdi-calendar"
                 required
-                v-bind="attrs"
-                v-on="on"
+               
+                v-bind="props"
               />
             </template>
             <v-date-picker
@@ -325,8 +325,8 @@ color="secondary" v-bind="attrs" v-on="on"> Edit off days </v-btn>
             >
               <v-spacer />
               <v-btn
-text color="success" @click="editCalender = false"> Cancel </v-btn>
-              <v-btn text color="secondary" @click="$refs.editCalender.save(targetDate)">
+variant="text" color="success" @click="editCalender = false"> Cancel </v-btn>
+              <v-btn variant="text" color="secondary" @click="$refs.editCalender.save(targetDate)">
                 OK
               </v-btn>
             </v-date-picker>
