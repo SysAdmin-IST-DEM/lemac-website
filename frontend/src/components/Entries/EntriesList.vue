@@ -8,15 +8,15 @@ class="mx-4" inset vertical />
 class="mt-6" label="Filter Workstations" v-model="search" />
       <v-spacer />
       <v-dialog v-model="dialogAdd" max-width="550px">
-        <template #activator="{ on, attrs }">
-          <v-btn color="secondary" dark class="mb-2" v-bind="attrs" v-on="on">
+        <template #activator="{ props }">
+          <v-btn color="secondary" dark class="mb-2" v-bind="props">
             New Registration
           </v-btn>
         </template>
         <v-card>
           <v-form ref="formAdd" lazy-validation @submit.prevent="save">
             <v-card-title>
-              <span class="headline"> New Registration </span>
+              <span class="text-h5"> New Registration </span>
             </v-card-title>
             <v-card-text>
               <v-row>
@@ -28,7 +28,7 @@ class="mt-6" label="Filter Workstations" v-model="search" />
                       label="Id"
                       type="number"
                       required
-                      filled
+                      variant="filled"
                     />
                   </div>
                 </v-col>
@@ -37,11 +37,11 @@ class="mt-6" label="Filter Workstations" v-model="search" />
                     v-model="newItem.workstationId"
                     label="Workstation"
                     :items="workstations"
-                    item-text="name"
+                    item-title="name"
                     item-value="id"
                     :rules="[(v) => !!v || 'Workstation is required']"
                     required
-                    filled
+                    variant="filled"
                   />
                 </v-col>
               </v-row>
@@ -49,13 +49,13 @@ class="mt-6" label="Filter Workstations" v-model="search" />
             <v-card-actions>
               <v-spacer />
               <v-btn
-color="primary" text @click="add"> Add Number </v-btn>
+color="primary" variant="text" @click="add"> Add Number </v-btn>
               <v-btn
-color="primary" text @click="remove"> Remove Number </v-btn>
+color="primary" variant="text" @click="remove"> Remove Number </v-btn>
               <v-btn
-color="primary" text @click="close"> Cancel </v-btn>
+color="primary" variant="text" @click="close"> Cancel </v-btn>
               <v-btn
-color="primary" text @click="save"> Save </v-btn>
+color="primary" variant="text" @click="save"> Save </v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -65,7 +65,7 @@ color="primary" text @click="save"> Save </v-btn>
       <template v-if="entries.length > 0">
         <div v-for="(entry, index) in filteredEntries" :key="entry.id + 'b'">
           <v-list-item>
-            <v-list-item-content>
+            
               <v-list-item-title class="mb-2">
                 <v-chip color="secondary">
                   {{ entry.istId.slice(4) }}
@@ -73,24 +73,24 @@ color="primary" text @click="save"> Save </v-btn>
               </v-list-item-title>
               <v-list-item-subtitle>
                 <v-icon
-left right small> mdi-desktop-classic </v-icon> {{ entry.workstation.name }}
+start end size="small"> mdi-desktop-classic </v-icon> {{ entry.workstation.name }}
                 <v-icon
-left right small> mdi-clock </v-icon>
+start end size="small"> mdi-clock </v-icon>
                 {{ new Date(entry.createdAt).toLocaleString('pt-PT') }}
                 <v-icon
-left right small> mdi-text </v-icon>
+start end size="small"> mdi-text </v-icon>
                 {{ entry.observations }}
               </v-list-item-subtitle>
-            </v-list-item-content>
+            
             <v-list-item-action>
               <div>
-                <v-tooltip bottom open-delay="500">
-                  <template #activator="{ on, attrs }">
+                <v-tooltip location="bottom" open-delay="500">
+                  <template #activator="{ props }">
                     <v-btn
-                      class="primary ma-1"
-                      small
-                      v-bind="attrs"
-                      v-on="on"
+                      class="bg-primary ma-1"
+                      size="small"
+                     
+                      v-bind="props"
                       @click="editEntry(entry)"
                     >
                       <v-icon>mdi-pencil</v-icon>
@@ -98,13 +98,13 @@ left right small> mdi-text </v-icon>
                   </template>
                   Edit
                 </v-tooltip>
-                <v-tooltip bottom open-delay="500">
-                  <template #activator="{ on, attrs }">
+                <v-tooltip location="bottom" open-delay="500">
+                  <template #activator="{ props }">
                     <v-btn
-                      class="ma-1 info darken-1"
-                      small
-                      v-bind="attrs"
-                      v-on="on"
+                      class="ma-1 bg-info-darken-1"
+                      size="small"
+                     
+                      v-bind="props"
                       @click="addObservation(entry)"
                     >
                       <v-icon>mdi-text</v-icon>
@@ -112,13 +112,13 @@ left right small> mdi-text </v-icon>
                   </template>
                   Observations
                 </v-tooltip>
-                <v-tooltip bottom open-delay="500">
-                  <template #activator="{ on, attrs }">
+                <v-tooltip location="bottom" open-delay="500">
+                  <template #activator="{ props }">
                     <v-btn
-                      class="ma-1 error"
-                      small
-                      v-bind="attrs"
-                      v-on="on"
+                      class="ma-1 bg-error"
+                      size="small"
+                     
+                      v-bind="props"
                       @click="closeEntry(entry)"
                     >
                       <v-icon>mdi-close</v-icon>
@@ -141,31 +141,31 @@ v-if="index < entries.length - 1" :key="index + 'c'" />
         <v-card>
           <v-form ref="formEdit" lazy-validation @submit.prevent="save">
             <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
+              <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
               <v-textarea v-model="editedItem.observations"
-filled clearable counter auto-grow />
+variant="filled" clearable counter auto-grow />
             </v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn
-color="primary" text @click="observationsClose"> Cancel </v-btn>
+color="primary" variant="text" @click="observationsClose"> Cancel </v-btn>
               <v-btn
-color="primary" text @click="observationsSave"> Save </v-btn>
+color="primary" variant="text" @click="observationsSave"> Save </v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
       </v-dialog>
       <v-dialog v-model="dialogClose" max-width="500px">
         <v-card>
-          <v-card-title class="headline"> Are you sure you want to close this entry? </v-card-title>
+          <v-card-title class="text-h5"> Are you sure you want to close this entry? </v-card-title>
           <v-card-actions>
             <v-spacer />
             <v-btn
-color="primary" text @click="closeCancel"> Cancel </v-btn>
+color="primary" variant="text" @click="closeCancel"> Cancel </v-btn>
             <v-btn
-color="error" text @click="closeConfirm"> Close </v-btn>
+color="error" variant="text" @click="closeConfirm"> Close </v-btn>
             <v-spacer />
           </v-card-actions>
         </v-card>
@@ -176,7 +176,7 @@ color="error" text @click="closeConfirm"> Close </v-btn>
       <v-card>
         <v-form ref="formAdd" lazy-validation @submit.prevent="save">
           <v-card-title>
-            <span class="headline"> Edit Registration </span>
+            <span class="text-h5"> Edit Registration </span>
           </v-card-title>
           <v-card-text>
             <v-row>
@@ -187,7 +187,7 @@ color="error" text @click="closeConfirm"> Close </v-btn>
                   label="Id"
                   type="number"
                   required
-                  filled
+                  variant="filled"
                 />
               </v-col>
               <v-col cols="6" class="flex items-center justify-center">
@@ -195,11 +195,11 @@ color="error" text @click="closeConfirm"> Close </v-btn>
                   v-model="editingEntry.workstationId"
                   label="Workstation"
                   :items="workstations"
-                  item-text="name"
+                  item-title="name"
                   item-value="id"
                   :rules="[(v) => !!v || 'Workstation is required']"
                   required
-                  filled
+                  variant="filled"
                 />
               </v-col>
             </v-row>
@@ -207,9 +207,9 @@ color="error" text @click="closeConfirm"> Close </v-btn>
           <v-card-actions>
             <v-spacer />
             <v-btn
-color="primary" text @click="close"> Cancel </v-btn>
+color="primary" variant="text" @click="close"> Cancel </v-btn>
             <v-btn
-color="primary" text @click="edit"> Edit </v-btn>
+color="primary" variant="text" @click="edit"> Edit </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>

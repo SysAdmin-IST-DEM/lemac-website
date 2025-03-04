@@ -1,7 +1,7 @@
 <template>
   <v-container class="container">
     <v-card class="card">
-      <v-card-title class="headline"> Hour Register </v-card-title>
+      <v-card-title class="text-h5"> Hour Register </v-card-title>
       <v-card-subtitle>
         Please log your work hours for today, or press the skip button if you are not working in the
         lab today.
@@ -20,9 +20,9 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-color="success" text @click="$router.push('dashboard')"> Skip </v-btn>
+color="success" variant="text" @click="$router.push('dashboard')"> Skip </v-btn>
         <v-btn
-color="secondary" text :disabled="disabled" @click="saveTime"> Save </v-btn>
+color="secondary" variant="text" :disabled="disabled" @click="saveTime"> Save </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

@@ -3,7 +3,7 @@
     <v-card>
       <v-form ref="formAdd" lazy-validation @submit.prevent="save">
         <v-card-title>
-          <span class="headline"> Entrance </span>
+          <span class="text-h5"> Entrance </span>
         </v-card-title>
         <v-card-text>
           <v-text-field
@@ -12,7 +12,7 @@
             label="Name"
             type="string"
             required
-            filled
+            variant="filled"
           />
           <v-text-field
             v-model="ist_id"
@@ -20,7 +20,7 @@
             label="Id"
             type="number"
             required
-            filled
+            variant="filled"
           />
           <v-text-field
             v-model="email"
@@ -28,24 +28,24 @@
             label="Email"
             type="email"
             required
-            filled
+            variant="filled"
           />
           <v-autocomplete
             v-model="choosenCourse"
             label="Course"
             :items="possibleCourses"
-            item-text="course"
+            item-title="course"
             item-value="course"
             :rules="[(v) => !!v || 'Course is required']"
             required
-            filled
+            variant="filled"
           />
         </v-card-text>
         <v-card-actions>
           <v-btn
-color="primary" text @click="save"> Submit </v-btn>
+color="primary" variant="text" @click="save"> Submit </v-btn>
           <v-btn
-color="primary" text @click="close"> Close </v-btn>
+color="primary" variant="text" @click="close"> Close </v-btn>
         </v-card-actions>
       </v-form>
     </v-card>

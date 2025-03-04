@@ -25,7 +25,7 @@
             class="mb-1"
             @click.stop="drawer = !drawer"
           >
-            <v-icon v-if="route.icon" left>
+            <v-icon v-if="route.icon" start>
               {{ route.icon }}
             </v-icon>
             {{ route.text }}
@@ -35,11 +35,11 @@
       <template #append>
         <div class="pa-2">
           <v-btn block color="error" @click="onLogout">
-            <v-icon left> mdi-logout </v-icon>Logout
+            <v-icon start> mdi-logout </v-icon>Logout
           </v-btn>
           <div class="py-2 text-center">
             LEMAC
-            <v-icon x-small> mdi-copyright </v-icon>
+            <v-icon size="x-small"> mdi-copyright </v-icon>
             {{ new Date().getFullYear() }}
           </div>
         </div>
