@@ -15,14 +15,14 @@ class="mx-4" inset vertical />
 append-icon="mdi-magnify" label="Search" hide-details />
         <v-spacer />
         <v-dialog v-model="dialog" max-width="550px" v-if="getPermission === 1">
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-btn
-color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New User </v-btn>
+color="secondary" dark class="mb-2" v-bind="props"> New User </v-btn>
           </template>
           <v-card>
             <v-form ref="form" lazy-validation @submit.prevent="save">
               <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
+                <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
               <v-card-text>
                 <v-row>
@@ -32,7 +32,7 @@ color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New User </v-btn>
                       :rules="[(v) => !!v || 'User name is required']"
                       label="Name"
                       required
-                      filled
+                      variant="filled"
                     />
                   </v-col>
                   <v-col cols="4">
@@ -41,40 +41,40 @@ color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New User </v-btn>
                       :rules="[(v) => !!v || 'IST Id is required']"
                       label="Id"
                       required
-                      filled
+                      variant="filled"
                     />
                   </v-col>
                   <v-col cols="4">
                     <v-select v-model="editedItem.admin"
-label="Role" :items="roles" filled />
+label="Role" :items="roles" variant="filled" />
                   </v-col>
                   <v-col cols="4">
                     <v-select v-model="editedItem.active"
-label="State" :items="states" filled />
+label="State" :items="states" variant="filled" />
                   </v-col>
                 </v-row>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-color="primary" text @click="close"> Cancel </v-btn>
+color="primary" variant="text" @click="close"> Cancel </v-btn>
                 <v-btn
-color="primary" text @click="save"> Save </v-btn>
+color="primary" variant="text" @click="save"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline">
+            <v-card-title class="text-h5">
               Are you sure you want to delete this item?
             </v-card-title>
             <v-card-actions>
               <v-spacer />
               <v-btn
-color="primary" text @click="closeDelete"> Cancel </v-btn>
+color="primary" variant="text" @click="closeDelete"> Cancel </v-btn>
               <v-btn
-color="error" text @click="deleteItemConfirm"> OK </v-btn>
+color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
               <v-spacer />
             </v-card-actions>
           </v-card>
@@ -84,9 +84,9 @@ color="error" text @click="deleteItemConfirm"> OK </v-btn>
     <template v-if="getPermission === 1"
 #[`item.actions`]="{ item }">
       <v-icon
-small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+size="small" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
       <v-icon
-small @click="deleteItem(item)"> mdi-delete </v-icon>
+size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template #[`item.admin`]="{ item }">
       <v-chip :color="roleColors[item.admin]" dark class="capitalized">

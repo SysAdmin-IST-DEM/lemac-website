@@ -13,14 +13,14 @@
 class="mx-4" inset vertical />
         <v-spacer />
         <v-dialog v-model="dialog" max-width="550px">
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-btn
-color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New Entry </v-btn>
+color="secondary" dark class="mb-2" v-bind="props"> New Entry </v-btn>
           </template>
           <v-card>
             <v-form ref="form" lazy-validation @submit.prevent="save">
               <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
+                <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
               <v-card-text>
                 <v-container>
@@ -31,14 +31,14 @@ color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New Entry </v-btn>
                         v-model="menu"
                         v-model:return-value="editedItem.entry"
                         :close-on-content-click="false"
-                        :close-on-click="false"
+                        persistent
                         :nudge-right="40"
                         transition="scale-transition"
                         offset-y
                         max-width="290px"
                         min-width="290px"
                       >
-                        <template #activator="{ on, attrs }">
+                        <template #activator="{ props }">
                           <v-text-field
                             v-model="editedItem.entry"
                             label="Entry Hours"
@@ -46,8 +46,8 @@ color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New Entry </v-btn>
                             readonly
                             required
                             :rules="[() => !!editedItem.entry || 'This field is required']"
-                            v-bind="attrs"
-                            v-on="on"
+                           
+                            v-bind="props"
                           />
                         </template>
                         <v-time-picker
@@ -59,8 +59,8 @@ color="secondary" dark class="mb-2" v-bind="attrs" v-on="on"> New Entry </v-btn>
                         >
                           <v-spacer />
                           <v-btn
-text color="success" @click="menu = false"> Cancel </v-btn>
-                          <v-btn text color="secondary" @click="$refs.menu.save(editedItem.entry)">
+variant="text" color="success" @click="menu = false"> Cancel </v-btn>
+                          <v-btn variant="text" color="secondary" @click="$refs.menu.save(editedItem.entry)">
                             OK
                           </v-btn>
                         </v-time-picker>
@@ -74,14 +74,14 @@ text color="success" @click="menu = false"> Cancel </v-btn>
                         v-model="menu2"
                         v-model:return-value="editedItem.exit"
                         :close-on-content-click="false"
-                        :close-on-click="false"
+                        persistent
                         :nudge-right="40"
                         transition="scale-transition"
                         offset-y
                         max-width="290px"
                         min-width="290px"
                       >
-                        <template #activator="{ on, attrs }">
+                        <template #activator="{ props }">
                           <v-text-field
                             v-model="editedItem.exit"
                             label="Exit Hours"
@@ -89,8 +89,8 @@ text color="success" @click="menu = false"> Cancel </v-btn>
                             readonly
                             required
                             :rules="[() => !!editedItem.exit || 'This field is required']"
-                            v-bind="attrs"
-                            v-on="on"
+                           
+                            v-bind="props"
                           />
                         </template>
                         <v-time-picker
@@ -102,8 +102,8 @@ text color="success" @click="menu = false"> Cancel </v-btn>
                         >
                           <v-spacer />
                           <v-btn
-text color="success" @click="menu2 = false"> Cancel </v-btn>
-                          <v-btn text color="secondary" @click="$refs.menu2.save(editedItem.exit)">
+variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
+                          <v-btn variant="text" color="secondary" @click="$refs.menu2.save(editedItem.exit)">
                             OK
                           </v-btn>
                         </v-time-picker>
@@ -139,20 +139,20 @@ text color="success" @click="menu2 = false"> Cancel </v-btn>
                       v-model="menu4"
                       v-model:return-value="adminDate"
                       :close-on-content-click="false"
-                      :close-on-click="false"
+                      persistent
                       :nudge-right="40"
                       transition="scale-transition"
                       offset-y
                     >
-                      <template #activator="{ on, attrs }">
+                      <template #activator="{ props }">
                         <v-text-field
                           v-model="adminDate"
                           label="Date for entry (OPCIONAL)"
                           prepend-icon="mdi-calendar"
                           readonly
                           required
-                          v-bind="attrs"
-                          v-on="on"
+                         
+                          v-bind="props"
                         />
                       </template>
                       <v-date-picker
@@ -163,9 +163,9 @@ text color="success" @click="menu2 = false"> Cancel </v-btn>
                       >
                         <v-spacer />
                         <v-btn
-text color="success" @click="menu4 = false"> Cancel </v-btn>
+variant="text" color="success" @click="menu4 = false"> Cancel </v-btn>
                         <v-btn
-text color="secondary"
+variant="text" color="secondary"
 @click="$refs.menu4.save(adminDate)"
 >
                           OK
@@ -178,11 +178,11 @@ text color="secondary"
                       v-model="active_user"
                       label="User"
                       :items="users"
-                      item-text="name"
+                      item-title="name"
                       item-value="id"
                       :rules="[(v) => !!v || 'User is required']"
                       required
-                      filled
+                      variant="filled"
                     />
                   </v-row>
                 </v-container>
@@ -190,24 +190,24 @@ text color="secondary"
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-color="primary" text @click="close"> Cancel </v-btn>
+color="primary" variant="text" @click="close"> Cancel </v-btn>
                 <v-btn
-color="primary" text @click="save"> Save </v-btn>
+color="primary" variant="text" @click="save"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline">
+            <v-card-title class="text-h5">
               Are you sure you want to delete this item?
             </v-card-title>
             <v-card-actions>
               <v-spacer />
               <v-btn
-color="primary" text @click="closeDelete"> Cancel </v-btn>
+color="primary" variant="text" @click="closeDelete"> Cancel </v-btn>
               <v-btn
-color="error" text @click="deleteItemConfirm"> OK </v-btn>
+color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
               <v-spacer />
             </v-card-actions>
           </v-card>
@@ -243,9 +243,9 @@ color="error" text @click="deleteItemConfirm"> OK </v-btn>
     </template>
     <template #[`item.actions`]="{ item }">
       <v-icon
-small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+size="small" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
       <v-icon
-small @click="deleteItem(item)"> mdi-delete </v-icon>
+size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
   </v-data-table>
 </template>

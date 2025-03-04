@@ -32,7 +32,7 @@ v-model="chosen_material" :items="materials" label="Material" />
             v-model="notes"
             label="Additional Notes"
             rows="3"
-            outlined
+            variant="outlined"
             maxlength="350"
             counter
           />

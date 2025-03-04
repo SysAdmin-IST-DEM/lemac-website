@@ -5,8 +5,8 @@
         <v-toolbar-title>Event List</v-toolbar-title>
         <v-spacer />
         <v-dialog v-model="dialog" max-width="450px">
-          <template #activator="{ on, attrs }">
-            <v-btn color="secondary" dark class="mb-2" v-bind="attrs" v-on="on">
+          <template #activator="{ props }">
+            <v-btn color="secondary" dark class="mb-2" v-bind="props">
               <v-icon>mdi-calendar</v-icon>
             </v-btn>
           </template>
@@ -21,15 +21,15 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline">
+            <v-card-title class="text-h5">
               Are you sure you want to delete this item?
             </v-card-title>
             <v-card-actions>
               <v-spacer />
               <v-btn
-color="primary" text @click="closeDelete"> Cancel </v-btn>
+color="primary" variant="text" @click="closeDelete"> Cancel </v-btn>
               <v-btn
-color="error" text @click="deleteItemConfirm"> OK </v-btn>
+color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
               <v-spacer />
             </v-card-actions>
           </v-card>
@@ -40,14 +40,14 @@ color="error" text @click="deleteItemConfirm"> OK </v-btn>
               <v-card-title> Add observation </v-card-title>
               <v-card-text>
                 <v-textarea v-model="editedItem.observations"
-filled clearable counter auto-grow />
+variant="filled" clearable counter auto-grow />
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-color="primary" text @click="cancel()"> Cancel </v-btn>
+color="primary" variant="text" @click="cancel()"> Cancel </v-btn>
                 <v-btn
-color="primary" text @click="addObservation(editedItem)"> Save </v-btn>
+color="primary" variant="text" @click="addObservation(editedItem)"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -56,9 +56,9 @@ color="primary" text @click="addObservation(editedItem)"> Save </v-btn>
     </template>
     <template #[`item.actions`]="{ item }">
       <v-icon
-small class="mr-2" @click="openObservation(item)"> mdi-pencil </v-icon>
+size="small" class="mr-2" @click="openObservation(item)"> mdi-pencil </v-icon>
       <v-icon
-small @click="deleteItem(item)"> mdi-delete </v-icon>
+size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
   </v-data-table>
 </template>

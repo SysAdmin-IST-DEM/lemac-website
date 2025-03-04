@@ -2,7 +2,7 @@
   <v-app-bar app dense>
     <v-row>
       <router-link to="/">
-        <h2 class="mx-3 primary--text">LEMAC</h2>
+        <h2 class="mx-3 text-primary">LEMAC</h2>
       </router-link>
       <v-divider vertical />
       <router-link to="/about">
@@ -27,31 +27,31 @@
     <v-spacer />
     <div v-if="!getId">
       <v-btn
-        class="mx-3 primary"
+        class="mx-3 bg-primary"
         :loading="loading"
         :disabled="loading"
         elevation="2"
-        small
+        size="small"
         @click="$emit('login')"
       >
         Login
       </v-btn>
     </div>
     <div v-else>
-      <v-tooltip bottom open-delay="500">
-        <template #activator="{ on, attrs }">
-          <v-icon v-bind="attrs" @click="$router.push('dashboard')" v-on="on">
+      <v-tooltip location="bottom" open-delay="500">
+        <template #activator="{ props }">
+          <v-icon @click="$router.push('dashboard')" v-bind="props">
             mdi-view-dashboard
           </v-icon>
         </template>
         Admin Dashboard
       </v-tooltip>
       <v-btn
-        class="mx-3 error"
+        class="mx-3 bg-error"
         :loading="loadingOut"
         :disabled="loadingOut"
         elevation="2"
-        small
+        size="small"
         @click="$emit('logout')"
       >
         Logout

@@ -19,7 +19,7 @@
               @click="save"
             >
               <p class="mb-0 text-2xl">Enter LEMAC</p>
-              <v-icon class="ml-4" large>mdi-exit-to-app</v-icon>
+              <v-icon class="ml-4" size="large">mdi-exit-to-app</v-icon>
             </v-btn>
           </span>
           <span class="flex flex-row items-center justify-center gap-4 mt-4">
@@ -33,7 +33,7 @@
                 @click="exit"
               >
                 <p class="mb-0 text-sm">Exit LEMAC</p>
-                <v-icon class="ml-4" small>mdi-pause-box-outline</v-icon>
+                <v-icon class="ml-4" size="small">mdi-pause-box-outline</v-icon>
               </v-btn>
             </div>
             <div>
@@ -46,7 +46,7 @@
                 @click="close"
               >
                 <p class="mb-0 text-sm">Cancel</p>
-                <v-icon class="ml-4" small>mdi-close</v-icon>
+                <v-icon class="ml-4" size="small">mdi-close</v-icon>
               </v-btn>
             </div>
           </span>

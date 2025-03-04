@@ -7,14 +7,14 @@
           v-model="menu"
           v-model:return-value="timeStart"
           :close-on-content-click="false"
-          :close-on-click="false"
+          persistent
           :nudge-right="40"
           transition="scale-transition"
           offset-y
           max-width="290px"
           min-width="290px"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-text-field
               v-model="timeStart"
               label="Entry Hours"
@@ -22,16 +22,16 @@
               readonly
               required
               :rules="[() => !!timeStart || 'This field is required']"
-              v-bind="attrs"
-              v-on="on"
+             
+              v-bind="props"
             />
           </template>
           <v-time-picker v-if="menu" v-model="timeStart" :max="timeEnd" full-width format="24hr">
             <v-spacer />
             <v-btn
-text color="success" @click="menu = false"> Cancel </v-btn>
+variant="text" color="success" @click="menu = false"> Cancel </v-btn>
             <v-btn
-text color="secondary" @click="setTimeStart"> OK </v-btn>
+variant="text" color="secondary" @click="setTimeStart"> OK </v-btn>
           </v-time-picker>
         </v-menu>
       </v-col>
@@ -43,14 +43,14 @@ text color="secondary" @click="setTimeStart"> OK </v-btn>
           v-model="menu2"
           v-model:return-value="timeEnd"
           :close-on-content-click="false"
-          :close-on-click="false"
+          persistent
           :nudge-right="40"
           transition="scale-transition"
           offset-y
           max-width="290px"
           min-width="290px"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-text-field
               v-model="timeEnd"
               label="Exit Hours"
@@ -58,16 +58,16 @@ text color="secondary" @click="setTimeStart"> OK </v-btn>
               readonly
               required
               :rules="[() => !!timeEnd || 'This field is required']"
-              v-bind="attrs"
-              v-on="on"
+             
+              v-bind="props"
             />
           </template>
           <v-time-picker v-if="menu2" v-model="timeEnd" :min="timeStart" full-width format="24hr">
             <v-spacer />
             <v-btn
-text color="success" @click="menu2 = false"> Cancel </v-btn>
+variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
             <v-btn
-text color="secondary" @click="setTimeEnd"> OK </v-btn>
+variant="text" color="secondary" @click="setTimeEnd"> OK </v-btn>
           </v-time-picker>
         </v-menu>
       </v-col>
