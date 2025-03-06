@@ -3,22 +3,21 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn
-class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
-          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="prev">
+          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
+          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="prev">
             <v-icon size="small"> mdi-chevron-left </v-icon>
           </v-btn>
-          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="next">
+          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="next">
             <v-icon size="small"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer />
+          <v-spacer></v-spacer>
 
           <v-menu location="bottom right"  offset-y>
             <template #activator="{ props }">
-              <v-btn color="secondary" class="mr-3" v-bind="props">
+              <v-btn color="secondary" v-bind="props" class="mr-3">
                 <span>{{ filter == '' ? 'Room' : filter }}</span>
                 <v-icon end> mdi-menu-down </v-icon>
               </v-btn>
@@ -69,20 +68,19 @@ class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
           :events="filteredEvents"
           :event-color="getEventColor"
           :type="type"
-          interval-count="14"
-          first-interval="8"
           @click:more="viewDay"
           @click:date="viewDay"
           @change="updateRange"
           @click:event="showEvent"
+          interval-count="14"
+          first-interval="8"
         >
           <template #interval="{ weekday, hour, date }">
             <div
               v-if="hour < 9 || hour >= 21"
               style="height: 100%; width: 100%; background-color: #f2f2f2"
-            />
-            <div
-v-else style="height: 100%; width: 100%" />
+            ></div>
+            <div v-else style="height: 100%; width: 100%"></div>
           </template>
         </v-calendar>
         <v-menu
@@ -93,10 +91,10 @@ v-else style="height: 100%; width: 100%" />
         >
           <v-card v-if="selectedElement" color="grey-lighten-4" min-width="250px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title v-if="selectedElement">
-                selectedEvent.details.title }}
-              </v-toolbar-title>
-              <v-spacer />
+              <v-toolbar-title v-if="selectedElement">{{
+                selectedEvent.details.title
+              }}</v-toolbar-title>
+              <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
               <p>

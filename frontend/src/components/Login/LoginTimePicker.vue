@@ -5,10 +5,10 @@
         <v-menu
           ref="menu"
           v-model="menu"
-          v-model:return-value="timeStart"
           :close-on-content-click="false"
           persistent
           :nudge-right="40"
+          :return-value.sync="timeStart"
           transition="scale-transition"
           offset-y
           max-width="290px"
@@ -24,27 +24,25 @@
               :rules="[() => !!timeStart || 'This field is required']"
              
               v-bind="props"
-            />
+            ></v-text-field>
           </template>
           <v-time-picker v-if="menu" v-model="timeStart" :max="timeEnd" full-width format="24hr">
             <v-spacer />
-            <v-btn
-variant="text" color="success" @click="menu = false"> Cancel </v-btn>
-            <v-btn
-variant="text" color="secondary" @click="setTimeStart"> OK </v-btn>
+            <v-btn variant="text" color="success" @click="menu = false"> Cancel </v-btn>
+            <v-btn variant="text" color="secondary" @click="setTimeStart"> OK </v-btn>
           </v-time-picker>
         </v-menu>
       </v-col>
-      <v-spacer />
+      <v-spacer></v-spacer>
       <!--Exit hours menu-->
       <v-col cols="11" sm="5">
         <v-menu
           ref="menu2"
           v-model="menu2"
-          v-model:return-value="timeEnd"
           :close-on-content-click="false"
           persistent
           :nudge-right="40"
+          :return-value.sync="timeEnd"
           transition="scale-transition"
           offset-y
           max-width="290px"
@@ -60,14 +58,12 @@ variant="text" color="secondary" @click="setTimeStart"> OK </v-btn>
               :rules="[() => !!timeEnd || 'This field is required']"
              
               v-bind="props"
-            />
+            ></v-text-field>
           </template>
           <v-time-picker v-if="menu2" v-model="timeEnd" :min="timeStart" full-width format="24hr">
             <v-spacer />
-            <v-btn
-variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
-            <v-btn
-variant="text" color="secondary" @click="setTimeEnd"> OK </v-btn>
+            <v-btn variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
+            <v-btn variant="text" color="secondary" @click="setTimeEnd"> OK </v-btn>
           </v-time-picker>
         </v-menu>
       </v-col>
@@ -79,13 +75,13 @@ variant="text" color="secondary" @click="setTimeEnd"> OK </v-btn>
         prepend-icon="mdi-ticket-confirmation"
         required
         :rules="[() => !!entryNumber || 'This field is required']"
-      />
+      ></v-text-field>
       <v-spacer />
       <v-text-field
         v-model="exitNumber"
         label="Exit ticket"
         prepend-icon="mdi-ticket-confirmation"
-      />
+      ></v-text-field>
       <v-spacer />
       <v-text-field
         v-model="safeAmount"
@@ -93,7 +89,7 @@ variant="text" color="secondary" @click="setTimeEnd"> OK </v-btn>
         prepend-icon="mdi-safe-square-outline"
         required
         :rules="[() => !!safeAmount || 'This field is required']"
-      />
+      ></v-text-field>
     </v-row>
   </div>
 </template>
@@ -122,8 +118,8 @@ export default {
       this.setEntryNumber();
     },
     exitNumber() {
-      this.setExitNumber();
-    },
+      this.setExitNumber()
+    }
   },
   async mounted() {
     const lastEntry = (await getLastEntry()).data;
@@ -148,7 +144,7 @@ export default {
     },
     setExitNumber() {
       this.$emit('setExitNumber', this.exitNumber);
-    },
+    }
   },
 };
 </script>

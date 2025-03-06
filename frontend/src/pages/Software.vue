@@ -4,8 +4,7 @@
     <v-container>
       <v-row v-if="userData == null" class="flex items-center justify-center gap-4 m-4">
         <p class="mb-0 text-xl">Please login in order to request a software:</p>
-        <v-btn
-color="primary" size="small" @click="loginFenix"> Authenticate </v-btn>
+        <v-btn color="primary" size="small" @click="loginFenix">Authenticate</v-btn>
       </v-row>
       <HomeSoftware v-if="userComputed" :person-data="userComputed" />
     </v-container>
@@ -58,7 +57,6 @@ export default {
         this.userData = data;
         this.personKey++;
       } catch (e) {
-        console.error(e);
         this.$notify({
           type: 'error',
           title: 'Unauthorized user',
@@ -81,7 +79,6 @@ export default {
           this.loginUser(data.user);
         }
       } catch (e) {
-        console.error(e);
         this.$notify({
           type: 'error',
           title: 'Unauthorized user',

@@ -1,51 +1,49 @@
 <template>
-  <v-dialog :model-value="entryModal" persistent>
+  <v-dialog v-model="entryModal" persistent>
     <v-card>
       <v-form ref="formAdd" lazy-validation @submit.prevent="save">
         <v-card-title>
           <span class="text-h5"> Entrance </span>
         </v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="name"
-            :rules="[(v) => !!v || 'Name is required']"
-            label="Name"
-            type="string"
-            required
-            variant="filled"
-          />
-          <v-text-field
-            v-model="ist_id"
-            :rules="[(v) => !!v || 'IST Id is required']"
-            label="Id"
-            type="number"
-            required
-            variant="filled"
-          />
-          <v-text-field
-            v-model="email"
-            :rules="[(v) => !!v || 'Contact email is required']"
-            label="Email"
-            type="email"
-            required
-            variant="filled"
-          />
-          <v-autocomplete
-            v-model="choosenCourse"
-            label="Course"
-            :items="possibleCourses"
-            item-title="course"
-            item-value="course"
-            :rules="[(v) => !!v || 'Course is required']"
-            required
-            variant="filled"
-          />
-        </v-card-text>
+          <v-card-text>
+            <v-text-field
+              v-model="name"
+              :rules="[(v) => !!v || 'Name is required']"
+              label="Name"
+              type="string"
+              required
+              variant="filled"
+            ></v-text-field>
+            <v-text-field
+              v-model="ist_id"
+              :rules="[(v) => !!v || 'IST Id is required']"
+              label="Id"
+              type="number"
+              required
+              variant="filled"
+            ></v-text-field>
+            <v-text-field
+              v-model="email"
+              :rules="[(v) => !!v || 'Contact email is required']"
+              label="Email"
+              type="email"
+              required
+              variant="filled"
+            ></v-text-field>
+            <v-autocomplete
+                  v-model="choosenCourse"
+                  label="Course"
+                  :items="possibleCourses"
+                  item-title="course"
+                  item-value="course"
+                  :rules="[(v) => !!v || 'Course is required']"
+                  required
+                  variant="filled"
+                ></v-autocomplete>
+          </v-card-text>
         <v-card-actions>
-          <v-btn
-color="primary" variant="text" @click="save"> Submit </v-btn>
-          <v-btn
-color="primary" variant="text" @click="close"> Close </v-btn>
+          <v-btn color="primary" variant="text" @click="save"> Submit </v-btn>
+          <v-btn color="primary" variant="text" @click="close"> Close </v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -63,23 +61,17 @@ export default {
     select: Function,
     mifare_id: String,
     entrySelected: Number,
-    entryModal: Boolean,
+    entryModal: Boolean
   },
   data: () => ({
     name: null,
     ist_id: null,
     email: null,
     choosenCourse: null,
-    possibleCourses: [
-      { course: 'Engenharia Aeroespacial' },
-      { course: 'Engenharia Mecânica' },
-      { course: 'Engenharia Naval' },
-      { course: 'Engenharia de Materiais' },
-      { course: 'Engenharia Ambiente' },
-      { course: 'Outro' },
-    ],
+    possibleCourses: [{course: "Engenharia Aeroespacial"}, {course: "Engenharia Mecânica"}, {course: "Engenharia Naval"}, {course: "Engenharia de Materiais"}, {course: "Engenharia Ambiente"}, {course: "Outro"}]
   }),
-  async mounted() {},
+  async mounted() {
+  },
   methods: {
     async save() {
       if (!this.$refs.formAdd.validate()) return;
@@ -90,19 +82,20 @@ export default {
         mifare_id: this.mifare_id,
         email: this.email,
         course: this.choosenCourse,
-      };
+      }
 
       createLemacUser(userData);
 
       try {
         this.close();
       } catch (error) {
-        console.log(error);
+        console.log(error)
       } finally {
         this.name = null;
         this.ist_id = null;
       }
-    },
-  },
-};
+
+    }
+  }
+}
 </script>

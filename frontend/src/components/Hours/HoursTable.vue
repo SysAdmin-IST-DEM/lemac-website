@@ -9,13 +9,11 @@
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Hours</v-toolbar-title>
-        <v-divider
-class="mx-4" inset vertical />
-        <v-spacer />
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="550px">
           <template #activator="{ props }">
-            <v-btn
-color="secondary" dark class="mb-2" v-bind="props"> New Entry </v-btn>
+            <v-btn color="secondary" dark class="mb-2" v-bind="props"> New Entry </v-btn>
           </template>
           <v-card>
             <v-form ref="form" lazy-validation @submit.prevent="save">
@@ -29,10 +27,10 @@ color="secondary" dark class="mb-2" v-bind="props"> New Entry </v-btn>
                       <v-menu
                         ref="menu"
                         v-model="menu"
-                        v-model:return-value="editedItem.entry"
                         :close-on-content-click="false"
                         persistent
                         :nudge-right="40"
+                        :return-value.sync="editedItem.entry"
                         transition="scale-transition"
                         offset-y
                         max-width="290px"
@@ -48,7 +46,7 @@ color="secondary" dark class="mb-2" v-bind="props"> New Entry </v-btn>
                             :rules="[() => !!editedItem.entry || 'This field is required']"
                            
                             v-bind="props"
-                          />
+                          ></v-text-field>
                         </template>
                         <v-time-picker
                           v-if="menu"
@@ -58,24 +56,23 @@ color="secondary" dark class="mb-2" v-bind="props"> New Entry </v-btn>
                           format="24hr"
                         >
                           <v-spacer />
-                          <v-btn
-variant="text" color="success" @click="menu = false"> Cancel </v-btn>
+                          <v-btn variant="text" color="success" @click="menu = false"> Cancel </v-btn>
                           <v-btn variant="text" color="secondary" @click="$refs.menu.save(editedItem.entry)">
                             OK
                           </v-btn>
                         </v-time-picker>
                       </v-menu>
                     </v-col>
-                    <v-spacer />
+                    <v-spacer></v-spacer>
                     <!--Exit hours menu-->
                     <v-col cols="11" sm="5">
                       <v-menu
                         ref="menu2"
                         v-model="menu2"
-                        v-model:return-value="editedItem.exit"
                         :close-on-content-click="false"
                         persistent
                         :nudge-right="40"
+                        :return-value.sync="editedItem.exit"
                         transition="scale-transition"
                         offset-y
                         max-width="290px"
@@ -91,7 +88,7 @@ variant="text" color="success" @click="menu = false"> Cancel </v-btn>
                             :rules="[() => !!editedItem.exit || 'This field is required']"
                            
                             v-bind="props"
-                          />
+                          ></v-text-field>
                         </template>
                         <v-time-picker
                           v-if="menu2"
@@ -101,8 +98,7 @@ variant="text" color="success" @click="menu = false"> Cancel </v-btn>
                           format="24hr"
                         >
                           <v-spacer />
-                          <v-btn
-variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
+                          <v-btn variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
                           <v-btn variant="text" color="secondary" @click="$refs.menu2.save(editedItem.exit)">
                             OK
                           </v-btn>
@@ -117,13 +113,13 @@ variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
                       prepend-icon="mdi-ticket-confirmation"
                       required
                       :rules="[() => !!editedItem.entry_number || 'This field is required']"
-                    />
+                    ></v-text-field>
                     <v-spacer />
                     <v-text-field
                       v-model="editedItem.exit_number"
                       label="Exit ticket"
                       prepend-icon="mdi-ticket-confirmation"
-                    />
+                    ></v-text-field>
                     <v-spacer />
                     <v-text-field
                       v-model="editedItem.safe_amount"
@@ -131,16 +127,16 @@ variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
                       prepend-icon="mdi-safe-square-outline"
                       required
                       :rules="[() => !!editedItem.safe_amount || 'This field is required']"
-                    />
+                    ></v-text-field>
                   </v-row>
                   <v-row v-if="getPermission === 1">
                     <v-menu
                       ref="menu4"
                       v-model="menu4"
-                      v-model:return-value="adminDate"
                       :close-on-content-click="false"
                       persistent
                       :nudge-right="40"
+                      :return-value.sync="adminDate"
                       transition="scale-transition"
                       offset-y
                     >
@@ -153,7 +149,7 @@ variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
                           required
                          
                           v-bind="props"
-                        />
+                        ></v-text-field>
                       </template>
                       <v-date-picker
                         v-if="menu4"
@@ -162,12 +158,12 @@ variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
                         :reactive="true"
                       >
                         <v-spacer />
+                        <v-btn variant="text" color="success" @click="menu4 = false"> Cancel </v-btn>
                         <v-btn
-variant="text" color="success" @click="menu4 = false"> Cancel </v-btn>
-                        <v-btn
-variant="text" color="secondary"
-@click="$refs.menu4.save(adminDate)"
->
+                          variant="text"
+                          color="secondary"
+                          @click="$refs.menu4.save(adminDate)"
+                        >
                           OK
                         </v-btn>
                       </v-date-picker>
@@ -183,32 +179,26 @@ variant="text" color="secondary"
                       :rules="[(v) => !!v || 'User is required']"
                       required
                       variant="filled"
-                    />
+                    ></v-autocomplete>
                   </v-row>
                 </v-container>
               </v-card-text>
               <v-card-actions>
-                <v-spacer />
-                <v-btn
-color="primary" variant="text" @click="close"> Cancel </v-btn>
-                <v-btn
-color="primary" variant="text" @click="save"> Save </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
+                <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="text-h5">
-              Are you sure you want to delete this item?
-            </v-card-title>
+            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions>
-              <v-spacer />
-              <v-btn
-color="primary" variant="text" @click="closeDelete"> Cancel </v-btn>
-              <v-btn
-color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
-              <v-spacer />
+              <v-spacer></v-spacer>
+              <v-btn color="primary" variant="text" @click="closeDelete">Cancel</v-btn>
+              <v-btn color="error" variant="text" @click="deleteItemConfirm">OK</v-btn>
+              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -242,10 +232,8 @@ color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
       {{ item.sold_amount > 0 ? item.sold_amount : '-' }}
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-icon
-size="small" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon
-size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon size="small" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+      <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
   </v-data-table>
 </template>
@@ -283,7 +271,7 @@ export default {
     users: [],
     active_user: '',
     headers: [
-      { text: 'Monitor', value: 'user', sortable: false },
+      { text: 'Monitor', value: 'user', sortable: false},
       { text: 'Entry Hour', value: 'entry', sortable: false },
       { text: 'Exit Hour', value: 'exit', sortable: false },
       { text: 'Total Time', value: 'time', sortable: false },
@@ -314,7 +302,7 @@ export default {
     },
     day: '',
     adminDate: null,
-    menu4: null,
+    menu4: null
   }),
   computed: {
     formTitle() {
@@ -343,6 +331,7 @@ export default {
     this.hours = this.propHours;
     this.users = (await getUsers()).data;
     this.active_user = this.users.find((val) => val.current);
+
   },
   methods: {
     editItem(item) {
@@ -366,7 +355,7 @@ export default {
         sold_amount: item.sold_amount,
       };
       this.day = item.entry.slice(0, 11);
-      this.active_user = this.users.find((user) => user.id == item.userId);
+      this.active_user = this.users.find(user => user.id == item.userId);
       this.dialog = true;
     },
 
@@ -415,8 +404,8 @@ export default {
 
       try {
         if (this.editedIndex > -1) {
-          if (this.adminDate) {
-            this.day = `${this.adminDate}T`;
+          if(this.adminDate) {
+            this.day = `${this.adminDate}T`
           }
 
           this.editedItem.entry = this.day + this.editedItem.entry + ':000Z';
@@ -430,9 +419,9 @@ export default {
           const response = await updateHours(this.hours[this.editedIndex].id, this.editedItem);
 
           response.data.sold_amount = (response.data.exit_number ?? 0) - response.data.entry_number;
-          console.log(response.data);
-          console.log(this.users);
-          response.data.user = this.users.find((user) => user.id == response.data.userId).name;
+          console.log(response.data)
+          console.log(this.users)
+          response.data.user = this.users.find(user => user.id == response.data.userId).name;
 
           this.hours.splice(this.editedIndex, 1, response.data);
           this.$notify({
@@ -443,22 +432,17 @@ export default {
         } else {
           const now = new Date().toJSON();
 
-          this.editedItem.entry =
-            (this.adminDate ? `${this.adminDate}T` : now.slice(0, 11)) +
-            this.editedItem.entry +
-            ':000Z';
-          this.editedItem.exit =
-            (this.adminDate ? `${this.adminDate}T` : now.slice(0, 11)) +
-            this.editedItem.exit +
-            ':000Z';
+          this.editedItem.entry = (this.adminDate ? `${this.adminDate}T` : now.slice(0, 11)) + this.editedItem.entry + ':000Z';
+          this.editedItem.exit = (this.adminDate ? `${this.adminDate}T` : now.slice(0, 11)) + this.editedItem.exit + ':000Z';
           if (!this.editedItem.exit_number) {
             this.editedItem.exit_number = null;
           }
 
+
           const response = await createHours(this.editedItem);
 
           response.data.sold_amount = response.data.exit_number - response.data.entry_number;
-          response.data.user = this.users.find((user) => user.id == response.data.userId).name;
+          response.data.user = this.users.find(user => user.id == response.data.userId).name;
 
           this.hours.push(response.data);
           this.$notify({
