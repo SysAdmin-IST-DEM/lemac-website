@@ -15,11 +15,9 @@
         <p class="font-bold">Price (€): {{ price?.toFixed(2) ?? 0 }}</p>
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
-        <v-btn
-color="primary" variant="text" @click="close"> Cancel </v-btn>
-        <v-btn
-color="primary" :loading="loading" @click="confirm"> Confirm </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" variant="text" @click="close">Cancel</v-btn>
+        <v-btn color="primary" :loading="loading" @click="confirm">Confirm</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -2,11 +2,9 @@
   <div class="elevation-1">
     <v-toolbar flat>
       <v-toolbar-title> Lab Entries </v-toolbar-title>
-      <v-divider
-class="mx-4" inset vertical />
-      <v-text-field
-class="mt-6" label="Filter Workstations" v-model="search" />
-      <v-spacer />
+      <v-divider class="mx-4" inset vertical></v-divider>
+      <v-text-field class="mt-6" label="Filter Workstations" v-model="search"></v-text-field>
+      <v-spacer></v-spacer>
       <v-dialog v-model="dialogAdd" max-width="550px">
         <template #activator="{ props }">
           <v-btn color="secondary" dark class="mb-2" v-bind="props">
@@ -29,7 +27,7 @@ class="mt-6" label="Filter Workstations" v-model="search" />
                       type="number"
                       required
                       variant="filled"
-                    />
+                    ></v-text-field>
                   </div>
                 </v-col>
                 <v-col cols="6" class="flex items-center justify-center">
@@ -42,20 +40,16 @@ class="mt-6" label="Filter Workstations" v-model="search" />
                     :rules="[(v) => !!v || 'Workstation is required']"
                     required
                     variant="filled"
-                  />
+                  ></v-autocomplete>
                 </v-col>
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-spacer />
-              <v-btn
-color="primary" variant="text" @click="add"> Add Number </v-btn>
-              <v-btn
-color="primary" variant="text" @click="remove"> Remove Number </v-btn>
-              <v-btn
-color="primary" variant="text" @click="close"> Cancel </v-btn>
-              <v-btn
-color="primary" variant="text" @click="save"> Save </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" variant="text" @click="add"> Add Number </v-btn>
+              <v-btn color="primary" variant="text" @click="remove"> Remove Number </v-btn>
+              <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
+              <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -72,13 +66,10 @@ color="primary" variant="text" @click="save"> Save </v-btn>
                 </v-chip>
               </v-list-item-title>
               <v-list-item-subtitle>
-                <v-icon
-start end size="small"> mdi-desktop-classic </v-icon> {{ entry.workstation.name }}
-                <v-icon
-start end size="small"> mdi-clock </v-icon>
+                <v-icon start end size="small">mdi-desktop-classic</v-icon> {{ entry.workstation.name }}
+                <v-icon start end size="small">mdi-clock</v-icon>
                 {{ new Date(entry.createdAt).toLocaleString('pt-PT') }}
-                <v-icon
-start end size="small"> mdi-text </v-icon>
+                <v-icon start end size="small">mdi-text</v-icon>
                 {{ entry.observations }}
               </v-list-item-subtitle>
             
@@ -129,8 +120,7 @@ start end size="small"> mdi-text </v-icon>
               </div>
             </v-list-item-action>
           </v-list-item>
-          <v-divider
-v-if="index < entries.length - 1" :key="index + 'c'" />
+          <v-divider v-if="index < entries.length - 1" :key="index + 'c'"></v-divider>
         </div>
       </template>
       <!-- template for empty list -->
@@ -144,29 +134,30 @@ v-if="index < entries.length - 1" :key="index + 'c'" />
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
             <v-card-text>
-              <v-textarea v-model="editedItem.observations"
-variant="filled" clearable counter auto-grow />
+              <v-textarea
+                v-model="editedItem.observations"
+                variant="filled"
+                clearable
+                counter
+                auto-grow
+              ></v-textarea>
             </v-card-text>
             <v-card-actions>
-              <v-spacer />
-              <v-btn
-color="primary" variant="text" @click="observationsClose"> Cancel </v-btn>
-              <v-btn
-color="primary" variant="text" @click="observationsSave"> Save </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" variant="text" @click="observationsClose"> Cancel </v-btn>
+              <v-btn color="primary" variant="text" @click="observationsSave"> Save </v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
       </v-dialog>
       <v-dialog v-model="dialogClose" max-width="500px">
         <v-card>
-          <v-card-title class="text-h5"> Are you sure you want to close this entry? </v-card-title>
+          <v-card-title class="text-h5">Are you sure you want to close this entry?</v-card-title>
           <v-card-actions>
-            <v-spacer />
-            <v-btn
-color="primary" variant="text" @click="closeCancel"> Cancel </v-btn>
-            <v-btn
-color="error" variant="text" @click="closeConfirm"> Close </v-btn>
-            <v-spacer />
+            <v-spacer></v-spacer>
+            <v-btn color="primary" variant="text" @click="closeCancel">Cancel</v-btn>
+            <v-btn color="error" variant="text" @click="closeConfirm">Close</v-btn>
+            <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -188,7 +179,7 @@ color="error" variant="text" @click="closeConfirm"> Close </v-btn>
                   type="number"
                   required
                   variant="filled"
-                />
+                ></v-text-field>
               </v-col>
               <v-col cols="6" class="flex items-center justify-center">
                 <v-autocomplete
@@ -200,16 +191,14 @@ color="error" variant="text" @click="closeConfirm"> Close </v-btn>
                   :rules="[(v) => !!v || 'Workstation is required']"
                   required
                   variant="filled"
-                />
+                ></v-autocomplete>
               </v-col>
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-spacer />
-            <v-btn
-color="primary" variant="text" @click="close"> Cancel </v-btn>
-            <v-btn
-color="primary" variant="text" @click="edit"> Edit </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
+            <v-btn color="primary" variant="text" @click="edit"> Edit </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>

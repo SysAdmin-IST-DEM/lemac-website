@@ -3,18 +3,17 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn
-class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
-          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="prev">
+          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
+          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="prev">
             <v-icon size="small"> mdi-chevron-left </v-icon>
           </v-btn>
-          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="next">
+          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="next">
             <v-icon size="small"> mdi-chevron-right </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer />
+          <v-spacer></v-spacer>
           <v-menu location="bottom right"  offset-y>
             <template #activator="{ props }">
               <v-btn color="secondary" v-bind="props">
@@ -52,12 +51,11 @@ class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
           @change="updateRange"
         >
           <template #interval="{ weekday, hour, date }">
-            <div
-              v-if="hour < 9 || hour >= 21"
-              style="height: 100%; width: 100%; background-color: #f2f2f2"
-            />
-            <div
-v-else style="height: 100%; width: 100%" />
+              <div
+                v-if="hour < 9 || hour >= 21"
+                style="height: 100%; width: 100%; background-color: #f2f2f2"
+              ></div>
+              <div v-else style="height: 100%; width: 100%"></div>
           </template>
         </v-calendar>
         <v-menu
@@ -68,10 +66,10 @@ v-else style="height: 100%; width: 100%" />
         >
           <v-card v-if="selectedElement" color="grey-lighten-4" min-width="250px" flat>
             <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title v-if="selectedElement">
-                selectedEvent.details.user.name }}
-              </v-toolbar-title>
-              <v-spacer />
+              <v-toolbar-title v-if="selectedElement">{{
+                selectedEvent.details.user.name
+              }}</v-toolbar-title>
+              <v-spacer></v-spacer>
             </v-toolbar>
             <v-card-text>
               <p>
@@ -183,8 +181,8 @@ export default {
       for (let i = 0; i < allHours.length; i++) {
         events.push({
           name: allHours[i].user.name.split(' ')[0],
-          start: moment(allHours[i].entry).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
-          end: moment(allHours[i].exit).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
+          start: moment(allHours[i].entry).utcOffset('+0000').format("YYYY-MM-DD HH:mm"),
+          end: moment(allHours[i].exit).utcOffset('+0000').format("YYYY-MM-DD HH:mm"),
           color: this.colors[this.rnd(0, this.colors.length - 1)],
           timed: true,
           details: allHours[i],

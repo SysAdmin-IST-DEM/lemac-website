@@ -11,11 +11,14 @@
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Workstations</v-toolbar-title>
-        <v-divider
-class="mx-4" inset vertical />
-        <v-text-field v-model="search"
-append-icon="mdi-magnify" label="Search" hide-details />
-        <v-spacer />
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          hide-details
+        ></v-text-field>
+        <v-spacer></v-spacer>
         <v-dialog v-model="dialog_filter" max-width="550px">
           <template #activator="{ props }">
             <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
@@ -41,25 +44,24 @@ append-icon="mdi-magnify" label="Search" hide-details />
                       class="ml-4"
                       label="Select all"
                       @update:model-value="selectAll"
-                    />
+                    ></v-checkbox>
                   </div>
                   <v-divider slot="prepend-item" class="mt-2" />
                 </v-select>
-                <v-checkbox v-model="filter_with_issues"
-label="Filter all with issues" />
+                <v-checkbox
+                  v-model="filter_with_issues"
+                  label="Filter all with issues"
+                ></v-checkbox>
                 <v-checkbox
                   v-model="filter_with_unresolved_issues"
                   label="Filter all with unresolved"
-                />
+                ></v-checkbox>
               </v-card-text>
               <v-card-actions>
-                <v-spacer />
-                <v-btn
-color="primary" variant="text" @click="clear_filter"> Clear Filter </v-btn>
-                <v-btn
-color="primary" variant="text" @click="close_filter"> Cancel </v-btn>
-                <v-btn
-color="primary" variant="text" @click="save_filter"> Save </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" variant="text" @click="clear_filter"> Clear Filter </v-btn>
+                <v-btn color="primary" variant="text" @click="close_filter"> Cancel </v-btn>
+                <v-btn color="primary" variant="text" @click="save_filter"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
@@ -84,7 +86,7 @@ color="primary" variant="text" @click="save_filter"> Save </v-btn>
                       label="Name"
                       required
                       variant="filled"
-                    />
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="6">
                     <v-text-field
@@ -93,7 +95,7 @@ color="primary" variant="text" @click="save_filter"> Save </v-btn>
                       type="number"
                       required
                       variant="filled"
-                    />
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="6">
                     <v-select
@@ -102,32 +104,26 @@ color="primary" variant="text" @click="save_filter"> Save </v-btn>
                       required
                       :items="types"
                       variant="filled"
-                    />
+                    ></v-select>
                   </v-col>
                 </v-row>
               </v-card-text>
               <v-card-actions>
-                <v-spacer />
-                <v-btn
-color="primary" variant="text" @click="close"> Cancel </v-btn>
-                <v-btn
-color="primary" variant="text" @click="save"> Save </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
+                <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="text-h5">
-              Are you sure you want to delete this item?
-            </v-card-title>
+            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions>
-              <v-spacer />
-              <v-btn
-color="primary" variant="text" @click="closeDelete"> Cancel </v-btn>
-              <v-btn
-color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
-              <v-spacer />
+              <v-spacer></v-spacer>
+              <v-btn color="primary" variant="text" @click="closeDelete">Cancel</v-btn>
+              <v-btn color="error" variant="text" @click="deleteItemConfirm">OK</v-btn>
+              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -137,8 +133,7 @@ color="error" variant="text" @click="deleteItemConfirm"> OK </v-btn>
       <v-icon v-if="getPermission === 1" size="small" class="mr-2" @click="editItem(item)">
         mdi-pencil
       </v-icon>
-      <v-icon
-v-if="getPermission === 1" size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon v-if="getPermission === 1" size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template #[`item.capacity`]="{ item }">
       {{ `${item.occupation} / ${item.capacity}` }}
@@ -185,12 +180,11 @@ v-if="getPermission === 1" size="small" @click="deleteItem(item)"> mdi-delete </
                         label="Software to add"
                         variant="outlined"
                         :rules="[(v) => !!v || 'Software is required']"
-                      />
+                      ></v-text-field>
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer />
-                      <v-btn
-color="primary" variant="text" @click="close_software_dialog"> Cancel </v-btn>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" variant="text" @click="close_software_dialog"> Cancel </v-btn>
                       <v-btn color="primary" variant="text" @click="() => save_software(item)">
                         Add Software
                       </v-btn>
@@ -220,7 +214,7 @@ color="primary" variant="text" @click="close_software_dialog"> Cancel </v-btn>
                     hide-details
                     label="Mark resolved"
                     @update:model-value="(e) => change_issue_status(e, item, i)"
-                  />
+                  ></v-checkbox>
                 </li>
               </ul>
             </div>
@@ -243,14 +237,12 @@ color="primary" variant="text" @click="close_software_dialog"> Cancel </v-btn>
                         label="Description"
                         variant="outlined"
                         :rules="[(v) => !!v || 'Description is required']"
-                      />
+                      ></v-textarea>
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer />
-                      <v-btn
-color="primary" variant="text" @click="close_issue_dialog"> Cancel </v-btn>
-                      <v-btn
-color="primary" variant="text" @click="() => save_issue(item)"> Report </v-btn>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" variant="text" @click="close_issue_dialog"> Cancel </v-btn>
+                      <v-btn color="primary" variant="text" @click="() => save_issue(item)"> Report </v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card>

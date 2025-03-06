@@ -5,7 +5,7 @@
         v-if="$vuetify.breakpoint.mdAndDown"
         color="primary"
         @click.stop="drawer = !drawer"
-      />
+      ></v-app-bar-nav-icon>
       <v-spacer />
       <v-progress-linear
         :active="isLoading"
@@ -13,7 +13,7 @@
         absolute
         bottom
         color="primary"
-      />
+      ></v-progress-linear>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" clipped :permanent="$vuetify.breakpoint.lgAndUp" app>
       <v-list nav>
@@ -35,11 +35,11 @@
       <template #append>
         <div class="pa-2">
           <v-btn block color="error" @click="onLogout">
-            <v-icon start> mdi-logout </v-icon>Logout
+            <v-icon start>mdi-logout</v-icon>Logout
           </v-btn>
           <div class="py-2 text-center">
             LEMAC
-            <v-icon size="x-small"> mdi-copyright </v-icon>
+            <v-icon size="x-small">mdi-copyright</v-icon>
             {{ new Date().getFullYear() }}
           </div>
         </div>
