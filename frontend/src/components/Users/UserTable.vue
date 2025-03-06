@@ -9,15 +9,18 @@
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Users</v-toolbar-title>
-        <v-divider
-class="mx-4" inset vertical />
-        <v-text-field v-model="search"
-append-icon="mdi-magnify" label="Search" hide-details />
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          hide-details
+        ></v-text-field>
       </v-toolbar>
     </template>
     <template #[`item.state`]="{ item }">
-      <v-chip :color="states.find((v) => v.value === item.state).color" dark class="capitalized">
-        {{ states.find((v) => v.value === item.state).text }}
+      <v-chip :color="(states.find(v => v.value === item.state).color)" dark class="capitalized">
+        {{ (states.find(v => v.value === item.state)).text }}
       </v-chip>
     </template>
     <template #[`item.last_modified`]="{ item }">
@@ -27,6 +30,7 @@ append-icon="mdi-magnify" label="Search" hide-details />
 </template>
 
 <script>
+
 export default {
   name: 'UserTable',
   props: {
@@ -58,12 +62,7 @@ export default {
       { text: 'Course', value: 'course' },
       { text: 'State', value: 'state' },
       { text: 'Mifare ID', value: 'mifare_id', sortable: false, filterable: false },
-      {
-        text: 'Time since last action',
-        value: 'last_modified',
-        sortable: false,
-        filterable: false,
-      },
+      { text: 'Time since last action', value: 'last_modified', sortable: false, filterable: false },
     ],
     defaultItem: {
       name: '',
@@ -74,9 +73,9 @@ export default {
       mifare_id: '',
     },
     states: [
-      { text: 'Online', value: 'online', color: 'blue' },
-      { text: 'Offline', value: 'offline', color: 'gray' },
-      { text: 'In-Break', value: 'in_break', color: 'orange' },
+      { text: 'Online', value: "online", color: 'blue' },
+      { text: 'Offline', value: "offline", color: 'gray' },
+      { text: 'In-Break', value: "in_break", color: 'orange' },
     ],
   }),
   mounted() {
@@ -92,23 +91,16 @@ export default {
       const timezoneOffsetDiff = -currentDate.getTimezoneOffset();
 
       // Calculate the time difference in milliseconds, adjusted for the timezone offset difference
-      const diff = Math.abs(
-        currentDate.getTime() - sqlDate.getTime() + timezoneOffsetDiff * 60 * 1000
-      );
+      const diff = Math.abs(currentDate.getTime() - sqlDate.getTime() + (timezoneOffsetDiff * 60 * 1000));
 
       // Convert the time difference to hours, minutes, and seconds
-      const hours = Math.floor(diff / (1000 * 60 * 60))
-        .toString()
-        .padStart(1, '0');
-      const minutes = Math.floor((diff / (1000 * 60)) % 60)
-        .toString()
-        .padStart(2, '0');
-      const seconds = Math.floor((diff / 1000) % 60)
-        .toString()
-        .padStart(2, '0');
+      const hours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(1, "0");
+      const minutes = Math.floor((diff / (1000 * 60)) % 60).toString().padStart(2, "0");
+      const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, "0");
 
       return `${hours}:${minutes}:${seconds}`;
-    },
-  },
+
+    }
+  }
 };
 </script>
