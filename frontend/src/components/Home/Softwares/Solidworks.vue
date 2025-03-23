@@ -80,12 +80,12 @@ export default {
   },
   methods: {
     test() {
-      this.url = process.env.VUE_APP_SOLIDWORKS_URL;
-      this.serial = process.env.VUE_APP_SOLIDWORKS_LICENSE;
+      this.url = import.meta.env.VITE_SOLIDWORKS_URL;
+      this.serial = import.meta.env.VITE_SOLIDWORKS_LICENSE;
 
       this.installInstructions = [
         `<p class="mb-0">The installation process has to be executed while connected to Eduroam on Tecnico's VPN. </p>
-          <p>Go to the <a href='${process.env.VUE_APP_SOLIDWORKS_URL}'>Download URL</a> and insert your data and download the SOLIDWORKS 2024 installer. (images shown ahead might be sujected to change)</p>`,
+          <p>Go to the <a href='${import.meta.env.VITE_SOLIDWORKS_URL}'>Download URL</a> and insert your data and download the SOLIDWORKS 2024 installer. (images shown ahead might be sujected to change)</p>`,
         'Execute the install executable and insert the serial number in the designated area. Make sure that there are no other serial numbers inserted.',
         "Remove 'SOLIDWORKS Eletrical' from the products to install",
         "Accept the license agreement and click the 'Download and Install' button",

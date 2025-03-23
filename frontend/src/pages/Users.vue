@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import MonitorTable from '@/components/Users/MonitorTable';
-import UserTable from '@/components/Users/UserTable';
+import MonitorTable from '@/components/Users/MonitorTable.vue';
+import UserTable from '@/components/Users/UserTable.vue';
 import { getUsers } from '@/api/user.api';
 import { getLemacUsers } from '@/api/lemacUsers.api';
 import { getEntries } from '@/api/entries.api';

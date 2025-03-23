@@ -79,11 +79,11 @@ export default {
   },
   methods: {
     test() {
-      this.url = process.env.VUE_APP_SOLIDEDGE4_URL;
-      this.pass = process.env.VUE_APP_SOLIDEDGE4_PASS;
+      this.url = import.meta.env.VITE_SOLIDEDGE4_URL;
+      this.pass = import.meta.env.VITE_SOLIDEDGE4_PASS;
 
       this.installInstructions = [
-        `<p>Go to the <a href='${process.env.VUE_APP_SOLIDEDGE4_URL}'>Download URL</a> and insert the password an install the update (the most recent) based on the steps that follow. (images shown ahead might be sujected to change)</p>`,
+        `<p>Go to the <a href='${import.meta.env.VITE_SOLIDEDGE4_URL}'>Download URL</a> and insert the password an install the update (the most recent) based on the steps that follow. (images shown ahead might be sujected to change)</p>`,
         `<p>After the page finish loading, open the "UDP04" folder and select the "Solid_Edge_MSI_Update0004.exe" file.</p> <p>This will start the download of the update automatically.</p>`,
       ];
     },

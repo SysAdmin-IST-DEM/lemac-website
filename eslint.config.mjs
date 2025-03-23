@@ -14,7 +14,7 @@ export default [
   {
     files: ['backend/**'],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       sourceType: 'module',
       globals: {
         ...globals.node,
@@ -25,6 +25,8 @@ export default [
   {
     files: ['frontend/**'],
     languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
       globals: {
         ...globals.node,
       },

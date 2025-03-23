@@ -98,7 +98,7 @@ export default {
   async mounted() {
     await this.update();
     setInterval(this.update, 30000);
-    this.socket = new WebSocket(process.env.VUE_APP_BASE_URL_WS || 'ws://localhost:5000');
+    this.socket = new WebSocket(import.meta.env.VITE_BASE_URL_WS || 'ws://localhost:5000');
 
     this.socket.onopen = (e) => {
       this.socket.send('Socket Open');
@@ -132,7 +132,7 @@ export default {
     this.socket.addEventListener('close', (event) => {
       console.log(event);
       setTimeout(() => {}, 10000);
-      this.socket = new WebSocket(process.env.VUE_APP_BASE_URL_WS || 'ws://localhost:5000');
+      this.socket = new WebSocket(import.meta.env.VITE_BASE_URL_WS || 'ws://localhost:5000');
     });
   },
 

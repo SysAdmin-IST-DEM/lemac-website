@@ -76,11 +76,11 @@ export default {
   },
   methods: {
     test() {
-      this.url = process.env.VUE_APP_NX_URL;
+      this.url = import.meta.env.VITE_NX_URL;
 
       this.installInstructions = [
         `<p class="mb-0">The installation process has to be executed while connected to Eduroam on Tecnico's VPN. </p>
-          <p>Go to the <a href='${process.env.VUE_APP_NX_URL}'>Download URL</a> and download the instalation files.</p>`,
+          <p>Go to the <a href='${import.meta.env.VITE_NX_URL}'>Download URL</a> and download the instalation files.</p>`,
         `<p> Extract the download contents and open the folder 'SiemensNX-XXXX_wntx64' </p>
            <p> Run the file 'Launch.exe'</p>
           `,
