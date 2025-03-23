@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     loginFenix() {
-      window.location = `${process.env.VUE_APP_FENIX_BASE_URL}oauth/userdialog?client_id=${process.env.VUE_APP_FENIX_CLIENT_SOFTWARE_ID}&redirect_uri=${process.env.VUE_APP_FENIX_REDIRECT_URL_SOFTWARE}`;
+      window.location = `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_SOFTWARE_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL_SOFTWARE}`;
     },
     //only runs after fenix login
     async getFenixInfo(code) {
@@ -50,7 +50,7 @@ export default {
         const { data } = await getFenixInfo(code);
 
         if (JSON.stringify(data) == '{}') {
-          window.location = `${process.env.VUE_APP_FENIX_REDIRECT_URL_SOFTWARE}`;
+          window.location = `${import.meta.env.VITE_FENIX_REDIRECT_URL_SOFTWARE}`;
           return;
         }
 
@@ -67,7 +67,7 @@ export default {
       this.loading = false;
     },
     login() {
-      window.location = `${process.env.VUE_APP_FENIX_BASE_URL}oauth/userdialog?client_id=${process.env.VUE_APP_FENIX_CLIENT_ID}&redirect_uri=${process.env.VUE_APP_FENIX_REDIRECT_URL}`;
+      window.location = `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL}`;
     },
     //only runs after fenix login
     async authBackend(code) {
