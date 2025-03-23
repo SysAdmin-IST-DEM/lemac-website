@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-container v-if="workstations" class="mt-6">
+    <v-container
+      v-if="workstations"
+      class="mt-6"
+    >
       <WorkstationsTable :passed-data="workstations" />
     </v-container>
   </div>

@@ -1,9 +1,15 @@
 <template>
   <div v-if="getPermission === 1">
     <v-tabs grow>
-      <v-tab key="1">Personal Hours</v-tab>
-      <v-tab key="2">Calendar</v-tab>
-      <v-tab key="3">Hour Table</v-tab>
+      <v-tab key="1">
+        Personal Hours
+      </v-tab>
+      <v-tab key="2">
+        Calendar
+      </v-tab>
+      <v-tab key="3">
+        Hour Table
+      </v-tab>
       <v-tab-item>
         <v-container v-if="hours">
           <HourTable :prop-hours="hours" />
@@ -23,7 +29,10 @@
   </div>
 
   <div v-else>
-    <v-container v-if="hours" class="mt-6">
+    <v-container
+      v-if="hours"
+      class="mt-6"
+    >
       <HourTable :prop-hours="hours" />
     </v-container>
   </div>

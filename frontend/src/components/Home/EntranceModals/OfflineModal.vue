@@ -1,7 +1,15 @@
 <template>
-  <v-dialog v-model="entryModal" max-width="1250px" persistent>
+  <v-dialog
+    v-model="entryModal"
+    max-width="1250px"
+    persistent
+  >
     <v-card>
-      <v-form ref="formAdd" lazy-validation @submit.prevent="save">
+      <v-form
+        ref="formAdd"
+        lazy-validation
+        @submit.prevent="save"
+      >
         <v-card-title>
           <span class="text-h5"> Entrance </span>
         </v-card-title>
@@ -10,12 +18,21 @@
             <div class="relative col-span-6 col-start-8 row-span-2 row-start-5 border-2 border-[#a5a5a5] flex justify-center items-center text-4xl font-semibold bg-whit">
               Monitor
               <div class="absolute my-auto right-[-48px]">
-                <v-icon size="48" color="black">
+                <v-icon
+                  size="48"
+                  color="black"
+                >
                   mdi-account
                 </v-icon>
               </div>
             </div>
-            <div :class="[val.number ? 'cursor-pointer' : '', val.class]" v-for="(val) in entryStations" @click="select(val)"> {{val.number !== -1 ? val.number : ''}}</div>
+            <div
+              v-for="(val) in entryStations"
+              :class="[val.number ? 'cursor-pointer' : '', val.class]"
+              @click="select(val)"
+            >
+              {{ val.number !== -1 ? val.number : '' }}
+            </div>
             <div class="row-span-3 col-span-18 xl:row-span-2">
               <div class="grid grid-rows-1 grid-cols-18 border border-[#a5a5a5] my-4 py-4">
                 <div class="flex items-center justify-center col-span-2 col-start-1 px-2 text-xs text-center lg:text-base">
@@ -50,11 +67,26 @@
           </div>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="green" size="large" dark @click="save" class="px-8"> Submit </v-btn>
-          <v-btn color="light-gray" size="large" dark @click="close" class="px-8"> Close </v-btn>
+          <v-btn
+            color="green"
+            size="large"
+            dark
+            class="px-8"
+            @click="save"
+          >
+            Submit
+          </v-btn>
+          <v-btn
+            color="light-gray"
+            size="large"
+            dark
+            class="px-8"
+            @click="close"
+          >
+            Close
+          </v-btn>
         </v-card-actions>
       </v-form>
-
     </v-card>
   </v-dialog>
 </template>

@@ -1,7 +1,11 @@
 <template>
   <v-tabs grow>
-    <v-tab key="1">Calendar</v-tab>
-    <v-tab key="2">Event Log</v-tab>
+    <v-tab key="1">
+      Calendar
+    </v-tab>
+    <v-tab key="2">
+      Event Log
+    </v-tab>
     <v-tab-item>
       <v-container>
         <RoomCalenderVue />

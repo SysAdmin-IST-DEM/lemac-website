@@ -1,6 +1,11 @@
 <template>
   <div class="home">
-    <HomeHeader :loading="loading" :loading-out="false" @login="login" @logout="logout" />
+    <HomeHeader
+      :loading="loading"
+      :loading-out="false"
+      @login="login"
+      @logout="logout"
+    />
     <v-container>
       <HomeAbout />
     </v-container>

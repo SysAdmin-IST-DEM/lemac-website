@@ -3,23 +3,59 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
-          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="prev">
-            <v-icon size="small"> mdi-chevron-left </v-icon>
+          <v-btn
+            class="mr-4"
+            color="secondary"
+            @click="setToday"
+          >
+            Today
           </v-btn>
-          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="next">
-            <v-icon size="small"> mdi-chevron-right </v-icon>
+          <v-btn
+            fab
+            variant="text"
+            size="small"
+            color="grey-darken-2"
+            @click="prev"
+          >
+            <v-icon size="small">
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+          <v-btn
+            fab
+            variant="text"
+            size="small"
+            color="grey-darken-2"
+            @click="next"
+          >
+            <v-icon size="small">
+              mdi-chevron-right
+            </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="550px" transition="dialog-transition">
+          <v-spacer />
+          <v-dialog
+            v-model="dialog"
+            max-width="550px"
+            transition="dialog-transition"
+          >
             <template #activator="{ props }">
-              <v-btn color="secondary" class="mr-4" v-bind="props">Add event</v-btn>
+              <v-btn
+                color="secondary"
+                class="mr-4"
+                v-bind="props"
+              >
+                Add event
+              </v-btn>
             </template>
             <v-card>
-              <v-form ref="form" lazy-validation @submit.prevent="save">
+              <v-form
+                ref="form"
+                lazy-validation
+                @submit.prevent="save"
+              >
                 <v-card-title> Add event </v-card-title>
                 <v-card-text>
                   <v-container>
@@ -27,10 +63,10 @@
                       <v-menu
                         ref="menu3"
                         v-model="menu3"
+                        v-model:return-value="editedItem.date"
                         :close-on-content-click="false"
                         persistent
                         :nudge-right="40"
-                        :return-value.sync="editedItem.date"
                         transition="scale-transition"
                         offset-y
                       >
@@ -44,7 +80,7 @@
                             :rules="[() => !!editedItem.date || 'This field is required']"
                            
                             v-bind="props"
-                          ></v-text-field>
+                          />
                         </template>
                         <v-date-picker
                           v-if="menu3"
@@ -53,22 +89,35 @@
                           :reactive="true"
                         >
                           <v-spacer />
-                          <v-btn variant="text" color="success" @click="menu3 = false"> Cancel </v-btn>
-                          <v-btn variant="text" color="secondary" @click="$refs.menu3.save(editedItem.date)">
+                          <v-btn
+                            variant="text"
+                            color="success"
+                            @click="menu3 = false"
+                          >
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            variant="text"
+                            color="secondary"
+                            @click="$refs.menu3.save(editedItem.date)"
+                          >
                             OK
                           </v-btn>
                         </v-date-picker>
                       </v-menu>
                     </v-row>
                     <v-row>
-                      <v-col cols="11" sm="5">
+                      <v-col
+                        cols="11"
+                        sm="5"
+                      >
                         <v-menu
                           ref="menu"
                           v-model="menu"
+                          v-model:return-value="editedItem.entry"
                           :close-on-content-click="false"
                           persistent
                           :nudge-right="40"
-                          :return-value.sync="editedItem.entry"
                           transition="scale-transition"
                           offset-y
                           max-width="290px"
@@ -84,7 +133,7 @@
                               :rules="[() => !!editedItem.entry || 'This field is required']"
                              
                               v-bind="props"
-                            ></v-text-field>
+                            />
                           </template>
                           <v-time-picker
                             v-if="menu"
@@ -95,7 +144,13 @@
                             format="24hr"
                           >
                             <v-spacer />
-                            <v-btn variant="text" color="success" @click="menu = false"> Cancel </v-btn>
+                            <v-btn
+                              variant="text"
+                              color="success"
+                              @click="menu = false"
+                            >
+                              Cancel
+                            </v-btn>
                             <v-btn
                               variant="text"
                               color="secondary"
@@ -106,16 +161,19 @@
                           </v-time-picker>
                         </v-menu>
                       </v-col>
-                      <v-spacer></v-spacer>
+                      <v-spacer />
                       <!--Exit hours menu-->
-                      <v-col cols="11" sm="5">
+                      <v-col
+                        cols="11"
+                        sm="5"
+                      >
                         <v-menu
                           ref="menu2"
                           v-model="menu2"
+                          v-model:return-value="editedItem.exit"
                           :close-on-content-click="false"
                           persistent
                           :nudge-right="40"
-                          :return-value.sync="editedItem.exit"
                           transition="scale-transition"
                           offset-y
                           max-width="290px"
@@ -131,7 +189,7 @@
                               :rules="[() => !!editedItem.exit || 'This field is required']"
                              
                               v-bind="props"
-                            ></v-text-field>
+                            />
                           </template>
                           <v-time-picker
                             v-if="menu2"
@@ -142,7 +200,13 @@
                             format="24hr"
                           >
                             <v-spacer />
-                            <v-btn variant="text" color="success" @click="menu2 = false"> Cancel </v-btn>
+                            <v-btn
+                              variant="text"
+                              color="success"
+                              @click="menu2 = false"
+                            >
+                              Cancel
+                            </v-btn>
                             <v-btn
                               variant="text"
                               color="secondary"
@@ -163,8 +227,8 @@
                         label="Name for reservation"
                         required
                         :rules="[() => !!name || 'This field is required']"
-                      ></v-text-field>
-                      <v-spacer></v-spacer>
+                      />
+                      <v-spacer />
                       <v-text-field
                         id="ist_id"
                         ref="ist_id_field"
@@ -173,7 +237,7 @@
                         label="Ist ID (ist1*)"
                         required
                         :rules="[() => !!ist_id || 'This field is required']"
-                      ></v-text-field>
+                      />
                     </v-row>
                     <v-row>
                       <v-select
@@ -182,24 +246,45 @@
                         label="Room"
                         required
                         :rules="[() => !!items || 'This field is required']"
-                      ></v-select>
+                      />
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
-                  <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
+                  <v-spacer />
+                  <v-btn
+                    color="primary"
+                    variant="text"
+                    @click="close"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    color="primary"
+                    variant="text"
+                    @click="save"
+                  >
+                    Save
+                  </v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
           </v-dialog>
 
-          <v-menu location="bottom right"  offset-y>
+          <v-menu
+            location="bottom right"
+            offset-y
+          >
             <template #activator="{ props }">
-              <v-btn color="secondary" v-bind="props" class="mr-3">
-                <span>{{filter == '' ? 'Room' : filter}}</span>
-                <v-icon end> mdi-menu-down </v-icon>
+              <v-btn
+                color="secondary"
+                v-bind="props"
+                class="mr-3"
+              >
+                <span>{{ filter == '' ? 'Room' : filter }}</span>
+                <v-icon end>
+                  mdi-menu-down
+                </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -217,11 +302,19 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-menu location="bottom right"  offset-y>
+          <v-menu
+            location="bottom right"
+            offset-y
+          >
             <template #activator="{ props }">
-              <v-btn color="secondary" v-bind="props">
+              <v-btn
+                color="secondary"
+                v-bind="props"
+              >
                 <span>{{ typeToLabel[type] }}</span>
-                <v-icon end> mdi-menu-down </v-icon>
+                <v-icon end>
+                  mdi-menu-down
+                </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -246,28 +339,34 @@
           :events="filteredEvents"
           :event-color="getEventColor"
           :type="type"
+          interval-count="14"
+          first-interval="8"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
           @change="updateRange"
-          interval-count="14"
-          first-interval="8"
         >
           <template #interval="{ weekday, hour, date }">
-              <div
-                v-if="hour < 9 || hour >= 21"
-                style="height: 100%; width: 100%; background-color: #f2f2f2"
-              ></div>
-              <div v-else style="height: 100%; width: 100%"></div>
-            </template>
+            <div
+              v-if="hour < 9 || hour >= 21"
+              style="height: 100%; width: 100%; background-color: #f2f2f2"
+            />
+            <div
+              v-else
+              style="height: 100%; width: 100%"
+            />
+          </template>
           <template #event="{ event, timed }">
             <div
               class="v-event-timed-container"
               style="user-select: none; background-color: inherit; position: relative"
             >
-              <div class="truncate" style="padding-left: 0.5em; background-color: inherit; color: white">
+              <div
+                class="truncate"
+                style="padding-left: 0.5em; background-color: inherit; color: white"
+              >
                 <strong>{{ event.name }}</strong>
-                <br />
+                <br>
                 {{ fTime(event.start, event.end) }}
               </div>
             </div>
@@ -279,12 +378,22 @@
           :activator="selectedElement"
           offset-x
         >
-          <v-card v-if="selectedElement" color="grey-lighten-4" min-width="250px" flat>
-            <v-toolbar :color="selectedEvent.color" dark>
-              <v-toolbar-title v-if="selectedElement">{{
-                selectedEvent.details.title
-              }}</v-toolbar-title>
-              <v-spacer></v-spacer>
+          <v-card
+            v-if="selectedElement"
+            color="grey-lighten-4"
+            min-width="250px"
+            flat
+          >
+            <v-toolbar
+              :color="selectedEvent.color"
+              dark
+            >
+              <v-toolbar-title v-if="selectedElement">
+                {{
+                  selectedEvent.details.title
+                }}
+              </v-toolbar-title>
+              <v-spacer />
             </v-toolbar>
             <v-card-text>
               <p>
@@ -304,23 +413,44 @@
               </p>
               <span v-if="typeof selectedEvent.details.id === 'number'">
                 <b>Oberservations:</b>
-                <span v-for="event in selectedEvent.details.events" :key="event.id" center>
-                  <p v-if="event.observations" style="margin-bottom: 0">
+                <span
+                  v-for="event in selectedEvent.details.events"
+                  :key="event.id"
+                  center
+                >
+                  <p
+                    v-if="event.observations"
+                    style="margin-bottom: 0"
+                  >
                     {{ event.observations }}
                   </p>
                 </span>
               </span>
-              <p v-else>Description: {{ selectedEvent.details.description }}</p>
+              <p v-else>
+                Description: {{ selectedEvent.details.description }}
+              </p>
             </v-card-text>
             <v-card-actions v-if="typeof selectedEvent.details.id === 'number'">
-              <v-dialog v-model="dialogCard" max-width="550px" transition="dialog-transition">
+              <v-dialog
+                v-model="dialogCard"
+                max-width="550px"
+                transition="dialog-transition"
+              >
                 <template #activator="{ props }">
-                  <v-btn color="primary" variant="text" v-bind="props">
+                  <v-btn
+                    color="primary"
+                    variant="text"
+                    v-bind="props"
+                  >
                     <v-icon>mdi-pencil-outline</v-icon>
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-form ref="form" lazy-validation @submit.prevent="save">
+                  <v-form
+                    ref="form"
+                    lazy-validation
+                    @submit.prevent="save"
+                  >
                     <v-card-title> Add event </v-card-title>
                     <v-card-text>
                       <v-container>
@@ -328,10 +458,10 @@
                           <v-menu
                             ref="menu4"
                             v-model="menu4"
+                            v-model:return-value="editedItem.date"
                             :close-on-content-click="false"
                             persistent
                             :nudge-right="40"
-                            :return-value.sync="editedItem.date"
                             transition="scale-transition"
                             offset-y
                           >
@@ -345,7 +475,7 @@
                                 :rules="[() => !!editedItem.date || 'This field is required']"
                                
                                 v-bind="props"
-                              ></v-text-field>
+                              />
                             </template>
                             <v-date-picker
                               v-if="menu4"
@@ -354,7 +484,13 @@
                               :reactive="true"
                             >
                               <v-spacer />
-                              <v-btn variant="text" color="success" @click="menu4 = false"> Cancel </v-btn>
+                              <v-btn
+                                variant="text"
+                                color="success"
+                                @click="menu4 = false"
+                              >
+                                Cancel
+                              </v-btn>
                               <v-btn
                                 variant="text"
                                 color="secondary"
@@ -366,14 +502,17 @@
                           </v-menu>
                         </v-row>
                         <v-row>
-                          <v-col cols="11" sm="5">
+                          <v-col
+                            cols="11"
+                            sm="5"
+                          >
                             <v-menu
                               ref="menu5"
                               v-model="menu5"
+                              v-model:return-value="editedItem.entry"
                               :close-on-content-click="false"
                               persistent
                               :nudge-right="40"
-                              :return-value.sync="editedItem.entry"
                               transition="scale-transition"
                               offset-y
                               max-width="290px"
@@ -389,7 +528,7 @@
                                   :rules="[() => !!editedItem.entry || 'This field is required']"
                                  
                                   v-bind="props"
-                                ></v-text-field>
+                                />
                               </template>
                               <v-time-picker
                                 v-if="menu5"
@@ -400,7 +539,13 @@
                                 format="24hr"
                               >
                                 <v-spacer />
-                                <v-btn variant="text" color="success" @click="menu5 = false"> Cancel </v-btn>
+                                <v-btn
+                                  variant="text"
+                                  color="success"
+                                  @click="menu5 = false"
+                                >
+                                  Cancel
+                                </v-btn>
                                 <v-btn
                                   variant="text"
                                   color="secondary"
@@ -411,16 +556,19 @@
                               </v-time-picker>
                             </v-menu>
                           </v-col>
-                          <v-spacer></v-spacer>
+                          <v-spacer />
                           <!--Exit hours menu-->
-                          <v-col cols="11" sm="5">
+                          <v-col
+                            cols="11"
+                            sm="5"
+                          >
                             <v-menu
                               ref="menu6"
                               v-model="menu6"
+                              v-model:return-value="editedItem.exit"
                               :close-on-content-click="false"
                               persistent
                               :nudge-right="40"
-                              :return-value.sync="editedItem.exit"
                               transition="scale-transition"
                               offset-y
                               max-width="290px"
@@ -436,7 +584,7 @@
                                   :rules="[() => !!editedItem.exit || 'This field is required']"
                                  
                                   v-bind="props"
-                                ></v-text-field>
+                                />
                               </template>
                               <v-time-picker
                                 v-if="menu6"
@@ -447,7 +595,13 @@
                                 format="24hr"
                               >
                                 <v-spacer />
-                                <v-btn variant="text" color="success" @click="menu6 = false"> Cancel </v-btn>
+                                <v-btn
+                                  variant="text"
+                                  color="success"
+                                  @click="menu6 = false"
+                                >
+                                  Cancel
+                                </v-btn>
                                 <v-btn
                                   variant="text"
                                   color="secondary"
@@ -468,8 +622,8 @@
                             label="Name for reservation"
                             required
                             :rules="[() => !!name || 'This field is required']"
-                          ></v-text-field>
-                          <v-spacer></v-spacer>
+                          />
+                          <v-spacer />
                           <v-text-field
                             id="ist_id"
                             ref="ist_id_field"
@@ -478,7 +632,7 @@
                             label="Ist ID (ist1*)"
                             required
                             :rules="[() => !!ist_id || 'This field is required']"
-                          ></v-text-field>
+                          />
                         </v-row>
                         <v-row>
                           <v-select
@@ -487,25 +641,55 @@
                             label="Room"
                             required
                             :rules="[() => !!roomDropdown || 'This field is required']"
-                          ></v-select>
+                          />
                         </v-row>
                       </v-container>
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
-                      <v-btn color="primary" variant="text" @click="update"> Update </v-btn>
+                      <v-spacer />
+                      <v-btn
+                        color="primary"
+                        variant="text"
+                        @click="close"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        color="primary"
+                        variant="text"
+                        @click="update"
+                      >
+                        Update
+                      </v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card>
               </v-dialog>
 
-              <v-spacer></v-spacer>
-              <v-btn v-if="!selectedEvent.givenKey" color="primary" variant="text" @click="giveKey()"
-                >Give key</v-btn
+              <v-spacer />
+              <v-btn
+                v-if="!selectedEvent.givenKey"
+                color="primary"
+                variant="text"
+                @click="giveKey()"
               >
-              <v-btn v-else color="primary" variant="text" @click="giveKey()">Receive key</v-btn>
-              <v-btn color="primary" variant="text" @click="deleteEvent(selectedEvent.details)">Delete</v-btn>
+                Give key
+              </v-btn>
+              <v-btn
+                v-else
+                color="primary"
+                variant="text"
+                @click="giveKey()"
+              >
+                Receive key
+              </v-btn>
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="deleteEvent(selectedEvent.details)"
+              >
+                Delete
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-menu>

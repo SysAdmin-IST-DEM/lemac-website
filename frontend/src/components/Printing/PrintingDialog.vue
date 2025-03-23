@@ -1,5 +1,8 @@
 <template>
-  <v-dialog :model-value="dialogVisible" max-width="500">
+  <v-dialog
+    :model-value="dialogVisible"
+    max-width="500"
+  >
     <v-card>
       <v-card-title>Confirmation Step</v-card-title>
       <v-card-text>
@@ -12,12 +15,26 @@
         <p>Unit of file: {{ chosenUnit }}</p>
         <p>Volume: {{ volume?.toFixed(2) ?? 0 }}</p>
         <p>Material: {{ material }}</p>
-        <p class="font-bold">Price (€): {{ price?.toFixed(2) ?? 0 }}</p>
+        <p class="font-bold">
+          Price (€): {{ price?.toFixed(2) ?? 0 }}
+        </p>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" variant="text" @click="close">Cancel</v-btn>
-        <v-btn color="primary" :loading="loading" @click="confirm">Confirm</v-btn>
+        <v-spacer />
+        <v-btn
+          color="primary"
+          variant="text"
+          @click="close"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          color="primary"
+          :loading="loading"
+          @click="confirm"
+        >
+          Confirm
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
