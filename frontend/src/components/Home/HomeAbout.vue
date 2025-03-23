@@ -1,6 +1,8 @@
 <template>
   <div style="margin-top: 2em">
-    <h1 style="font-size: 1.8em; font-weight: bold">Bem-vindos ao LEMAC!</h1>
+    <h1 style="font-size: 1.8em; font-weight: bold">
+      Bem-vindos ao LEMAC!
+    </h1>
     <p style="margin-top: 1em; font-size: 1em">
       O Lemac é um espaço projetado para oferecer um ambiente ideal para trabalho individual ou
       colaborativo. Esta sala está equipada com computadores (LTI-PC) e áreas designadas para alunos
@@ -11,7 +13,9 @@
       ambiente propício ao estudo.
     </p>
 
-    <h2 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">Reservas de Computadores</h2>
+    <h2 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">
+      Reservas de Computadores
+    </h2>
     <p style="margin-top: 1em; font-size: 1em">
       A possibilidade de reservar computadores permite que os estudantes garantam acesso a uma
       estação de trabalho em horários de estudo, facilitando a organização do tempo e a eficiência
@@ -19,20 +23,22 @@
       desejado, assegurando um espaço disponível quando precisarem.
     </p>
 
-    <h3 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">Reservas de Salas</h3>
+    <h3 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">
+      Reservas de Salas
+    </h3>
     <p style="margin-top: 1em; font-size: 1em">
       O Lemac disponibiliza a possibilidade de reservar salas para as atividades dos núcleos e
       pessoais. As salas disponíveis e a cargo do Lemac são a SDM, MOM e o LTI. Para efetuar uma
       reserva, é necessário falar pessoalmente com um monitor.
     </p>
 
-    <h3 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">Serviços de Impressão 3D</h3>
+    <h3 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">
+      Serviços de Impressão 3D
+    </h3>
     <p style="margin-top: 1em; font-size: 1em">
       O Lemac disponibiliza serviços de impressão 3D. Para mais informações, é favor enviar e-mail
       para:
-      <a href="mailto:monitores.lemac@dem.tecnico.ulisboa.pt"
-        >monitores.lemac@dem.tecnico.ulisboa.pt</a
-      >
+      <a href="mailto:monitores.lemac@dem.tecnico.ulisboa.pt">monitores.lemac@dem.tecnico.ulisboa.pt</a>
     </p>
 
     <p style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 2em">

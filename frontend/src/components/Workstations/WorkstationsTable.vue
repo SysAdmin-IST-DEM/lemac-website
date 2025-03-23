@@ -11,22 +11,38 @@
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Workstations</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        />
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
           hide-details
-        ></v-text-field>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog_filter" max-width="550px">
+        />
+        <v-spacer />
+        <v-dialog
+          v-model="dialog_filter"
+          max-width="550px"
+        >
           <template #activator="{ props }">
-            <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
+            <v-btn
+              color="secondary"
+              dark
+              class="mb-2 mr-2"
+              v-bind="props"
+            >
               Filters
             </v-btn>
           </template>
           <v-card>
-            <v-form ref="form_filter" lazy-validation @submit.prevent="save">
+            <v-form
+              ref="form_filter"
+              lazy-validation
+              @submit.prevent="save"
+            >
               <v-card-title>
                 <span class="text-h5"> Filter </span>
               </v-card-title>
@@ -38,42 +54,79 @@
                   :rules="[(v) => v.length > 0 || 'Software to filter is required!']"
                   multiple
                 >
-                  <div slot="prepend-item" ripple>
+                  <div
+                    slot="prepend-item"
+                    ripple
+                  >
                     <v-checkbox
                       v-model="select_all"
                       class="ml-4"
                       label="Select all"
                       @update:model-value="selectAll"
-                    ></v-checkbox>
+                    />
                   </div>
-                  <v-divider slot="prepend-item" class="mt-2" />
+                  <v-divider
+                    slot="prepend-item"
+                    class="mt-2"
+                  />
                 </v-select>
                 <v-checkbox
                   v-model="filter_with_issues"
                   label="Filter all with issues"
-                ></v-checkbox>
+                />
                 <v-checkbox
                   v-model="filter_with_unresolved_issues"
                   label="Filter all with unresolved"
-                ></v-checkbox>
+                />
               </v-card-text>
               <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" variant="text" @click="clear_filter"> Clear Filter </v-btn>
-                <v-btn color="primary" variant="text" @click="close_filter"> Cancel </v-btn>
-                <v-btn color="primary" variant="text" @click="save_filter"> Save </v-btn>
+                <v-spacer />
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="clear_filter"
+                >
+                  Clear Filter
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="close_filter"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="save_filter"
+                >
+                  Save
+                </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
-        <v-dialog v-if="getPermission === 1" v-model="dialog" max-width="550px">
+        <v-dialog
+          v-if="getPermission === 1"
+          v-model="dialog"
+          max-width="550px"
+        >
           <template #activator="{ props }">
-            <v-btn color="secondary" dark class="mb-2" v-bind="props">
+            <v-btn
+              color="secondary"
+              dark
+              class="mb-2"
+              v-bind="props"
+            >
               New Workstation
             </v-btn>
           </template>
           <v-card>
-            <v-form ref="form" lazy-validation @submit.prevent="save">
+            <v-form
+              ref="form"
+              lazy-validation
+              @submit.prevent="save"
+            >
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
@@ -86,7 +139,7 @@
                       label="Name"
                       required
                       variant="filled"
-                    ></v-text-field>
+                    />
                   </v-col>
                   <v-col cols="6">
                     <v-text-field
@@ -95,7 +148,7 @@
                       type="number"
                       required
                       variant="filled"
-                    ></v-text-field>
+                    />
                   </v-col>
                   <v-col cols="6">
                     <v-select
@@ -104,51 +157,100 @@
                       required
                       :items="types"
                       variant="filled"
-                    ></v-select>
+                    />
                   </v-col>
                 </v-row>
               </v-card-text>
               <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
-                <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
+                <v-spacer />
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="close"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="save"
+                >
+                  Save
+                </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog
+          v-model="dialogDelete"
+          max-width="500px"
+        >
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="text-h5">
+              Are you sure you want to delete this item?
+            </v-card-title>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" variant="text" @click="closeDelete">Cancel</v-btn>
-              <v-btn color="error" variant="text" @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="closeDelete"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="error"
+                variant="text"
+                @click="deleteItemConfirm"
+              >
+                OK
+              </v-btn>
+              <v-spacer />
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
     <template #[`item.actions`]="{ item }">
-      <v-icon v-if="getPermission === 1" size="small" class="mr-2" @click="editItem(item)">
+      <v-icon
+        v-if="getPermission === 1"
+        size="small"
+        class="mr-2"
+        @click="editItem(item)"
+      >
         mdi-pencil
       </v-icon>
-      <v-icon v-if="getPermission === 1" size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon
+        v-if="getPermission === 1"
+        size="small"
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
     </template>
     <template #[`item.capacity`]="{ item }">
       {{ `${item.occupation} / ${item.capacity}` }}
     </template>
     <template #[`item.type`]="{ item }">
-      <v-chip :color="typeColors[item.type]" dark class="capitalized">
+      <v-chip
+        :color="typeColors[item.type]"
+        dark
+        class="capitalized"
+      >
         {{ (types.find((v) => v.value == item.type) || {}).text }}
       </v-chip>
     </template>
     <template #expanded-item="{ headers, item }">
-      <td class="!h-full shadow-inner bg-gray-50" :colspan="headers.length">
+      <td
+        class="!h-full shadow-inner bg-gray-50"
+        :colspan="headers.length"
+      >
         <div class="flex flex-col w-full h-full m-4">
           <div class="flex flex-row">
             <div class="flex flex-col p-0 m-0 h-min">
-              <h3 class="mt-4 text-lg font-medium">Softwares:</h3>
+              <h3 class="mt-4 text-lg font-medium">
+                Softwares:
+              </h3>
               <ul class="flex flex-col">
                 <li
                   v-for="software in item.softwares"
@@ -163,14 +265,27 @@
               </ul>
             </div>
             <div class="mx-4 my-auto">
-              <v-dialog v-if="getPermission === 1" v-model="dialog_software" max-width="550px">
+              <v-dialog
+                v-if="getPermission === 1"
+                v-model="dialog_software"
+                max-width="550px"
+              >
                 <template #activator="{ props }">
-                  <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
+                  <v-btn
+                    color="secondary"
+                    dark
+                    class="mb-2 mr-2"
+                    v-bind="props"
+                  >
                     Add a software
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-form ref="form_software" lazy-validation @submit.prevent="save">
+                  <v-form
+                    ref="form_software"
+                    lazy-validation
+                    @submit.prevent="save"
+                  >
                     <v-card-title>
                       <span class="text-h5"> Add a software </span>
                     </v-card-title>
@@ -180,12 +295,22 @@
                         label="Software to add"
                         variant="outlined"
                         :rules="[(v) => !!v || 'Software is required']"
-                      ></v-text-field>
+                      />
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" variant="text" @click="close_software_dialog"> Cancel </v-btn>
-                      <v-btn color="primary" variant="text" @click="() => save_software(item)">
+                      <v-spacer />
+                      <v-btn
+                        color="primary"
+                        variant="text"
+                        @click="close_software_dialog"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        color="primary"
+                        variant="text"
+                        @click="() => save_software(item)"
+                      >
                         Add Software
                       </v-btn>
                     </v-card-actions>
@@ -196,7 +321,9 @@
           </div>
           <div class="flex flex-row">
             <div class="flex flex-col p-0 m-0 h-min">
-              <h3 class="mt-4 text-lg font-medium">Problems:</h3>
+              <h3 class="mt-4 text-lg font-medium">
+                Problems:
+              </h3>
               <ul>
                 <li
                   v-for="(problem, i) in item.problems"
@@ -214,35 +341,61 @@
                     hide-details
                     label="Mark resolved"
                     @update:model-value="(e) => change_issue_status(e, item, i)"
-                  ></v-checkbox>
+                  />
                 </li>
               </ul>
             </div>
             <div class="mx-4 my-auto">
-              <v-dialog v-model="dialog_issue" max-width="550px">
+              <v-dialog
+                v-model="dialog_issue"
+                max-width="550px"
+              >
                 <template #activator="{ props }">
-                  <v-btn color="secondary" dark class="mb-2 mr-2" v-bind="props">
+                  <v-btn
+                    color="secondary"
+                    dark
+                    class="mb-2 mr-2"
+                    v-bind="props"
+                  >
                     Report issue
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-form ref="form_issue" lazy-validation @submit.prevent="save">
+                  <v-form
+                    ref="form_issue"
+                    lazy-validation
+                    @submit.prevent="save"
+                  >
                     <v-card-title>
                       <span class="text-h5"> Report issue </span>
                     </v-card-title>
                     <v-card-text>
-                      <h4 class="mb-2 text-lg font-normal">Please describe the issue:</h4>
+                      <h4 class="mb-2 text-lg font-normal">
+                        Please describe the issue:
+                      </h4>
                       <v-textarea
                         v-model="issue_description"
                         label="Description"
                         variant="outlined"
                         :rules="[(v) => !!v || 'Description is required']"
-                      ></v-textarea>
+                      />
                     </v-card-text>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" variant="text" @click="close_issue_dialog"> Cancel </v-btn>
-                      <v-btn color="primary" variant="text" @click="() => save_issue(item)"> Report </v-btn>
+                      <v-spacer />
+                      <v-btn
+                        color="primary"
+                        variant="text"
+                        @click="close_issue_dialog"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        color="primary"
+                        variant="text"
+                        @click="() => save_issue(item)"
+                      >
+                        Report
+                      </v-btn>
                     </v-card-actions>
                   </v-form>
                 </v-card>

@@ -16,7 +16,11 @@
         <div><span class="text-xl font-medium">Course</span>: {{ getCourse(personData) }}</div>
       </div>
       <div class="grid h-full my-auto w-52 place-content-center">
-        <v-select v-model="selected_software" :items="items" label="Software"></v-select>
+        <v-select
+          v-model="selected_software"
+          :items="items"
+          label="Software"
+        />
       </div>
     </div>
     <Solidworks v-if="selected_software == 'Solidworks' && isDEMStudent(getCourse(personData))" />

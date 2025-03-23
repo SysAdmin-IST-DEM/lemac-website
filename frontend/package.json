@@ -9,7 +9,6 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "css-watch": "npx tailwindcss -i ./src/assets/tailwind.css -o ./src/assets/dist.css --watch"
   },
   "dependencies": {

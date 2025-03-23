@@ -1,11 +1,15 @@
 <template>
   <div>
-    <v-app-bar clipped-left app dense>
+    <v-app-bar
+      clipped-left
+      app
+      dense
+    >
       <v-app-bar-nav-icon
         v-if="$vuetify.breakpoint.mdAndDown"
         color="primary"
         @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+      />
       <v-spacer />
       <v-progress-linear
         :active="isLoading"
@@ -13,11 +17,20 @@
         absolute
         bottom
         color="primary"
-      ></v-progress-linear>
+      />
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" clipped :permanent="$vuetify.breakpoint.lgAndUp" app>
+    <v-navigation-drawer
+      v-model="drawer"
+      clipped
+      :permanent="$vuetify.breakpoint.lgAndUp"
+      app
+    >
       <v-list nav>
-        <v-list-item-group v-for="(route, index) in routes" :key="index" v-model="group">
+        <v-list-item-group
+          v-for="(route, index) in routes"
+          :key="index"
+          v-model="group"
+        >
           <v-list-item
             v-if="getPermission >= (route.permission || 0)"
             :to="route.link"
@@ -25,7 +38,10 @@
             class="mb-1"
             @click.stop="drawer = !drawer"
           >
-            <v-icon v-if="route.icon" start>
+            <v-icon
+              v-if="route.icon"
+              start
+            >
               {{ route.icon }}
             </v-icon>
             {{ route.text }}
@@ -34,12 +50,20 @@
       </v-list>
       <template #append>
         <div class="pa-2">
-          <v-btn block color="error" @click="onLogout">
-            <v-icon start>mdi-logout</v-icon>Logout
+          <v-btn
+            block
+            color="error"
+            @click="onLogout"
+          >
+            <v-icon start>
+              mdi-logout
+            </v-icon>Logout
           </v-btn>
           <div class="py-2 text-center">
             LEMAC
-            <v-icon size="x-small">mdi-copyright</v-icon>
+            <v-icon size="x-small">
+              mdi-copyright
+            </v-icon>
             {{ new Date().getFullYear() }}
           </div>
         </div>

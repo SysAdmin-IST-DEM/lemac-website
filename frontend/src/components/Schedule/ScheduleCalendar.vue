@@ -3,17 +3,39 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn class="mr-4" color="secondary" @click="setToday"> Today </v-btn>
-          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="prev">
-            <v-icon size="small"> mdi-chevron-left </v-icon>
+          <v-btn
+            class="mr-4"
+            color="secondary"
+            @click="setToday"
+          >
+            Today
           </v-btn>
-          <v-btn fab variant="text" size="small" color="grey-darken-2" @click="next">
-            <v-icon size="small"> mdi-chevron-right </v-icon>
+          <v-btn
+            fab
+            variant="text"
+            size="small"
+            color="grey-darken-2"
+            @click="prev"
+          >
+            <v-icon size="small">
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+          <v-btn
+            fab
+            variant="text"
+            size="small"
+            color="grey-darken-2"
+            @click="next"
+          >
+            <v-icon size="small">
+              mdi-chevron-right
+            </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <div style="display: flex; justify-items: center; align-items: center; padding: 0 1em">
             <v-switch
               v-model="switchValue"
@@ -23,29 +45,50 @@
               inset
               hide-details
               label="Edit mode"
-            ></v-switch>
+            />
           </div>
 
-          <v-menu location="bottom right"  offset-y>
+          <v-menu
+            location="bottom right"
+            offset-y
+          >
             <template #activator="{ props }">
-              <v-btn style="margin: 0 1em" color="secondary" v-bind="props">
+              <v-btn
+                style="margin: 0 1em"
+                color="secondary"
+                v-bind="props"
+              >
                 <span>{{ active_user.name }}</span>
-                <v-icon end> mdi-menu-down </v-icon>
+                <v-icon end>
+                  mdi-menu-down
+                </v-icon>
               </v-btn>
             </template>
             <v-list>
-              <v-list-item v-for="user in users" :key="user.id" @click="active_user = user">
+              <v-list-item
+                v-for="user in users"
+                :key="user.id"
+                @click="active_user = user"
+              >
                 <v-list-item-title>
                   {{ user.name }}
                 </v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-menu location="bottom right"  offset-y>
+          <v-menu
+            location="bottom right"
+            offset-y
+          >
             <template #activator="{ props }">
-              <v-btn color="secondary" v-bind="props">
+              <v-btn
+                color="secondary"
+                v-bind="props"
+              >
                 <span>{{ typeToLabel[type] }}</span>
-                <v-icon end> mdi-menu-down </v-icon>
+                <v-icon end>
+                  mdi-menu-down
+                </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -80,8 +123,11 @@
             <div
               v-if="weekday == 0 || weekday == 6 || hour < 9 || hour >= 21 || testDate(date)"
               style="height: 100%; width: 100%; background-color: #f2f2f2"
-            ></div>
-            <div v-else style="height: 100%; width: 100%"></div>
+            />
+            <div
+              v-else
+              style="height: 100%; width: 100%"
+            />
           </template>
           <template #event="{ event, timed }">
             <div
@@ -90,7 +136,7 @@
             >
               <div style="padding-left: 0.5em; background-color: inherit; color: black">
                 <strong>{{ event.name }}</strong>
-                <br />
+                <br>
                 {{ formatTime(event.start, event.end) }}
               </div>
             </div>
@@ -113,8 +159,9 @@
                   v-if="hover && switchValue"
                   color="white"
                   @mousedown.stop="extendBottom(event)"
-                  >mdi-menu</v-icon
                 >
+                  mdi-menu
+                </v-icon>
                 <v-btn
                   v-if="hover && switchValue"
                   fab
@@ -123,7 +170,9 @@
                   style="position: absolute; bottom: 0; right: 0; margin: auto auto 0 0; padding: 0"
                   @click="deleteHour(event)"
                 >
-                  <v-icon color="red">mdi-close</v-icon>
+                  <v-icon color="red">
+                    mdi-close
+                  </v-icon>
                 </v-btn>
               </div>
             </v-hover>
@@ -135,12 +184,18 @@
                 'v-current-time': new Date().getDate() == new Date(date).getDate(),
               }"
               :style="{ top: nowY }"
-            ></div>
+            />
           </template>
         </v-calendar>
       </v-sheet>
       <v-sheet class="flex flex-row items-center justify-start py-3">
-        <v-btn color="secondary" class="mx-3" @click="downloadCalender">Download</v-btn>
+        <v-btn
+          color="secondary"
+          class="mx-3"
+          @click="downloadCalender"
+        >
+          Download
+        </v-btn>
         <v-dialog
           v-if="getPermission === 1"
           v-model="dialogOffset"
@@ -148,7 +203,13 @@
           transition="dialog-transition"
         >
           <template #activator="{ props }">
-            <v-btn color="secondary" class="mr-3" v-bind="props">Targets</v-btn>
+            <v-btn
+              color="secondary"
+              class="mr-3"
+              v-bind="props"
+            >
+              Targets
+            </v-btn>
           </template>
           <v-card>
             <v-form>
@@ -165,8 +226,9 @@
                       size="medium"
                       class="col-span-2 col-start-1 row-span-1 row-start-2"
                       @click="startEdit(i)"
-                      >Edit Target</v-btn
                     >
+                      Edit Target
+                    </v-btn>
                     <p class="col-span-3 row-span-1 my-auto">
                       {{ formatDate(target.date_start) }} to {{ formatDate(target.date_end) }}
                     </p>
@@ -178,22 +240,32 @@
               </v-card-text>
               <v-card-actions>
                 <div class="grid w-full grid-cols-5">
-                  <v-dialog v-model="targetDialog" max-width="500px" transition="dialog-transition">
+                  <v-dialog
+                    v-model="targetDialog"
+                    max-width="500px"
+                    transition="dialog-transition"
+                  >
                     <template #activator="{ props }">
-                      <v-btn class="col-span-3" color="primary" v-bind="props"
-                        >Add Target</v-btn
+                      <v-btn
+                        class="col-span-3"
+                        color="primary"
+                        v-bind="props"
                       >
+                        Add Target
+                      </v-btn>
                     </template>
                     <v-card>
-                      <v-card-title primary-title> Create new target </v-card-title>
+                      <v-card-title primary-title>
+                        Create new target
+                      </v-card-title>
                       <v-card-text>
                         <v-menu
                           ref="menu3"
                           v-model="menu3"
+                          v-model:return-value="targetDate"
                           :close-on-content-click="false"
                           persistent
                           :nudge-right="40"
-                          :return-value.sync="targetDate"
                           transition="scale-transition"
                           offset-y
                         >
@@ -205,7 +277,7 @@
                               required
                              
                               v-bind="props"
-                            ></v-text-field>
+                            />
                           </template>
                           <v-date-picker
                             v-if="menu3"
@@ -215,8 +287,18 @@
                             :reactive="true"
                           >
                             <v-spacer />
-                            <v-btn variant="text" color="success" @click="menu3 = false"> Cancel </v-btn>
-                            <v-btn variant="text" color="secondary" @click="$refs.menu3.save(targetDate)">
+                            <v-btn
+                              variant="text"
+                              color="success"
+                              @click="menu3 = false"
+                            >
+                              Cancel
+                            </v-btn>
+                            <v-btn
+                              variant="text"
+                              color="secondary"
+                              @click="$refs.menu3.save(targetDate)"
+                            >
                               OK
                             </v-btn>
                           </v-date-picker>
@@ -225,11 +307,21 @@
                           v-model="targetHours"
                           type="number"
                           label="Target Hours"
-                        ></v-text-field>
+                        />
                       </v-card-text>
                       <v-card-actions>
-                        <v-btn color="primary" @click="createTarget()">Add target</v-btn>
-                        <v-btn color="error" @click="closeCreateTarget()">Cancel</v-btn>
+                        <v-btn
+                          color="primary"
+                          @click="createTarget()"
+                        >
+                          Add target
+                        </v-btn>
+                        <v-btn
+                          color="error"
+                          @click="closeCreateTarget()"
+                        >
+                          Cancel
+                        </v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -239,8 +331,9 @@
                       color="primary"
                       size="medium"
                       @click="() => (startIndex = startIndex - 4 < 0 ? 0 : startIndex - 4)"
-                      >{{ '<' }}</v-btn
                     >
+                      {{ '<' }}
+                    </v-btn>
                     <v-btn
                       color="primary"
                       size="medium"
@@ -249,8 +342,9 @@
                           (startIndex =
                             startIndex + 4 >= userTargets.length ? startIndex : startIndex + 4)
                       "
-                      >{{ '>' }}</v-btn
                     >
+                      {{ '>' }}
+                    </v-btn>
                   </div>
                 </div>
               </v-card-actions>
@@ -264,7 +358,12 @@
           transition="dialog-transition"
         >
           <template #activator="{ props }">
-            <v-btn color="secondary" v-bind="props">Edit off days</v-btn>
+            <v-btn
+              color="secondary"
+              v-bind="props"
+            >
+              Edit off days
+            </v-btn>
           </template>
           <v-date-picker
             v-model="dates"
@@ -273,7 +372,7 @@
             multiple
             no-title
             @input="updateDates()"
-          ></v-date-picker>
+          />
         </v-dialog>
         <span class="inline-block grow">
           <p style="text-align: center; margin: auto">{{ active_user.name }}</p>
@@ -283,17 +382,23 @@
         </span>
       </v-sheet>
     </v-col>
-    <v-dialog v-model="editTarget" max-width="500px" transition="dialog-transition">
+    <v-dialog
+      v-model="editTarget"
+      max-width="500px"
+      transition="dialog-transition"
+    >
       <v-card>
-        <v-card-title primary-title> Edit target </v-card-title>
+        <v-card-title primary-title>
+          Edit target
+        </v-card-title>
         <v-card-text>
           <v-menu
             ref="editCalender"
             v-model="editCalender"
+            v-model:return-value="targetDate"
             :close-on-content-click="false"
             persistent
             :nudge-right="40"
-            :return-value.sync="targetDate"
             transition="scale-transition"
             offset-y
           >
@@ -305,7 +410,7 @@
                 required
                
                 v-bind="props"
-              ></v-text-field>
+              />
             </template>
             <v-date-picker
               v-if="editCalender"
@@ -315,18 +420,48 @@
               :reactive="true"
             >
               <v-spacer />
-              <v-btn variant="text" color="success" @click="editCalender = false"> Cancel </v-btn>
-              <v-btn variant="text" color="secondary" @click="$refs.editCalender.save(targetDate)">
+              <v-btn
+                variant="text"
+                color="success"
+                @click="editCalender = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                variant="text"
+                color="secondary"
+                @click="$refs.editCalender.save(targetDate)"
+              >
                 OK
               </v-btn>
             </v-date-picker>
           </v-menu>
-          <v-text-field v-model="targetHours" type="number" label="Target Hours"></v-text-field>
+          <v-text-field
+            v-model="targetHours"
+            type="number"
+            label="Target Hours"
+          />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="finishEditTarget()">Edit target</v-btn>
-          <v-btn color="error" @click="closeEditTarget()">Cancel</v-btn>
-          <v-btn class="ml-auto" color="error" @click="deleteTarget()">Delete Target</v-btn>
+          <v-btn
+            color="primary"
+            @click="finishEditTarget()"
+          >
+            Edit target
+          </v-btn>
+          <v-btn
+            color="error"
+            @click="closeEditTarget()"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            class="ml-auto"
+            color="error"
+            @click="deleteTarget()"
+          >
+            Delete Target
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
