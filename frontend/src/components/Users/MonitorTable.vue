@@ -9,20 +9,39 @@
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Users</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        />
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
           hide-details
-        ></v-text-field>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="550px" v-if="getPermission === 1">
+        />
+        <v-spacer />
+        <v-dialog
+          v-if="getPermission === 1"
+          v-model="dialog"
+          max-width="550px"
+        >
           <template #activator="{ props }">
-            <v-btn color="secondary" dark class="mb-2" v-bind="props"> New User </v-btn>
+            <v-btn
+              color="secondary"
+              dark
+              class="mb-2"
+              v-bind="props"
+            >
+              New User
+            </v-btn>
           </template>
           <v-card>
-            <v-form ref="form" lazy-validation @submit.prevent="save">
+            <v-form
+              ref="form"
+              lazy-validation
+              @submit.prevent="save"
+            >
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
@@ -35,7 +54,7 @@
                       label="Name"
                       required
                       variant="filled"
-                    ></v-text-field>
+                    />
                   </v-col>
                   <v-col cols="4">
                     <v-text-field
@@ -44,7 +63,7 @@
                       label="Id"
                       required
                       variant="filled"
-                    ></v-text-field>
+                    />
                   </v-col>
                   <v-col cols="4">
                     <v-select
@@ -52,7 +71,7 @@
                       label="Role"
                       :items="roles"
                       variant="filled"
-                    ></v-select>
+                    />
                   </v-col>
                   <v-col cols="4">
                     <v-select
@@ -60,42 +79,93 @@
                       label="State"
                       :items="states"
                       variant="filled"
-                    ></v-select>
+                    />
                   </v-col>
                 </v-row>
               </v-card-text>
               <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
-                <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
+                <v-spacer />
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="close"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  @click="save"
+                >
+                  Save
+                </v-btn>
               </v-card-actions>
             </v-form>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog
+          v-model="dialogDelete"
+          max-width="500px"
+        >
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="text-h5">
+              Are you sure you want to delete this item?
+            </v-card-title>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" variant="text" @click="closeDelete">Cancel</v-btn>
-              <v-btn color="error" variant="text" @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="closeDelete"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="error"
+                variant="text"
+                @click="deleteItemConfirm"
+              >
+                OK
+              </v-btn>
+              <v-spacer />
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-toolbar>
     </template>
-    <template #[`item.actions`]="{ item }"  v-if="getPermission === 1">
-      <v-icon size="small" class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
+    <template
+      v-if="getPermission === 1"
+      #[`item.actions`]="{ item }"
+    >
+      <v-icon
+        size="small"
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        size="small"
+        @click="deleteItem(item)"
+      >
+        mdi-delete
+      </v-icon>
     </template>
     <template #[`item.admin`]="{ item }">
-      <v-chip :color="roleColors[item.admin]" dark class="capitalized">
+      <v-chip
+        :color="roleColors[item.admin]"
+        dark
+        class="capitalized"
+      >
         {{ (roles.find((v) => v.value == item.admin) || {}).text }}
       </v-chip>
     </template>
     <template #[`item.active`]="{ item }">
-      <v-chip :color="stateColors[item.active]" dark class="capitalized">
+      <v-chip
+        :color="stateColors[item.active]"
+        dark
+        class="capitalized"
+      >
         {{ (states.find((v) => v.value == item.active) || {}).text }}
       </v-chip>
     </template>

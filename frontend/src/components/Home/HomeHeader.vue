@@ -1,12 +1,19 @@
 <template>
-  <v-app-bar app dense>
+  <v-app-bar
+    app
+    dense
+  >
     <v-row>
       <router-link to="/">
-        <h2 class="mx-3 text-primary">LEMAC</h2>
+        <h2 class="mx-3 text-primary">
+          LEMAC
+        </h2>
       </router-link>
-      <v-divider vertical></v-divider>
+      <v-divider vertical />
       <router-link to="/about">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">About</h2>
+        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+          About
+        </h2>
       </router-link>
       <router-link to="/reservations">
         <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
@@ -38,9 +45,15 @@
       </v-btn>
     </div>
     <div v-else>
-      <v-tooltip location="bottom" open-delay="500">
+      <v-tooltip
+        location="bottom"
+        open-delay="500"
+      >
         <template #activator="{ props }">
-          <v-icon @click="$router.push('dashboard')" v-bind="props">
+          <v-icon
+            v-bind="props"
+            @click="$router.push('dashboard')"
+          >
             mdi-view-dashboard
           </v-icon>
         </template>

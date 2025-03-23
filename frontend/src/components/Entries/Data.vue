@@ -1,7 +1,7 @@
 <template>
   <div>
-    <canvas id="count-by-workstation"></canvas>
-    <canvas id="count-by-hour"></canvas>
+    <canvas id="count-by-workstation" />
+    <canvas id="count-by-hour" />
   </div>
 </template>
 

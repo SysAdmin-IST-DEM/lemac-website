@@ -9,17 +9,25 @@
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Users</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        />
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
           label="Search"
           hide-details
-        ></v-text-field>
+        />
       </v-toolbar>
     </template>
     <template #[`item.state`]="{ item }">
-      <v-chip :color="(states.find(v => v.value === item.state).color)" dark class="capitalized">
+      <v-chip
+        :color="(states.find(v => v.value === item.state).color)"
+        dark
+        class="capitalized"
+      >
         {{ (states.find(v => v.value === item.state)).text }}
       </v-chip>
     </template>

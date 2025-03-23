@@ -1,6 +1,9 @@
 <template>
   <div v-if="getPermission === 1">
-    <v-container v-if="publications" class="mt-6">
+    <v-container
+      v-if="publications"
+      class="mt-6"
+    >
       <PublicationsTable :passed-data="publications" />
     </v-container>
   </div>

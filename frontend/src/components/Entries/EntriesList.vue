@@ -2,24 +2,47 @@
   <div class="elevation-1">
     <v-toolbar flat>
       <v-toolbar-title> Lab Entries </v-toolbar-title>
-      <v-divider class="mx-4" inset vertical></v-divider>
-      <v-text-field class="mt-6" label="Filter Workstations" v-model="search"></v-text-field>
-      <v-spacer></v-spacer>
-      <v-dialog v-model="dialogAdd" max-width="550px">
+      <v-divider
+        class="mx-4"
+        inset
+        vertical
+      />
+      <v-text-field
+        v-model="search"
+        class="mt-6"
+        label="Filter Workstations"
+      />
+      <v-spacer />
+      <v-dialog
+        v-model="dialogAdd"
+        max-width="550px"
+      >
         <template #activator="{ props }">
-          <v-btn color="secondary" dark class="mb-2" v-bind="props">
+          <v-btn
+            color="secondary"
+            dark
+            class="mb-2"
+            v-bind="props"
+          >
             New Registration
           </v-btn>
         </template>
         <v-card>
-          <v-form ref="formAdd" lazy-validation @submit.prevent="save">
+          <v-form
+            ref="formAdd"
+            lazy-validation
+            @submit.prevent="save"
+          >
             <v-card-title>
               <span class="text-h5"> New Registration </span>
             </v-card-title>
             <v-card-text>
               <v-row>
                 <v-col cols="6">
-                  <div v-for="(number, i) in numberList" :key="i + 'a'">
+                  <div
+                    v-for="(number, i) in numberList"
+                    :key="i + 'a'"
+                  >
                     <v-text-field
                       v-model="numberList[i]"
                       :rules="[(v) => !!v || 'IST Id is required']"
@@ -27,10 +50,13 @@
                       type="number"
                       required
                       variant="filled"
-                    ></v-text-field>
+                    />
                   </div>
                 </v-col>
-                <v-col cols="6" class="flex items-center justify-center">
+                <v-col
+                  cols="6"
+                  class="flex items-center justify-center"
+                >
                   <v-autocomplete
                     v-model="newItem.workstationId"
                     label="Workstation"
@@ -40,16 +66,40 @@
                     :rules="[(v) => !!v || 'Workstation is required']"
                     required
                     variant="filled"
-                  ></v-autocomplete>
+                  />
                 </v-col>
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" variant="text" @click="add"> Add Number </v-btn>
-              <v-btn color="primary" variant="text" @click="remove"> Remove Number </v-btn>
-              <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
-              <v-btn color="primary" variant="text" @click="save"> Save </v-btn>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="add"
+              >
+                Add Number
+              </v-btn>
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="remove"
+              >
+                Remove Number
+              </v-btn>
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="close"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="save"
+              >
+                Save
+              </v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -57,25 +107,48 @@
     </v-toolbar>
     <v-list>
       <template v-if="entries.length > 0">
-        <div v-for="(entry, index) in filteredEntries" :key="entry.id + 'b'">
+        <div
+          v-for="(entry, index) in filteredEntries"
+          :key="entry.id + 'b'"
+        >
           <v-list-item>
-            
-              <v-list-item-title class="mb-2">
-                <v-chip color="secondary">
-                  {{ entry.istId.slice(4) }}
-                </v-chip>
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                <v-icon start end size="small">mdi-desktop-classic</v-icon> {{ entry.workstation.name }}
-                <v-icon start end size="small">mdi-clock</v-icon>
-                {{ new Date(entry.createdAt).toLocaleString('pt-PT') }}
-                <v-icon start end size="small">mdi-text</v-icon>
-                {{ entry.observations }}
-              </v-list-item-subtitle>
+            <v-list-item-title class="mb-2">
+              <v-chip color="secondary">
+                {{ entry.istId.slice(4) }}
+              </v-chip>
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              <v-icon
+                start
+                end
+                size="small"
+              >
+                mdi-desktop-classic
+              </v-icon> {{ entry.workstation.name }}
+              <v-icon
+                start
+                end
+                size="small"
+              >
+                mdi-clock
+              </v-icon>
+              {{ new Date(entry.createdAt).toLocaleString('pt-PT') }}
+              <v-icon
+                start
+                end
+                size="small"
+              >
+                mdi-text
+              </v-icon>
+              {{ entry.observations }}
+            </v-list-item-subtitle>
             
             <v-list-item-action>
               <div>
-                <v-tooltip location="bottom" open-delay="500">
+                <v-tooltip
+                  location="bottom"
+                  open-delay="500"
+                >
                   <template #activator="{ props }">
                     <v-btn
                       class="bg-primary ma-1"
@@ -89,7 +162,10 @@
                   </template>
                   Edit
                 </v-tooltip>
-                <v-tooltip location="bottom" open-delay="500">
+                <v-tooltip
+                  location="bottom"
+                  open-delay="500"
+                >
                   <template #activator="{ props }">
                     <v-btn
                       class="ma-1 bg-info-darken-1"
@@ -103,7 +179,10 @@
                   </template>
                   Observations
                 </v-tooltip>
-                <v-tooltip location="bottom" open-delay="500">
+                <v-tooltip
+                  location="bottom"
+                  open-delay="500"
+                >
                   <template #activator="{ props }">
                     <v-btn
                       class="ma-1 bg-error"
@@ -120,16 +199,28 @@
               </div>
             </v-list-item-action>
           </v-list-item>
-          <v-divider v-if="index < entries.length - 1" :key="index + 'c'"></v-divider>
+          <v-divider
+            v-if="index < entries.length - 1"
+            :key="index + 'c'"
+          />
         </div>
       </template>
       <!-- template for empty list -->
       <template v-else>
-        <v-list-item key="0"> There are no active entries in the lab! </v-list-item>
+        <v-list-item key="0">
+          There are no active entries in the lab!
+        </v-list-item>
       </template>
-      <v-dialog v-model="dialog" max-width="550px">
+      <v-dialog
+        v-model="dialog"
+        max-width="550px"
+      >
         <v-card>
-          <v-form ref="formEdit" lazy-validation @submit.prevent="save">
+          <v-form
+            ref="formEdit"
+            lazy-validation
+            @submit.prevent="save"
+          >
             <v-card-title>
               <span class="text-h5">{{ formTitle }}</span>
             </v-card-title>
@@ -140,32 +231,69 @@
                 clearable
                 counter
                 auto-grow
-              ></v-textarea>
+              />
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" variant="text" @click="observationsClose"> Cancel </v-btn>
-              <v-btn color="primary" variant="text" @click="observationsSave"> Save </v-btn>
+              <v-spacer />
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="observationsClose"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="primary"
+                variant="text"
+                @click="observationsSave"
+              >
+                Save
+              </v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dialogClose" max-width="500px">
+      <v-dialog
+        v-model="dialogClose"
+        max-width="500px"
+      >
         <v-card>
-          <v-card-title class="text-h5">Are you sure you want to close this entry?</v-card-title>
+          <v-card-title class="text-h5">
+            Are you sure you want to close this entry?
+          </v-card-title>
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" variant="text" @click="closeCancel">Cancel</v-btn>
-            <v-btn color="error" variant="text" @click="closeConfirm">Close</v-btn>
-            <v-spacer></v-spacer>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              variant="text"
+              @click="closeCancel"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              color="error"
+              variant="text"
+              @click="closeConfirm"
+            >
+              Close
+            </v-btn>
+            <v-spacer />
           </v-card-actions>
         </v-card>
       </v-dialog>
     </v-list>
 
-    <v-dialog v-model="editEntryModal" max-width="550px" v-if="editEntryModal">
+    <v-dialog
+      v-if="editEntryModal"
+      v-model="editEntryModal"
+      max-width="550px"
+    >
       <v-card>
-        <v-form ref="formAdd" lazy-validation @submit.prevent="save">
+        <v-form
+          ref="formAdd"
+          lazy-validation
+          @submit.prevent="save"
+        >
           <v-card-title>
             <span class="text-h5"> Edit Registration </span>
           </v-card-title>
@@ -179,9 +307,12 @@
                   type="number"
                   required
                   variant="filled"
-                ></v-text-field>
+                />
               </v-col>
-              <v-col cols="6" class="flex items-center justify-center">
+              <v-col
+                cols="6"
+                class="flex items-center justify-center"
+              >
                 <v-autocomplete
                   v-model="editingEntry.workstationId"
                   label="Workstation"
@@ -191,14 +322,26 @@
                   :rules="[(v) => !!v || 'Workstation is required']"
                   required
                   variant="filled"
-                ></v-autocomplete>
+                />
               </v-col>
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
-            <v-btn color="primary" variant="text" @click="edit"> Edit </v-btn>
+            <v-spacer />
+            <v-btn
+              color="primary"
+              variant="text"
+              @click="close"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              color="primary"
+              variant="text"
+              @click="edit"
+            >
+              Edit
+            </v-btn>
           </v-card-actions>
         </v-form>
       </v-card>

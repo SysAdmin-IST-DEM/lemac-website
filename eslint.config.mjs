@@ -1,6 +1,7 @@
 import globals from 'globals';
 import vuetify from 'eslint-plugin-vuetify';
 import vue from 'eslint-plugin-vue';
+import vueParser from 'vue-eslint-parser';
 
 export default [
   {
@@ -8,13 +9,13 @@ export default [
     files: ["**/*.{js,vue}"],
   },
 
-  ...vue.configs['flat/base'],
-  ...vuetify.configs['flat/base'],
+  ...vue.configs['flat/recommended'],
+  ...vuetify.configs['flat/recommended'],
 
   {
     files: ['backend/**'],
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
         ...globals.node,
@@ -25,10 +26,11 @@ export default [
   {
     files: ['frontend/**'],
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 'latest',
       sourceType: 'module',
+      parser: vueParser,
       globals: {
-        ...globals.node,
+        ...globals.browser,
       },
     }
   },

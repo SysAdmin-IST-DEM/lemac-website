@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col items-start justify-start w-full">
-    <h2 class="m-6 text-4xl font-semibold">SOLIDEDGE 2024 Update</h2>
+    <h2 class="m-6 text-4xl font-semibold">
+      SOLIDEDGE 2024 Update
+    </h2>
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
       <a :href="url">{{ url }}</a>
@@ -9,7 +11,9 @@
       <span class="text-xl font-medium">Password: </span>
       {{ pass }}
     </span>
-    <h3 class="m-4 text-3xl font-medium">Installation Steps:</h3>
+    <h3 class="m-4 text-3xl font-medium">
+      Installation Steps:
+    </h3>
     <div class="grid w-full grid-cols-5 grid-rows-1 h-[40vh]">
       <div class="flex flex-col items-center justify-start col-span-2">
         <p class="my-auto text-lg indent-4">
@@ -20,39 +24,43 @@
             v-if="currentPlace > 0"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             size="large"
-            @click="() => this.currentPlace--"
-            >mdi-menu-left</v-icon
+            @click="() => currentPlace--"
           >
+            mdi-menu-left
+          </v-icon>
           <v-icon
-            disabled
             v-if="currentPlace <= 0"
+            disabled
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             size="large"
-            >mdi-menu-left</v-icon
           >
+            mdi-menu-left
+          </v-icon>
 
           <v-icon
             v-if="currentPlace < installInstructions.length - 1"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             size="large"
-            @click="() => this.currentPlace++"
-            >mdi-menu-right</v-icon
+            @click="() => currentPlace++"
           >
+            mdi-menu-right
+          </v-icon>
 
           <v-icon
             v-if="currentPlace >= installInstructions.length - 1"
             class="transition-transform duration-200 scale-100 hover:scale-125 active:scale-95"
             size="large"
             disabled
-            >mdi-menu-right</v-icon
           >
+            mdi-menu-right
+          </v-icon>
         </div>
       </div>
       <div class="flex items-center col-span-3 p-2">
         <img
           class="object-contain mx-auto rounded-md shadow-md max-h-[40vh]"
           :src="installPhotos[currentPlace]"
-        />
+        >
       </div>
     </div>
   </div>

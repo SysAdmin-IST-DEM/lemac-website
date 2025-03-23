@@ -1,5 +1,10 @@
 <template>
-  <v-data-table :headers="headers" :items="data" sort-by="id" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="data"
+    sort-by="id"
+    class="elevation-1"
+  >
     <template #top>
       <v-toolbar flat>
         <v-toolbar-title>Occurrence list</v-toolbar-title>
