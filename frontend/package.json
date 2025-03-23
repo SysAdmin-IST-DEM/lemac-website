@@ -1,19 +1,21 @@
 {
   "name": "lemac-frontend",
   "version": "0.0.0",
+  "type": "module",
   "private": true,
   "description": "Hs project for lemac meant to control and keep track of the lab's usage",
   "author": "HackerSchool",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
     "css-watch": "npx tailwindcss -i ./src/assets/tailwind.css -o ./src/assets/dist.css --watch"
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^3.4.1",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
-    "core-js": "^3.40.0",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",
     "tailwindcss": "^4.0.6",
@@ -25,15 +27,11 @@
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~5.0.8",
-    "@vue/cli-plugin-router": "~5.0.8",
-    "@vue/cli-plugin-vuex": "~5.0.8",
-    "@vue/cli-service": "~5.0.8",
+    "@tailwindcss/vite": "^4.0.15",
+    "@vitejs/plugin-vue": "^5.2.3",
     "sass": "^1.85.0",
-    "sass-loader": "^16.0.5",
-    "vue-cli-plugin-tailwind": "~3.0.0",
-    "vue-template-compiler": "^2.7.16",
-    "webpack-plugin-vuetify": "^3.1.0"
+    "vite": "^6.2.2",
+    "vite-plugin-vuetify": "^2.1.0"
   },
   "bugs": {
     "url": "https://github.com/HackerSchool/lemac-project/issues"
