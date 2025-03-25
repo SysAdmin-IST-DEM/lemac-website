@@ -85,6 +85,17 @@ export default {
     userData: Object,
     entryModal: Boolean
   },
+  emits: ['update:entryModal'],
+  computed: {
+    localEntryModal: {
+      get() {
+        return this.entryModal;
+      },
+      set(value) {
+        this.$emit('update:entryModal', value);
+      }
+    }
+  },
   async mounted() {
   },
   methods: {
@@ -129,17 +140,6 @@ export default {
 
       return diff > 1*60*1000;
 
-    }
-  },
-  emits: ['update:entryModal'],
-  computed: {
-    localEntryModal: {
-      get() {
-        return this.entryModal;
-      },
-      set(value) {
-        this.$emit('update:entryModal', value);
-      }
     }
   }
 }
