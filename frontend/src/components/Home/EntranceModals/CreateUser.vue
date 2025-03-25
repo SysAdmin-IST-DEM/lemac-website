@@ -81,6 +81,7 @@ export default {
     entrySelected: Number,
     entryModal: Boolean
   },
+  emits: ['update:entryModal'],
   data: () => ({
     name: null,
     ist_id: null,
@@ -88,6 +89,16 @@ export default {
     choosenCourse: null,
     possibleCourses: [{course: "Engenharia Aeroespacial"}, {course: "Engenharia Mecânica"}, {course: "Engenharia Naval"}, {course: "Engenharia de Materiais"}, {course: "Engenharia Ambiente"}, {course: "Outro"}]
   }),
+  computed: {
+    localEntryModal: {
+      get() {
+        return this.entryModal;
+      },
+      set(value) {
+        this.$emit('update:entryModal', value);
+      }
+    }
+  },
   async mounted() {
   },
   methods: {
@@ -113,17 +124,6 @@ export default {
         this.ist_id = null;
       }
 
-    }
-  },
-  emits: ['update:entryModal'],
-  computed: {
-    localEntryModal: {
-      get() {
-        return this.entryModal;
-      },
-      set(value) {
-        this.$emit('update:entryModal', value);
-      }
     }
   }
 }
