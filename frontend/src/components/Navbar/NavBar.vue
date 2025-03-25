@@ -5,8 +5,8 @@
       :permanent="lgAndUp"
     >
       <v-list
-        nav
         v-model:selected="group"
+        nav
       >
         <v-list-item
           v-for="(route, index) in filteredRoutes"
