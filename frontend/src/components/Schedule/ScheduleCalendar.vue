@@ -11,7 +11,7 @@
             Today
           </v-btn>
           <v-btn
-            fab
+            icon
             variant="text"
             size="small"
             color="grey-darken-2"
@@ -22,7 +22,7 @@
             </v-icon>
           </v-btn>
           <v-btn
-            fab
+            icon
             variant="text"
             size="small"
             color="grey-darken-2"
@@ -164,7 +164,7 @@
                 </v-icon>
                 <v-btn
                   v-if="hover && switchValue"
-                  fab
+                  icon
                   variant="text"
                   size="small"
                   style="position: absolute; bottom: 0; right: 0; margin: auto auto 0 0; padding: 0"
@@ -265,7 +265,7 @@
                           v-model:return-value="targetDate"
                           :close-on-content-click="false"
                           persistent
-                          :nudge-right="40"
+                          :offset="40"
                           transition="scale-transition"
                           offset-y
                         >
@@ -282,7 +282,7 @@
                           <v-date-picker
                             v-if="menu3"
                             v-model="targetDate"
-                            range
+                            multiple="range"
                             :landscape="true"
                             :reactive="true"
                           >
@@ -398,7 +398,7 @@
             v-model:return-value="targetDate"
             :close-on-content-click="false"
             persistent
-            :nudge-right="40"
+            :offset="40"
             transition="scale-transition"
             offset-y
           >
@@ -415,7 +415,7 @@
             <v-date-picker
               v-if="editCalender"
               v-model="targetDate"
-              range
+              multiple="range"
               :landscape="true"
               :reactive="true"
             >
@@ -483,8 +483,8 @@ import {
   setOffDays,
   deleteOffDay,
 } from '@/api/schedule.api';
-import Vue from 'vue';
-import ICS from 'vue-ics';
+//import Vue from 'vue';
+//import ICS from 'vue-ics';
 import { saveAs } from 'file-saver';
 import moment from 'moment';
 import { mapGetters } from 'vuex';
@@ -835,7 +835,9 @@ export default {
       return `${event.name}${event.start}${event.end}`;
     },
     downloadCalender() {
-      const calenderDate = this.value ? new Date(this.value) : new Date();
+      alert('Not implemented yet in v3');
+      // TODO: Add download calendar button;
+      /*const calenderDate = this.value ? new Date(this.value) : new Date();
       const oneAug = new Date(calenderDate.getFullYear(), 6, 17);
       const numberOfDays = Math.floor((calenderDate - oneAug) / (24 * 60 * 60 * 1000));
       const curWeek = Math.floor(numberOfDays / (7 * 4));
@@ -868,7 +870,7 @@ export default {
       }
 
       var blob = new Blob([final_calender], { type: 'text/x-vCalendar;charset=utf-8' });
-      saveAs(blob, `LEMAC-${this.active_user.name}-Week_${curWeek}.ics`);
+      saveAs(blob, `LEMAC-${this.active_user.name}-Week_${curWeek}.ics`);*/
     },
     testDate(date) {
       for (const val of this.offDays) {

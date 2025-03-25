@@ -6,16 +6,16 @@
     <v-tab key="2">
       Event Log
     </v-tab>
-    <v-tab-item>
+    <v-window-item>
       <v-container>
         <RoomCalenderVue />
       </v-container>
-    </v-tab-item>
-    <v-tab-item>
+    </v-window-item>
+    <v-window-item>
       <v-container>
         <EventLogVue />
       </v-container>
-    </v-tab-item>
+    </v-window-item>
   </v-tabs>
 </template>
 

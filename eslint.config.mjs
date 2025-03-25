@@ -25,6 +25,9 @@ export default [
 
   {
     files: ['frontend/**'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

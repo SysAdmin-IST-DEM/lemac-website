@@ -10,21 +10,21 @@
       <v-tab key="3">
         Hour Table
       </v-tab>
-      <v-tab-item>
+      <v-window-item>
         <v-container v-if="hours">
           <HourTable :prop-hours="hours" />
         </v-container>
-      </v-tab-item>
-      <v-tab-item>
+      </v-window-item>
+      <v-window-item>
         <v-container>
           <Calendar />
         </v-container>
-      </v-tab-item>
-      <v-tab-item>
+      </v-window-item>
+      <v-window-item>
         <v-container>
           <SumTable />
         </v-container>
-      </v-tab-item>
+      </v-window-item>
     </v-tabs>
   </div>
 

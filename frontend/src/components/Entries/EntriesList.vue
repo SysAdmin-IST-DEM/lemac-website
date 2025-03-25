@@ -20,7 +20,7 @@
         <template #activator="{ props }">
           <v-btn
             color="secondary"
-            dark
+            theme="dark"
             class="mb-2"
             v-bind="props"
           >
@@ -30,7 +30,6 @@
         <v-card>
           <v-form
             ref="formAdd"
-            lazy-validation
             @submit.prevent="save"
           >
             <v-card-title>
@@ -218,7 +217,6 @@
         <v-card>
           <v-form
             ref="formEdit"
-            lazy-validation
             @submit.prevent="save"
           >
             <v-card-title>
@@ -291,7 +289,6 @@
       <v-card>
         <v-form
           ref="formAdd"
-          lazy-validation
           @submit.prevent="save"
         >
           <v-card-title>

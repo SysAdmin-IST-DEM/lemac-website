@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full">
     <OfflineModal
-      v-if="modelType == 'offline'"
+      v-if="modelType === 'offline'"
       :close="close"
       :entry-stations="entryStations"
       :select="select"
@@ -9,7 +9,7 @@
       :entry-modal="entryModal"
     />
     <OnlineModal
-      v-if="modelType == 'online'"
+      v-if="modelType === 'online'"
       :close="close"
       :entry-stations="entryStations"
       :select="select"
@@ -17,7 +17,7 @@
       :entry-modal="entryModal"
     />
     <InBreak
-      v-if="modelType == 'in_break'"
+      v-if="modelType === 'in_break'"
       :close="close"
       :entry-stations="entryStations"
       :select="select"
@@ -25,7 +25,7 @@
       :entry-modal="entryModal"
     />
     <CreateUser
-      v-if="modelType == 'create_user'"
+      v-if="modelType === 'create_user'"
       :close="close"
       :entry-stations="entryStations"
       :select="select"

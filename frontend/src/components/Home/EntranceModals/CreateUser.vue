@@ -1,12 +1,11 @@
 <template>
   <v-dialog
-    v-model="entryModal"
+    v-model="localEntryModal"
     persistent
   >
     <v-card>
       <v-form
         ref="formAdd"
-        lazy-validation
         @submit.prevent="save"
       >
         <v-card-title>
@@ -114,6 +113,17 @@ export default {
         this.ist_id = null;
       }
 
+    }
+  },
+  emits: ['update:entryModal'],
+  computed: {
+    localEntryModal: {
+      get() {
+        return this.entryModal;
+      },
+      set(value) {
+        this.$emit('update:entryModal', value);
+      }
     }
   }
 }
