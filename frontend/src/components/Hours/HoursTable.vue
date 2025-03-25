@@ -2,8 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="hours"
-    sort-by="id"
-    :sort-desc="true"
+    :sort-by="[{ key: 'id', order: 'desc' }]"
     class="elevation-1"
   >
     <template #top>
@@ -22,7 +21,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2"
               v-bind="props"
             >
@@ -32,7 +31,6 @@
           <v-card>
             <v-form
               ref="form"
-              lazy-validation
               @submit.prevent="save"
             >
               <v-card-title>
@@ -51,7 +49,7 @@
                         v-model:return-value="editedItem.entry"
                         :close-on-content-click="false"
                         persistent
-                        :nudge-right="40"
+                        :offset="40"
                         transition="scale-transition"
                         offset-y
                         max-width="290px"
@@ -106,7 +104,7 @@
                         v-model:return-value="editedItem.exit"
                         :close-on-content-click="false"
                         persistent
-                        :nudge-right="40"
+                        :offset="40"
                         transition="scale-transition"
                         offset-y
                         max-width="290px"
@@ -180,7 +178,7 @@
                       v-model:return-value="adminDate"
                       :close-on-content-click="false"
                       persistent
-                      :nudge-right="40"
+                      :offset="40"
                       transition="scale-transition"
                       offset-y
                     >

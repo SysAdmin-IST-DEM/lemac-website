@@ -6,11 +6,13 @@
 </template>
 
 <script>
-import Chart from 'chart.js'
+import { Chart, registerables } from 'chart.js'
 import { getEntries } from '@/api/entries.api';
 
+Chart.register(...registerables)
+
 export default {
-  name: 'Data',
+  name: 'WorkstationData',
   data() {
     return {
       count_by_workstation_data: null

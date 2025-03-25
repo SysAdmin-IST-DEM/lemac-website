@@ -1,13 +1,12 @@
 <template>
   <v-dialog
-    v-model="entryModal"
+    v-model="localEntryModal"
     max-width="400px"
     persistent
   >
     <v-card>
       <v-form
         ref="formAdd"
-        lazy-validation
         class="my-4"
         @submit.prevent="save"
       >
@@ -24,7 +23,7 @@
               class="flex flex-col items-center justify-center"
               width="320px"
               height="120px"
-              dark
+              theme="dark"
               @click="save"
             >
               <p class="mb-0 text-2xl">Enter LEMAC</p>
@@ -41,7 +40,7 @@
                 class="flex flex-col items-center justify-center"
                 width="152px"
                 height="30px"
-                dark
+                theme="dark"
                 @click="exit"
               >
                 <p class="mb-0 text-sm">Exit LEMAC</p>
@@ -57,7 +56,7 @@
                 class="flex flex-col items-center justify-center"
                 width="152px"
                 height="30px"
-                dark
+                theme="dark"
                 @click="close"
               >
                 <p class="mb-0 text-sm">Cancel</p>
@@ -130,6 +129,17 @@ export default {
 
       return diff > 1*60*1000;
 
+    }
+  },
+  emits: ['update:entryModal'],
+  computed: {
+    localEntryModal: {
+      get() {
+        return this.entryModal;
+      },
+      set(value) {
+        this.$emit('update:entryModal', value);
+      }
     }
   }
 }

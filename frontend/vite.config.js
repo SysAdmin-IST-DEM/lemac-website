@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 import vuetify from 'vite-plugin-vuetify';
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), vuetify({ autoImport: { labs: true } }),],
+  plugins: [vue(), vuetify({ autoImport: { labs: true } }),],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

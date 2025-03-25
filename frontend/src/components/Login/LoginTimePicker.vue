@@ -11,7 +11,7 @@
           v-model:return-value="timeStart"
           :close-on-content-click="false"
           persistent
-          :nudge-right="40"
+          :offset="40"
           transition="scale-transition"
           offset-y
           max-width="290px"
@@ -66,7 +66,7 @@
           v-model:return-value="timeEnd"
           :close-on-content-click="false"
           persistent
-          :nudge-right="40"
+          :offset="40"
           transition="scale-transition"
           offset-y
           max-width="290px"

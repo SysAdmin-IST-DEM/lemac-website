@@ -16,7 +16,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2"
               v-bind="props"
             >
@@ -26,7 +26,7 @@
           <v-date-picker
             v-model="dates"
             class="py-3"
-            range
+            multiple="range"
             full-width
             no-title
             @change="update()"
@@ -67,7 +67,6 @@
           <v-card>
             <v-form
               ref="formEdit"
-              lazy-validation
               @submit.prevent="save"
             >
               <v-card-title> Add observation </v-card-title>

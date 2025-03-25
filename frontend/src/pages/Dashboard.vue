@@ -9,32 +9,34 @@
     <v-tab key="3">
       Visualisation
     </v-tab>
+  </v-tabs>
 
-    <v-tab-item>
+  <v-window>
+    <v-window-item>
       <v-container>
         <EntriesList />
       </v-container>
-    </v-tab-item>
-    <v-tab-item>
+    </v-window-item>
+    <v-window-item>
       <v-container>
         <Occurences />
       </v-container>
-    </v-tab-item>
-    <v-tab-item>
+    </v-window-item>
+    <v-window-item>
       <v-container>
-        <Data />
+        <WorkstationData />
       </v-container>
-    </v-tab-item>
-  </v-tabs>
+    </v-window-item>
+  </v-window>
 </template>
 
 <script>
 import EntriesList from '@/components/Entries/EntriesList.vue';
 import Occurences from '@/components/Entries/Occurences.vue';
-import Data from '@/components/Entries/Data.vue';
+import WorkstationData from '@/components/Entries/WorkstationData.vue';
 
 export default {
-  components: { EntriesList, Occurences, Data },
+  components: { EntriesList, Occurences, WorkstationData },
 };
 </script>
 

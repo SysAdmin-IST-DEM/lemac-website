@@ -3,8 +3,7 @@
     :headers="headers"
     :items="publications"
     :search="search"
-    sort-by="id"
-    sort-desc
+    :sort-by="[{ key: 'id', order: 'desc' }]"
     class="elevation-1"
   >
     <template #top>
@@ -25,7 +24,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2"
               v-bind="props"
             >
@@ -34,7 +33,6 @@
           </template>          <v-card>
             <v-form
               ref="form"
-              lazy-validation
               @submit.prevent="save"
             >
               <v-card-title>                <span class="text-h5">{{ formTitle }}</span>              </v-card-title>              <v-card-text>
@@ -116,7 +114,7 @@
     </template>    <template #[`item.active`]="{ item }">
       <v-chip
         :color="item.active ? 'success' : 'error'"
-        dark
+        theme="dark"
         class="capitalized"
       >
         {{ item.active ? 'Active' : 'Inactive' }}
