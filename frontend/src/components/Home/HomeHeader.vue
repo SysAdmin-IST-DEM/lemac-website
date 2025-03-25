@@ -1,6 +1,6 @@
 <template>
+  <!-- TODO: app inside v-app-bar vuetify2 > vuetify3 -->
   <v-app-bar
-    app
     dense
   >
     <v-row>

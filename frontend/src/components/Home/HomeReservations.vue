@@ -11,7 +11,7 @@
             Today
           </v-btn>
           <v-btn
-            fab
+            icon
             variant="text"
             size="small"
             color="grey-darken-2"
@@ -22,7 +22,7 @@
             </v-icon>
           </v-btn>
           <v-btn
-            fab
+            icon
             variant="text"
             size="small"
             color="grey-darken-2"
@@ -139,7 +139,7 @@
           >
             <v-toolbar
               :color="selectedEvent.color"
-              dark
+              theme="dark"
             >
               <v-toolbar-title v-if="selectedElement">
                 {{

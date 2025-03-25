@@ -29,7 +29,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2"
               v-bind="props"
             >
@@ -39,7 +39,6 @@
           <v-card>
             <v-form
               ref="form"
-              lazy-validation
               @submit.prevent="save"
             >
               <v-card-title>
@@ -154,7 +153,7 @@
     <template #[`item.admin`]="{ item }">
       <v-chip
         :color="roleColors[item.admin]"
-        dark
+        theme="dark"
         class="capitalized"
       >
         {{ (roles.find((v) => v.value == item.admin) || {}).text }}
@@ -163,7 +162,7 @@
     <template #[`item.active`]="{ item }">
       <v-chip
         :color="stateColors[item.active]"
-        dark
+        theme="dark"
         class="capitalized"
       >
         {{ (states.find((v) => v.value == item.active) || {}).text }}

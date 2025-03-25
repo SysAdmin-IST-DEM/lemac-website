@@ -30,7 +30,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2 mr-2"
               v-bind="props"
             >
@@ -40,7 +40,6 @@
           <v-card>
             <v-form
               ref="form_filter"
-              lazy-validation
               @submit.prevent="save"
             >
               <v-card-title>
@@ -54,21 +53,15 @@
                   :rules="[(v) => v.length > 0 || 'Software to filter is required!']"
                   multiple
                 >
-                  <div
-                    slot="prepend-item"
-                    ripple
-                  >
+                  <template #prepend-item>
                     <v-checkbox
                       v-model="select_all"
                       class="ml-4"
                       label="Select all"
                       @update:model-value="selectAll"
                     />
-                  </div>
-                  <v-divider
-                    slot="prepend-item"
-                    class="mt-2"
-                  />
+                    <v-divider class="mt-2" />
+                  </template>
                 </v-select>
                 <v-checkbox
                   v-model="filter_with_issues"
@@ -114,7 +107,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2"
               v-bind="props"
             >
@@ -124,7 +117,6 @@
           <v-card>
             <v-form
               ref="form"
-              lazy-validation
               @submit.prevent="save"
             >
               <v-card-title>
@@ -234,7 +226,7 @@
     <template #[`item.type`]="{ item }">
       <v-chip
         :color="typeColors[item.type]"
-        dark
+        theme="dark"
         class="capitalized"
       >
         {{ (types.find((v) => v.value == item.type) || {}).text }}
@@ -273,7 +265,7 @@
                 <template #activator="{ props }">
                   <v-btn
                     color="secondary"
-                    dark
+                    theme="dark"
                     class="mb-2 mr-2"
                     v-bind="props"
                   >
@@ -283,7 +275,6 @@
                 <v-card>
                   <v-form
                     ref="form_software"
-                    lazy-validation
                     @submit.prevent="save"
                   >
                     <v-card-title>
@@ -353,7 +344,7 @@
                 <template #activator="{ props }">
                   <v-btn
                     color="secondary"
-                    dark
+                    theme="dark"
                     class="mb-2 mr-2"
                     v-bind="props"
                   >
@@ -363,7 +354,6 @@
                 <v-card>
                   <v-form
                     ref="form_issue"
-                    lazy-validation
                     @submit.prevent="save"
                   >
                     <v-card-title>

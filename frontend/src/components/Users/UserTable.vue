@@ -25,7 +25,7 @@
     <template #[`item.state`]="{ item }">
       <v-chip
         :color="(states.find(v => v.value === item.state).color)"
-        dark
+        theme="dark"
         class="capitalized"
       >
         {{ (states.find(v => v.value === item.state)).text }}

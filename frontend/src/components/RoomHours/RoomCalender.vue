@@ -11,7 +11,7 @@
             Today
           </v-btn>
           <v-btn
-            fab
+            icon
             variant="text"
             size="small"
             color="grey-darken-2"
@@ -22,7 +22,7 @@
             </v-icon>
           </v-btn>
           <v-btn
-            fab
+            icon
             variant="text"
             size="small"
             color="grey-darken-2"
@@ -53,7 +53,6 @@
             <v-card>
               <v-form
                 ref="form"
-                lazy-validation
                 @submit.prevent="save"
               >
                 <v-card-title> Add event </v-card-title>
@@ -66,7 +65,7 @@
                         v-model:return-value="editedItem.date"
                         :close-on-content-click="false"
                         persistent
-                        :nudge-right="40"
+                        :offset="40"
                         transition="scale-transition"
                         offset-y
                       >
@@ -117,7 +116,7 @@
                           v-model:return-value="editedItem.entry"
                           :close-on-content-click="false"
                           persistent
-                          :nudge-right="40"
+                          :offset="40"
                           transition="scale-transition"
                           offset-y
                           max-width="290px"
@@ -173,7 +172,7 @@
                           v-model:return-value="editedItem.exit"
                           :close-on-content-click="false"
                           persistent
-                          :nudge-right="40"
+                          :offset="40"
                           transition="scale-transition"
                           offset-y
                           max-width="290px"
@@ -386,7 +385,7 @@
           >
             <v-toolbar
               :color="selectedEvent.color"
-              dark
+              theme="dark"
             >
               <v-toolbar-title v-if="selectedElement">
                 {{
@@ -448,7 +447,6 @@
                 <v-card>
                   <v-form
                     ref="form"
-                    lazy-validation
                     @submit.prevent="save"
                   >
                     <v-card-title> Add event </v-card-title>
@@ -461,7 +459,7 @@
                             v-model:return-value="editedItem.date"
                             :close-on-content-click="false"
                             persistent
-                            :nudge-right="40"
+                            :offset="40"
                             transition="scale-transition"
                             offset-y
                           >
@@ -512,7 +510,7 @@
                               v-model:return-value="editedItem.entry"
                               :close-on-content-click="false"
                               persistent
-                              :nudge-right="40"
+                              :offset="40"
                               transition="scale-transition"
                               offset-y
                               max-width="290px"
@@ -568,7 +566,7 @@
                               v-model:return-value="editedItem.exit"
                               :close-on-content-click="false"
                               persistent
-                              :nudge-right="40"
+                              :offset="40"
                               transition="scale-transition"
                               offset-y
                               max-width="290px"

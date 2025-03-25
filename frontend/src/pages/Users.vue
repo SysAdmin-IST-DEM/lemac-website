@@ -8,19 +8,19 @@
         Users
       </v-tab>
 
-      <v-tab-item>
+      <v-window-item>
         <v-container
           v-if="monitors"
           class="mt-6"
         >
           <MonitorTable :members="monitors" />
         </v-container>
-      </v-tab-item>
-      <v-tab-item>
+      </v-window-item>
+      <v-window-item>
         <v-container>
           <UserTable :members="users" />
         </v-container>
-      </v-tab-item>
+      </v-window-item>
     </v-tabs>
   </div>
 </template>

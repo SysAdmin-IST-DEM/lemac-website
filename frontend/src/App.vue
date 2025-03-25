@@ -41,7 +41,7 @@ html {
   overflow-y: auto !important;
 }
 #app {
-  background-color: var(--v-background-base);
+  background-color: rgb(var(--v-theme-background));
 }
 .theme--light.v-tabs-items {
   background-color: #eef2f5;

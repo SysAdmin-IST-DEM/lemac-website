@@ -1,13 +1,12 @@
 <template>
   <v-dialog
-    v-model="entryModal"
+    v-model="localEntryModal"
     max-width="1250px"
     persistent
   >
     <v-card>
       <v-form
         ref="formAdd"
-        lazy-validation
         @submit.prevent="save"
       >
         <v-card-title>
@@ -70,7 +69,7 @@
           <v-btn
             color="green"
             size="large"
-            dark
+            theme="dark"
             class="px-8"
             @click="save"
           >
@@ -79,7 +78,7 @@
           <v-btn
             color="light-gray"
             size="large"
-            dark
+            theme="dark"
             class="px-8"
             @click="close"
           >
@@ -121,6 +120,17 @@ export default {
         console.log(error)
       }
 
+    }
+  },
+  emits: ['update:entryModal'],
+  computed: {
+    localEntryModal: {
+      get() {
+        return this.entryModal;
+      },
+      set(value) {
+        this.$emit('update:entryModal', value);
+      }
     }
   }
 }

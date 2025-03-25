@@ -14,7 +14,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              dark
+              theme="dark"
               class="mb-2"
               v-bind="props"
             >
@@ -23,7 +23,7 @@
           </template>          <v-date-picker
             v-model="dates"
             class="py-3"
-            range
+            multiple="range"
             full-width
             no-title
             @change="update()"
