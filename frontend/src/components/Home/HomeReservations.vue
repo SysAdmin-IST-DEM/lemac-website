@@ -180,7 +180,7 @@ export default {
   name: 'HomeReservations',
   components: {},
   data: () => ({
-    focus: '',
+    focus: [new Date()],
     type: 'week',
     typeToLabel: {
       month: 'Month',
