@@ -1,7 +1,7 @@
 <template>
   <!-- TODO: app inside v-app-bar vuetify2 > vuetify3 -->
   <v-app-bar
-    dense
+    density="compact"
   >
     <v-row>
       <router-link to="/">
