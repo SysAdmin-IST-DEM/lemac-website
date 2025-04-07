@@ -47,7 +47,7 @@
       </template>
     </v-navigation-drawer>
     <v-app-bar
-      dense
+      density="compact"
       :order="mdAndDown ? 0 : -1"
     >
       <v-app-bar-nav-icon
