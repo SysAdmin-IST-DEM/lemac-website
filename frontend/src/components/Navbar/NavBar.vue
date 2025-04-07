@@ -100,6 +100,11 @@ export default {
           icon: 'mdi-table-chair',
           link: '/rooms',
         },
+        {
+          text: '3D Printing',
+          icon: 'mdi-google-drive',
+          link: '/drive',
+        },
       ],
     };
   },

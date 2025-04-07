@@ -100,6 +100,12 @@ const routes = [
     meta: { title: 'Monitor Schedule', navBar: NavBar },
   },
   {
+    path: '/drive',
+    beforeEnter() {
+      window.location.href = "https://drive.google.com/drive/folders/1KFYaJqnscGJ_YC5se43KJcyQQ56kYX2-?usp=drive_link"
+    }
+  },
+  {
     path: '*',
     name: 'page-not-found',
     component: NotFoundPage,
