@@ -11,6 +11,7 @@
         v-model="search"
         class="mt-6"
         label="Filter Workstations"
+        variant="underlined"
       />
       <v-spacer />
       <v-dialog
@@ -20,7 +21,7 @@
         <template #activator="{ props }">
           <v-btn
             color="secondary"
-            theme="dark"
+            variant="elevated"
             class="mb-2"
             v-bind="props"
           >
@@ -141,7 +142,7 @@
               </v-icon>
               {{ entry.observations }}
             </v-list-item-subtitle>
-            
+
             <v-list-item-action>
               <div>
                 <v-tooltip
@@ -152,7 +153,7 @@
                     <v-btn
                       class="bg-primary ma-1"
                       size="small"
-                     
+
                       v-bind="props"
                       @click="editEntry(entry)"
                     >
@@ -169,7 +170,7 @@
                     <v-btn
                       class="ma-1 bg-info-darken-1"
                       size="small"
-                     
+
                       v-bind="props"
                       @click="addObservation(entry)"
                     >
@@ -186,7 +187,7 @@
                     <v-btn
                       class="ma-1 bg-error"
                       size="small"
-                     
+
                       v-bind="props"
                       @click="closeEntry(entry)"
                     >

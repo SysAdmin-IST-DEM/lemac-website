@@ -27,6 +27,7 @@
             </div>
             <div
               v-for="(val) in entryStations"
+              :key="val.number"
               :class="[val.number ? 'cursor-pointer' : '', val.class]"
               @click="select(val)"
             >
