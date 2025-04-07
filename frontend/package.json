@@ -9,7 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "css-watch": "npx tailwindcss -i ./src/assets/tailwind.css -o ./src/assets/dist.css --watch"
+    "css-watch": "npx tailwindcss -i ./src/assets/tailwind.css -o src/assets/dist.css --watch"
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^3.4.1",
@@ -17,7 +17,7 @@
     "chart.js": "^4.4.7",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",
-    "tailwindcss": "^4.0.6",
+    "tailwindcss": "^4.1.3",
     "three": "^0.173.0",
     "vue": "^3.5.13",
     "vue-ics": "^0.1.4",
@@ -26,11 +26,11 @@
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.15",
+    "@tailwindcss/vite": "^4.1.3",
     "@vitejs/plugin-vue": "^5.2.3",
     "sass": "^1.85.0",
-    "vite": "^6.2.2",
-    "vite-plugin-vuetify": "^2.1.0"
+    "vite": "^6.2.5",
+    "vite-plugin-vuetify": "^2.1.1"
   },
   "bugs": {
     "url": "https://github.com/HackerSchool/lemac-project/issues"

@@ -1,5 +1,6 @@
 module.exports = {
-  content: ['./public/**/*.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  content: ['./*.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+  safelist: ['text-xs', 'text-base'],
   theme: {
     extend: {
       gridTemplateColumns: {

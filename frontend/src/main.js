@@ -5,7 +5,7 @@ import router from './plugins/router';
 import store from './plugins/store';
 import vuetify from './plugins/vuetify';
 import './plugins/notifications';
-import './assets/dist.css';
+import './assets/tailwind.css';
 
 const app = createApp(App);
 

@@ -113,7 +113,7 @@
         >
           <v-list-item>
             <v-list-item-title class="mb-2">
-              <v-chip color="secondary">
+              <v-chip color="secondary" variant="elevated">
                 {{ entry.istId.slice(4) }}
               </v-chip>
             </v-list-item-title>
