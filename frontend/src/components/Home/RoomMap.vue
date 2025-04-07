@@ -372,7 +372,7 @@ export default {
 
   unmounted() {
     console.log('Test');
-    this.socket.close();
+    if(this.socket) this.socket.close();
   },
   methods: {
     async update() {

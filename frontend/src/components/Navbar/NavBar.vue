@@ -13,7 +13,6 @@
           :key="index"
           :value="index"
           :to="route.link"
-          text
           class="mb-1"
           @click.stop="drawer = !drawer"
         >
@@ -47,9 +46,9 @@
         </div>
       </template>
     </v-navigation-drawer>
-
     <v-app-bar
       dense
+      :order="mdAndDown ? 0 : -1"
     >
       <v-app-bar-nav-icon
         v-if="mdAndDown"
@@ -81,7 +80,7 @@ export default {
 
   data() {
     return {
-      drawer: false,
+      drawer: true,
       group: null,
       routes: [
         {

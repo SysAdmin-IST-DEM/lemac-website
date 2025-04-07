@@ -154,7 +154,7 @@ import moment from 'moment';
 
 export default {
   data: () => ({
-    focus: '',
+    focus: [new Date()],
     type: 'month',
     typeToLabel: {
       month: 'Month',

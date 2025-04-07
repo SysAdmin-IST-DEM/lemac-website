@@ -71,7 +71,7 @@
                       >
                         <template #activator="{ props }">
                           <v-text-field
-                            v-model="editedItem.date"
+                            v-model="editedItem.dateString"
                             label="Date for reservation"
                             prepend-icon="mdi-calendar"
                             readonly
@@ -337,7 +337,7 @@
           color="primary"
           :events="filteredEvents"
           :event-color="getEventColor"
-          :type="type"
+          :view-mode="type"
           interval-count="14"
           first-interval="8"
           @click:event="showEvent"
@@ -709,7 +709,7 @@ import moment from 'moment';
 
 export default {
   data: () => ({
-    focus: '',
+    focus: [new Date()],
     type: 'week',
     typeToLabel: {
       month: 'Month',
@@ -734,7 +734,7 @@ export default {
     editedItem: {
       entry: '',
       exit: '',
-      date: '',
+      date: new Date(),
     },
     requested: [],
     items: ['SDM', 'MOM', 'LTI'],
@@ -777,7 +777,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.calendar.checkChange();
+    //this.$refs.calendar.checkChange();
   },
   methods: {
     fTime(start, end) {
@@ -801,7 +801,7 @@ export default {
     },
 
     setToday() {
-      this.focus = '';
+      this.focus = new Date();
     },
 
     prev() {
