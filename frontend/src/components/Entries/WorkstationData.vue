@@ -101,14 +101,12 @@ export default {
         responsive: true,
         lineTension: 1,
         scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                padding: 25
-              }
+          y: {
+            ticks: {
+              beginAtZero: true,
+              padding: 25
             }
-          ]
+          }
         }
       }
     };
@@ -131,14 +129,12 @@ export default {
         responsive: true,
         lineTension: 1,
         scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                padding: 25
-              }
+          y: {
+            ticks: {
+              beginAtZero: true,
+              padding: 25
             }
-          ]
+          }
         }
       }
     };

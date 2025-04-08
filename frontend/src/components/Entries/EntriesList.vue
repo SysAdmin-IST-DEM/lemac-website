@@ -1,17 +1,19 @@
 <template>
   <div class="elevation-1">
     <v-toolbar flat>
-      <v-toolbar-title> Lab Entries </v-toolbar-title>
+      <v-toolbar-title class="flex-0-0">
+        Lab Entries
+      </v-toolbar-title>
       <v-divider
-        class="mx-4"
-        inset
+        class="mx-4 border-opacity-100"
         vertical
       />
       <v-text-field
         v-model="search"
-        class="mt-6"
+        class="mt-2"
         label="Filter Workstations"
         variant="underlined"
+        color="secondary"
       />
       <v-spacer />
       <v-dialog
@@ -22,7 +24,7 @@
           <v-btn
             color="secondary"
             variant="elevated"
-            class="mb-2"
+            class="mb-2 mr-4"
             v-bind="props"
           >
             New Registration
@@ -113,7 +115,10 @@
         >
           <v-list-item>
             <v-list-item-title class="mb-2">
-              <v-chip color="secondary" variant="elevated">
+              <v-chip
+                color="secondary"
+                variant="elevated"
+              >
                 {{ entry.istId.slice(4) }}
               </v-chip>
             </v-list-item-title>
@@ -143,61 +148,75 @@
               {{ entry.observations }}
             </v-list-item-subtitle>
 
-            <v-list-item-action>
-              <div>
-                <v-tooltip
-                  location="bottom"
-                  open-delay="500"
-                >
-                  <template #activator="{ props }">
-                    <v-btn
-                      class="bg-primary ma-1"
-                      size="small"
+            <template #append>
+              <v-tooltip
+                location="bottom"
+                open-delay="500"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    class="bg-primary ma-1"
+                    size="small"
 
-                      v-bind="props"
-                      @click="editEntry(entry)"
+                    v-bind="props"
+                    @click="editEntry(entry)"
+                  >
+                    <v-icon
+                      color="white"
+                      size="large"
                     >
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  Edit
-                </v-tooltip>
-                <v-tooltip
-                  location="bottom"
-                  open-delay="500"
-                >
-                  <template #activator="{ props }">
-                    <v-btn
-                      class="ma-1 bg-info-darken-1"
-                      size="small"
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn>
+                </template>
+                Edit
+              </v-tooltip>
+              <v-tooltip
+                location="bottom"
+                open-delay="500"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    class="ma-1"
+                    size="small"
+                    color="info"
+                    
+                    v-bind="props"
+                    @click="addObservation(entry)"
+                  >
+                    <v-icon
+                      color="white"
+                      size="large"
+                    >
+                      mdi-text
+                    </v-icon>
+                  </v-btn>
+                </template>
+                Observations
+              </v-tooltip>
+              <v-tooltip
+                location="bottom"
+                open-delay="500"
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    class="ma-1 bg-error"
+                    size="small"
 
-                      v-bind="props"
-                      @click="addObservation(entry)"
+                    v-bind="props"
+                    @click="closeEntry(entry)"
+                  >
+                    <v-icon
+                      color="white"
+                      size="large"
                     >
-                      <v-icon>mdi-text</v-icon>
-                    </v-btn>
-                  </template>
-                  Observations
-                </v-tooltip>
-                <v-tooltip
-                  location="bottom"
-                  open-delay="500"
-                >
-                  <template #activator="{ props }">
-                    <v-btn
-                      class="ma-1 bg-error"
-                      size="small"
-
-                      v-bind="props"
-                      @click="closeEntry(entry)"
-                    >
-                      <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                  </template>
-                  Close Entry
-                </v-tooltip>
-              </div>
-            </v-list-item-action>
+                      mdi-close
+                    </v-icon>
+                  </v-btn>
+                </template>
+                Close Entry
+              </v-tooltip>
+            </template>
           </v-list-item>
           <v-divider
             v-if="index < entries.length - 1"
