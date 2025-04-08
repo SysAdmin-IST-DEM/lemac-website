@@ -1,8 +1,8 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :columns="columns"
     :items="data"
-    sort-by="id"
+    :sort-by="['id']"
     class="elevation-1"
   >
     <template #top>
@@ -20,13 +20,13 @@ import moment from 'moment';
 export default {
   data() {
     return {
-      headers: [
-        { text: 'Date', value: 'date', sortable: false },
-        { text: 'Entry hour', value: 'entry', sortable: false },
-        { text: 'Student number', value: 'stuId', sortable: false },
-        { text: 'Computer', value: 'computer', sortable: false },
-        { text: 'Exit hour', value: 'exit', sortable: false },
-        { text: 'Time spent', value: 'spent', sortable: false },
+      columns: [
+        { title: 'Date', key: 'date', sortable: false },
+        { title: 'Entry hour', key: 'entry', sortable: false },
+        { title: 'Student number', key: 'stuId', sortable: false },
+        { title: 'Computer', key: 'computer', sortable: false },
+        { title: 'Exit hour', key: 'exit', sortable: false },
+        { title: 'Time spent', key: 'spent', sortable: false },
       ],
       data: [],
       dates: [],
