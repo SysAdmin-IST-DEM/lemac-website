@@ -234,7 +234,7 @@
     </template>
     <template #expanded-item="{ headers, item }">
       <td
-        class="!h-full shadow-inner bg-gray-50"
+        class="h-full! shadow-inner bg-gray-50"
         :colspan="headers.length"
       >
         <div class="flex flex-col w-full h-full m-4">
