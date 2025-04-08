@@ -404,9 +404,9 @@ export default {
         const returnVal = val;
         returnVal.class =
           this.classData[index] == 'l'
-            ? `!border-r-2 !border-r-black ${returnVal.class}`
+            ? `border-r-2! border-r-black! ${returnVal.class}`
             : this.classData[index] == 'r'
-            ? `!border-l-2 !border-l-black ${returnVal.class}`
+            ? `border-l-2! border-l-black! ${returnVal.class}`
             : `${returnVal.class}`;
 
         return returnVal;
