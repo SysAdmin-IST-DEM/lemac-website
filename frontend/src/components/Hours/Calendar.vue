@@ -1,85 +1,87 @@
 <template>
   <v-row class="fill-height">
     <v-col>
-      <v-sheet height="64">
-        <v-toolbar flat>
-          <v-btn
-            class="mr-4"
-            color="secondary"
-            @click="setToday"
-          >
-            Today
-          </v-btn>
-          <v-btn
-            icon
-            variant="text"
-            size="small"
-            color="grey-darken-2"
-            @click="prev"
-          >
-            <v-icon size="small">
-              mdi-chevron-left
-            </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            variant="text"
-            size="small"
-            color="grey-darken-2"
-            @click="next"
-          >
-            <v-icon size="small">
-              mdi-chevron-right
-            </v-icon>
-          </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-          <v-spacer />
-          <v-menu
-            location="bottom right"
-            offset-y
-          >
-            <template #activator="{ props }">
-              <v-btn
-                color="secondary"
-                v-bind="props"
-              >
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon end>
-                  mdi-menu-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
-      </v-sheet>
-      <v-sheet height="75vh">
+      <v-sheet>
         <v-calendar
           ref="calendar"
           v-model="focus"
           color="primary"
           :events="events"
           :event-color="getEventColor"
-          :type="type"
+          :view-mode="type"
           interval-count="14"
           first-interval="8"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
-          @change="updateRange"
+          @update:model-value="updateRange"
         >
+          <template #header=" { title }">
+            <v-toolbar flat>
+              <v-btn
+                class="mr-4 ml-4"
+                color="secondary"
+                variant="elevated"
+                @click="setToday"
+              >
+                Today
+              </v-btn>
+              <v-btn
+                icon
+                variant="text"
+                size="small"
+                color="grey-darken-2"
+                @click="prev"
+              >
+                <v-icon size="small">
+                  mdi-chevron-left
+                </v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                variant="text"
+                size="small"
+                color="grey-darken-2"
+                @click="next"
+              >
+                <v-icon size="small">
+                  mdi-chevron-right
+                </v-icon>
+              </v-btn>
+              <v-toolbar-title>
+                {{ title }}
+              </v-toolbar-title>
+              <v-spacer />
+              <v-menu
+                location="bottom right"
+                offset-y
+              >
+                <template #activator="{ props }">
+                  <v-btn
+                    color="secondary"
+                    variant="elevated"
+                    v-bind="props"
+                  >
+                    <span>{{ typeToLabel[type] }}</span>
+                    <v-icon end>
+                      mdi-menu-down
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item @click="type = 'day'">
+                    <v-list-item-title>Day</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="type = 'week'">
+                    <v-list-item-title>Week</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="type = 'month'">
+                    <v-list-item-title>Month</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-toolbar>
+          </template>
           <template #interval="{ weekday, hour, date }">
             <div
               v-if="hour < 9 || hour >= 21"
@@ -151,6 +153,7 @@
 <script>
 import { getHours } from '@/api/hours.api';
 import moment from 'moment';
+import { useDate } from 'vuetify'
 
 export default {
   data: () => ({
@@ -169,7 +172,7 @@ export default {
     requested: [],
   }),
   mounted() {
-    this.$refs.calendar.checkChange();
+    this.updateRange(this.focus)
   },
   methods: {
     viewDay({ date }) {
@@ -180,13 +183,27 @@ export default {
       return event.color;
     },
     setToday() {
-      this.focus = '';
+      this.focus = [new Date()];
     },
     prev() {
-      this.$refs.calendar.prev();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() - 1, 1)]
+      }
     },
     next() {
-      this.$refs.calendar.next();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() + 1, 1)]
+      }
     },
     showEvent({ nativeEvent, event }) {
       const open = () => {
@@ -204,15 +221,30 @@ export default {
 
       nativeEvent.stopPropagation();
     },
-    async updateRange({ start, end }) {
+    async updateRange(value) {
       this.$loading.show();
-      if (!this.requested.includes('' + start.month + start.year)) {
-        await this.pushEvents(start.month, start.year);
-        this.requested.push('' + start.month + start.year);
+      const date = value[0];
+      const adapter = useDate();
+
+      let start, end
+      if (this.type === 'week') {
+        start = adapter.startOfWeek(date)
+        end   = adapter.endOfWeek(date)
+      } else if (this.type === 'month') {
+        start = adapter.startOfMonth(date)
+        end   = adapter.endOfMonth(date)
+      } else {
+        start = new Date(date)
+        end   = new Date(date)
       }
-      if (!this.requested.includes('' + end.month + end.year)) {
-        await this.pushEvents(end.month, end.year);
-        this.requested.push('' + end.month + end.year);
+
+      if (!this.requested.includes('' + start.getMonth() + start.getFullYear())) {
+        await this.pushEvents(start.getMonth(), start.getFullYear());
+        this.requested.push('' + start.getMonth() + start.getFullYear());
+      }
+      if (!this.requested.includes('' + end.getMonth() + end.getFullYear())) {
+        await this.pushEvents(end.getMonth(), end.getFullYear());
+        this.requested.push('' + end.getMonth() + end.getFullYear());
       }
       this.$loading.hide();
     },
@@ -223,11 +255,11 @@ export default {
       //   const max = new Date(`${end.date}T23:59:59`);
       for (let i = 0; i < allHours.length; i++) {
         events.push({
-          name: allHours[i].user.name.split(' ')[0],
-          start: moment(allHours[i].entry).utcOffset('+0000').format("YYYY-MM-DD HH:mm"),
-          end: moment(allHours[i].exit).utcOffset('+0000').format("YYYY-MM-DD HH:mm"),
+          title: allHours[i].user.name.split(' ')[0],
+          start: moment(allHours[i].entry).toDate(),
+          end: moment(allHours[i].exit).toDate(),
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: true,
+          allDay: false,
           details: allHours[i],
         });
       }
