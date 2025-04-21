@@ -1,37 +1,1 @@
-<template>
-  <v-data-table
-    :headers="headers"
-    :items="hours"
-    sort-by="id"
-    class="elevation-1"
-  >
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>Weekly Hours</v-toolbar-title>        <v-spacer />        <v-dialog
-          v-model="dialog"
-          max-width="450px"
-        >
-          <template #activator="{ props }">
-            <v-btn
-              color="secondary"
-              theme="dark"
-              class="mb-2"
-              v-bind="props"
-            >
-              <v-icon>mdi-calendar</v-icon>
-            </v-btn>
-          </template>          <v-date-picker
-            v-model="dates"
-            class="py-3"
-            multiple="range"
-            full-width
-            no-title
-            @change="update()"
-          />
-        </v-dialog>
-      </v-toolbar>
-    </template>    <template #[`item.time`]="{ item }">
-      {{ Math.floor(parseInt(item.time) / 60) }}h{{ parseInt(item.time % 60) || '' }}
-    </template>
-  </v-data-table>
-</template><script>import { getSumHours } from '@/api/hours.api';export default {  name: 'SumTable',  data: () => ({    dialog: false,    hours: [],    dates: [],    headers: [      { text: 'Name', value: 'name' },      { text: 'Time', value: 'time' },    ],  }),  async mounted() {    this.$loading.show();    const date = new Date();    date.setDate(date.getDate() - date.getDay());    this.dates[0] = date.toISOString().slice(0, 10);    date.setDate(date.getDate() + 6);    this.dates[1] = date.toISOString().slice(0, 10);    const response = await getSumHours(this.dates[0], this.dates[1]);    this.hours = response.data;    this.$loading.hide();  },  methods: {    async update() {      this.$loading.show();      //reverses the array if the first element selected was the end      if (new Date(this.dates[0]) > new Date(this.dates[1])) this.dates.reverse();      const response = await getSumHours(this.dates[0], this.dates[1]);      this.hours = response.data;      this.$loading.hide();    },  },};</script>
+<template>  <v-data-table    :headers="headers"    :items="hours"    :sort-by="[{ key: 'id'}]"    class="elevation-1"  >    <template #top>      <v-toolbar flat>        <v-toolbar-title>Weekly Hours</v-toolbar-title>        <v-spacer />        <v-dialog          v-model="dialog"          max-width="450px"        >          <template #activator="{ props }">            <v-btn              color="secondary"              variant="elevated"              class="mb-2 mr-4"              v-bind="props"            >              <v-icon size="large">mdi-calendar</v-icon>            </v-btn>          </template>          <v-date-picker            v-model="dates"            class="py-3"            color="secondary"            multiple="range"            show-adjacent-months            hide-header            @update:model-value="update"          />        </v-dialog>      </v-toolbar>    </template>    <template #[`item.time`]="{ item }">      {{ Math.floor(parseInt(item.time) / 60) }}h{{ parseInt(item.time % 60) || '' }}    </template>  </v-data-table></template><script>import { getSumHours } from '@/api/hours.api';import moment from 'moment';export default {  name: 'SumTable',  data: () => ({    dialog: false,    hours: [],    dates: [],    headers: [      { text: 'Name', value: 'name' },      { text: 'Time', value: 'time' },    ],  }),  async mounted() {    this.$loading.show();    let now = new Date();    for(let i = 0; i < 7; i++) {      const date = new Date();      date.setDate(now.getDate() - now.getDay() + i);      now = date;      this.dates.push(date);    }    const response = await getSumHours(moment(this.dates[0]).format('YYYY-MM-DD'), moment(this.dates[this.dates.length - 1]).format('YYYY-MM-DD'));    this.hours = response.data;    this.$loading.hide();  },  methods: {    async update() {      this.$loading.show();      //reverses the array if the first element selected was the end      if (this.dates[0] > this.dates[this.dates.length - 1]) this.dates.reverse();      const response = await getSumHours(moment(this.dates[0]).format('YYYY-MM-DD'), moment(this.dates[this.dates.length - 1]).format('YYYY-MM-DD'));      this.hours = response.data;      this.$loading.hide();    },  },};</script>

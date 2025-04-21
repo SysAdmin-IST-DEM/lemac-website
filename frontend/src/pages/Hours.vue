@@ -1,31 +1,39 @@
 <template>
   <div v-if="getPermission === 1">
-    <v-tabs grow>
-      <v-tab key="1">
+    <v-tabs
+      v-model="tab"
+      color="primary"
+      bg-color="white"
+      slider-color="primary"
+      grow
+    >
+      <v-tab value="1">
         Personal Hours
       </v-tab>
-      <v-tab key="2">
+      <v-tab value="2">
         Calendar
       </v-tab>
-      <v-tab key="3">
+      <v-tab value="3">
         Hour Table
       </v-tab>
-      <v-window-item>
+    </v-tabs>
+    <v-tabs-window v-model="tab">
+      <v-tabs-window-item value="1">
         <v-container v-if="hours">
           <HourTable :prop-hours="hours" />
         </v-container>
-      </v-window-item>
-      <v-window-item>
+      </v-tabs-window-item>
+      <v-tabs-window-item value="2">
         <v-container>
           <Calendar />
         </v-container>
-      </v-window-item>
-      <v-window-item>
+      </v-tabs-window-item>
+      <v-tabs-window-item value="3">
         <v-container>
           <SumTable />
         </v-container>
-      </v-window-item>
-    </v-tabs>
+      </v-tabs-window-item>
+    </v-tabs-window>
   </div>
 
   <div v-else>
@@ -51,6 +59,7 @@ export default {
   components: { HourTable, Calendar, SumTable },
   data() {
     return {
+      tab: null,
       hours: null,
     };
   },

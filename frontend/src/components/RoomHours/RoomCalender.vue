@@ -471,7 +471,7 @@
                                 readonly
                                 required
                                 :rules="[() => !!editedItem.date || 'This field is required']"
-                               
+
                                 v-bind="props"
                               />
                             </template>
@@ -524,7 +524,7 @@
                                   readonly
                                   required
                                   :rules="[() => !!editedItem.entry || 'This field is required']"
-                                 
+
                                   v-bind="props"
                                 />
                               </template>
@@ -580,7 +580,7 @@
                                   readonly
                                   required
                                   :rules="[() => !!editedItem.exit || 'This field is required']"
-                                 
+
                                   v-bind="props"
                                 />
                               </template>
@@ -799,19 +799,29 @@ export default {
         return event.color;
       }
     },
-
     setToday() {
-      this.focus = new Date();
+      this.focus = [new Date()];
     },
-
     prev() {
-      this.$refs.calendar.prev();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() - 1, 1)]
+      }
     },
-
     next() {
-      this.$refs.calendar.next();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() + 1, 1)]
+      }
     },
-
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;

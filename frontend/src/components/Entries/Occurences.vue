@@ -2,7 +2,6 @@
   <v-data-table
     :columns="columns"
     :items="data"
-    :sort-by="['id']"
     class="elevation-1"
   >
     <template #top>

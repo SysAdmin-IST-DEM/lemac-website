@@ -3,7 +3,7 @@
     :headers="headers"
     :items="users"
     :search="search"
-    sort-by="name"
+    :sort-by="[{ key: 'name'}]"
     class="elevation-1"
   >
     <template #top>
