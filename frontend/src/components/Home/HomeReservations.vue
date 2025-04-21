@@ -106,13 +106,13 @@
           color="primary"
           :events="filteredEvents"
           :event-color="getEventColor"
-          :type="type"
+          :view-mode="type"
           interval-count="14"
           first-interval="8"
           @click:more="viewDay"
           @click:date="viewDay"
-          @change="updateRange"
           @click:event="showEvent"
+          @change="updateRange"
         >
           <template #interval="{ weekday, hour, date }">
             <div
@@ -243,19 +243,29 @@ export default {
         return event.color;
       }
     },
-
     setToday() {
-      this.focus = '';
+      this.focus = [new Date()];
     },
-
     prev() {
-      this.$refs.calendar.prev();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() - 1, 1)]
+      }
     },
-
     next() {
-      this.$refs.calendar.next();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() + 1, 1)]
+      }
     },
-
     showEvent({ nativeEvent, event }) {
       const open = () => {
         this.selectedEvent = event;

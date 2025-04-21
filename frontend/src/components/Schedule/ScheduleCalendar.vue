@@ -106,7 +106,7 @@
         <v-calendar
           ref="calendar"
           v-model="value"
-          :type="type"
+          :view-mode="type"
           :events="events"
           :event-overlap-mode="mode"
           :event-overlap-threshold="60"
@@ -818,13 +818,27 @@ export default {
       //}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     },
     setToday() {
-      this.value = '';
+      this.focus = [new Date()];
     },
     prev() {
-      this.$refs.calendar.prev();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() - 1, 1)]
+      }
     },
     next() {
-      this.$refs.calendar.next();
+      const date = this.focus[0];
+      if (this.type === 'day') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)]
+      } else if (this.type === 'week') {
+        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)]
+      } else {
+        this.focus = [new Date(date.getFullYear(), date.getMonth() + 1, 1)]
+      }
     },
     async deleteHour(event) {
       const ev = this.events.filter((val) => this.getUniqueId(val) === this.getUniqueId(event));

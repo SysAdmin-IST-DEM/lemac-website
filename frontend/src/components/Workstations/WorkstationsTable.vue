@@ -4,9 +4,10 @@
     :items="workstations"
     :search="search"
     :single-expand="singleExpand"
-    sort-by="name"
+    :sort-by="[{ key: 'name'}]"
     show-expand
     class="elevation-1"
+    item-value="id"
   >
     <template #top>
       <v-toolbar flat>
@@ -30,7 +31,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              theme="dark"
+              variant="elevated"
               class="mb-2 mr-2"
               v-bind="props"
             >
@@ -107,7 +108,7 @@
           <template #activator="{ props }">
             <v-btn
               color="secondary"
-              theme="dark"
+              variant="elevated"
               class="mb-2"
               v-bind="props"
             >
@@ -226,174 +227,11 @@
     <template #[`item.type`]="{ item }">
       <v-chip
         :color="typeColors[item.type]"
-        theme="dark"
+        variant="elevated"
         class="capitalized"
       >
         {{ (types.find((v) => v.value == item.type) || {}).text }}
       </v-chip>
-    </template>
-    <template #expanded-item="{ headers, item }">
-      <td
-        class="h-full! shadow-inner bg-gray-50"
-        :colspan="headers.length"
-      >
-        <div class="flex flex-col w-full h-full m-4">
-          <div class="flex flex-row">
-            <div class="flex flex-col p-0 m-0 h-min">
-              <h3 class="mt-4 text-lg font-medium">
-                Softwares:
-              </h3>
-              <ul class="flex flex-col">
-                <li
-                  v-for="software in item.softwares"
-                  :key="software"
-                  aria-label="•"
-                  class="inline-flex flex-cols before:content-[attr(aria-label)] before:pr-2 before:my-auto before:text-lg"
-                >
-                  <span class="flex items-center justify-start">
-                    {{ software }}
-                  </span>
-                </li>
-              </ul>
-            </div>
-            <div class="mx-4 my-auto">
-              <v-dialog
-                v-if="getPermission === 1"
-                v-model="dialog_software"
-                max-width="550px"
-              >
-                <template #activator="{ props }">
-                  <v-btn
-                    color="secondary"
-                    theme="dark"
-                    class="mb-2 mr-2"
-                    v-bind="props"
-                  >
-                    Add a software
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-form
-                    ref="form_software"
-                    @submit.prevent="save"
-                  >
-                    <v-card-title>
-                      <span class="text-h5"> Add a software </span>
-                    </v-card-title>
-                    <v-card-text>
-                      <v-text-field
-                        v-model="software_to_add"
-                        label="Software to add"
-                        variant="outlined"
-                        :rules="[(v) => !!v || 'Software is required']"
-                      />
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer />
-                      <v-btn
-                        color="primary"
-                        variant="text"
-                        @click="close_software_dialog"
-                      >
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                        color="primary"
-                        variant="text"
-                        @click="() => save_software(item)"
-                      >
-                        Add Software
-                      </v-btn>
-                    </v-card-actions>
-                  </v-form>
-                </v-card>
-              </v-dialog>
-            </div>
-          </div>
-          <div class="flex flex-row">
-            <div class="flex flex-col p-0 m-0 h-min">
-              <h3 class="mt-4 text-lg font-medium">
-                Problems:
-              </h3>
-              <ul>
-                <li
-                  v-for="(problem, i) in item.problems"
-                  :key="problem.message"
-                  aria-label="•"
-                  class="relative inline-flex flex-cols before:content-[attr(aria-label)] before:pr-2 before:my-auto before:text-lg w-full pr-24"
-                >
-                  <span class="flex items-center justify-start mr-auto">
-                    {{ problem.message }}
-                  </span>
-                  <v-checkbox
-                    v-model="problem.resolved"
-                    :disabled="getPermission !== 1"
-                    class="self-end my-auto ml-4 min-w-max"
-                    hide-details
-                    label="Mark resolved"
-                    @update:model-value="(e) => change_issue_status(e, item, i)"
-                  />
-                </li>
-              </ul>
-            </div>
-            <div class="mx-4 my-auto">
-              <v-dialog
-                v-model="dialog_issue"
-                max-width="550px"
-              >
-                <template #activator="{ props }">
-                  <v-btn
-                    color="secondary"
-                    theme="dark"
-                    class="mb-2 mr-2"
-                    v-bind="props"
-                  >
-                    Report issue
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-form
-                    ref="form_issue"
-                    @submit.prevent="save"
-                  >
-                    <v-card-title>
-                      <span class="text-h5"> Report issue </span>
-                    </v-card-title>
-                    <v-card-text>
-                      <h4 class="mb-2 text-lg font-normal">
-                        Please describe the issue:
-                      </h4>
-                      <v-textarea
-                        v-model="issue_description"
-                        label="Description"
-                        variant="outlined"
-                        :rules="[(v) => !!v || 'Description is required']"
-                      />
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer />
-                      <v-btn
-                        color="primary"
-                        variant="text"
-                        @click="close_issue_dialog"
-                      >
-                        Cancel
-                      </v-btn>
-                      <v-btn
-                        color="primary"
-                        variant="text"
-                        @click="() => save_issue(item)"
-                      >
-                        Report
-                      </v-btn>
-                    </v-card-actions>
-                  </v-form>
-                </v-card>
-              </v-dialog>
-            </div>
-          </div>
-        </div>
-      </td>
     </template>
   </v-data-table>
 </template>
@@ -429,10 +267,10 @@ export default {
     search: '',
     workstations: [],
     headers: [
-      { text: 'Name', value: 'name' },
-      { text: 'Occupation/Capacity', value: 'capacity', filterable: false },
-      { text: 'Type', value: 'type' },
-      { text: 'Actions', value: 'actions', sortable: false, filterable: false },
+      { title: 'Name', key: 'name' },
+      { title: 'Occupation/Capacity', key: 'capacity', filterable: false },
+      { title: 'Type', key: 'type' },
+      { title: 'Actions', key: 'actions', sortable: false, filterable: false },
     ],
     editedIndex: -1,
     editedItem: {
