@@ -7,8 +7,16 @@
     class="elevation-1"
   >
     <!-- Forward all the item.<> slots -->
-    <template v-for="col in filterSlotHeaders" #[`item.${col.key}`]="slotProps" :key="col.key">
-      <slot v-if="$slots[`item.${col.key}`]" :name="`item.${col.key}`" v-bind="slotProps" />
+    <template
+      v-for="col in filterSlotHeaders"
+      #[`item.${col.key}`]="slotProps"
+      :key="col.key"
+    >
+      <slot
+        v-if="$slots[`item.${col.key}`]"
+        :name="`item.${col.key}`"
+        v-bind="slotProps"
+      />
     </template>
 
     <template #top>
@@ -17,40 +25,46 @@
         <v-toolbar-title class="flex-0-0">
           {{ title }}
         </v-toolbar-title>
-        <v-divider class="mx-4 border-opacity-100" vertical />
+        <v-divider
+          class="mx-4 border-opacity-100"
+          vertical
+          inset
+        />
         <v-text-field
           v-if="search"
           v-model="searchQuery"
-          append-icon="mdi-magnify"
+          class="mt-2"
           label="Search"
-          single-line
-          hide-details
+          variant="underlined"
+          color="secondary"
         />
         <v-spacer />
-        <v-btn
-          v-if="newButton"
-          color="secondary"
-          variant="elevated"
-          class="mb-2 mr-4"
-          @click="
-            selectedItem = null;
-            editDialog = true;
-          "
-        >
-          {{ newButton }}
-        </v-btn>
+        <slot name="button">
+          <v-btn
+            v-if="newButton"
+            color="secondary"
+            variant="elevated"
+            class="mb-2 mr-4"
+            @click="
+              selectedItem = null;
+              editDialog = true;
+            "
+          >
+            {{ newButton }}
+          </v-btn>
+        </slot>
 
         <!-- Custom slot for dialogs -->
         <slot name="dialogs">
           <!-- Delete dialog -->
-          <LemacDeleteDialog
+          <DashboardDeleteDialog
             v-model="deleteDialog"
             :item="selectedItem"
             @delete="$emit('delete', selectedItem)"
           />
 
           <!-- Edit dialog -->
-          <LemacEditDialog
+          <DashboardEditDialog
             v-model="editDialog"
             :item="selectedItem"
             :fields="editFields"
@@ -60,25 +74,40 @@
             <template #title>
               {{ title }}
             </template>
-          </LemacEditDialog>
+          </DashboardEditDialog>
         </slot>
       </v-toolbar>
     </template>
 
-    <template #[`item.actions`]="{ item }">
-      <v-icon size="small" class="mr-2" @click="openEditDialog(item)"> mdi-pencil </v-icon>
-      <v-icon size="small" @click="openDeleteDialog(item)"> mdi-delete </v-icon>
+    <template
+      v-if="actionHeader && actionHeader.permission ? getPermission >= actionHeader.permission : true"
+      #[`item.actions`]="{ item }"
+    >
+      <v-icon
+        size="small"
+        class="mr-2"
+        @click="openEditDialog(item)"
+      >
+        mdi-pencil
+      </v-icon>
+      <v-icon
+        size="small"
+        @click="openDeleteDialog(item)"
+      >
+        mdi-delete
+      </v-icon>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import LemacEditDialog from '@/components/LemacDataTable/LemacEditDialog.vue';
-import LemacDeleteDialog from '@/components/LemacDataTable/LemacDeleteDialog.vue';
+import DashboardEditDialog from '@/components/DashboardDataTable/DashboardEditDialog.vue';
+import DashboardDeleteDialog from '@/components/DashboardDataTable/DashboardDeleteDialog.vue';
+import { mapGetters } from 'vuex';
 
 export default {
-  name: 'LemacDataTable',
-  components: { LemacEditDialog, LemacDeleteDialog },
+  name: 'DashboardTable',
+  components: { DashboardEditDialog, DashboardDeleteDialog },
   props: {
     title: {
       type: String,
@@ -103,7 +132,7 @@ export default {
     },
     editFields: {
       type: Array,
-      default: null,
+      default: () => [],
     },
     editInitialization: {
       type: Function,
@@ -121,6 +150,10 @@ export default {
     filterSlotHeaders() {
       return this.headers.filter((header) => this.$slots[`item.${header.key}`]);
     },
+    actionHeader() {
+      return this.headers.find((header) => header.key === 'actions');
+    },
+    ...mapGetters('user', ['getPermission'])
   },
   mounted() {},
   methods: {
