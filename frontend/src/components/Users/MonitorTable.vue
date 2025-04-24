@@ -1,182 +1,45 @@
 <template>
-  <v-data-table
+  <DashboardTable
+    title="Users"
     :headers="headers"
     :items="users"
-    :search="search"
+    search
     :sort-by="[{ key: 'name'}]"
-    class="elevation-1"
+    :new-button="getPermission === 1 ? 'New User' : undefined"
+    :edit-initialization="editInitialization"
+    :edit-fields="editFields"
+    @edit="editItem"
+    @delete="deleteItemConfirm"
   >
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>Users</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        />
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          hide-details
-        />
-        <v-spacer />
-        <v-dialog
-          v-if="getPermission === 1"
-          v-model="dialog"
-          max-width="550px"
-        >
-          <template #activator="{ props }">
-            <v-btn
-              color="secondary"
-              theme="dark"
-              class="mb-2"
-              v-bind="props"
-            >
-              New User
-            </v-btn>
-          </template>
-          <v-card>
-            <v-form
-              ref="form"
-              @submit.prevent="save"
-            >
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-              <v-card-text>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      :rules="[(v) => !!v || 'User name is required']"
-                      label="Name"
-                      required
-                      variant="filled"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-text-field
-                      v-model="editedItem.istId"
-                      :rules="[(v) => !!v || 'IST Id is required']"
-                      label="Id"
-                      required
-                      variant="filled"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-select
-                      v-model="editedItem.admin"
-                      label="Role"
-                      :items="roles"
-                      variant="filled"
-                    />
-                  </v-col>
-                  <v-col cols="4">
-                    <v-select
-                      v-model="editedItem.active"
-                      label="State"
-                      :items="states"
-                      variant="filled"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-form>
-          </v-card>
-        </v-dialog>
-        <v-dialog
-          v-model="dialogDelete"
-          max-width="500px"
-        >
-          <v-card>
-            <v-card-title class="text-h5">
-              Are you sure you want to delete this item?
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                color="primary"
-                variant="text"
-                @click="closeDelete"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="error"
-                variant="text"
-                @click="deleteItemConfirm"
-              >
-                OK
-              </v-btn>
-              <v-spacer />
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template
-      v-if="getPermission === 1"
-      #[`item.actions`]="{ item }"
-    >
-      <v-icon
-        size="small"
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        size="small"
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
     <template #[`item.admin`]="{ item }">
       <v-chip
         :color="roleColors[item.admin]"
-        theme="dark"
+        variant="elevated"
         class="capitalized"
       >
-        {{ (roles.find((v) => v.value == item.admin) || {}).text }}
+        {{ (roles.find((v) => v.value === item.admin) || {}).title }}
       </v-chip>
     </template>
     <template #[`item.active`]="{ item }">
       <v-chip
         :color="stateColors[item.active]"
-        theme="dark"
+        variant="elevated"
         class="capitalized"
       >
-        {{ (states.find((v) => v.value == item.active) || {}).text }}
+        {{ (states.find((v) => v.value === item.active) || {}).title }}
       </v-chip>
     </template>
-  </v-data-table>
+  </DashboardTable>
 </template>
 
 <script>
 import { createUser, deleteUser, updateUser } from '@/api/user.api';
 import { mapGetters } from 'vuex';
+import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'MonitorTable',
+  components: { DashboardTable },
   props: {
     members: {
       type: Array,
@@ -194,124 +57,74 @@ export default {
     },
   },
   data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    search: '',
     users: [],
     headers: [
-      { text: 'Member', value: 'name' },
-      { text: 'IST Id', value: 'istId' },
-      { text: 'Role', value: 'admin', filterable: false },
-      { text: 'State', value: 'active', filterable: false },
-      { text: 'Actions', value: 'actions', sortable: false, filterable: false },
+      { title: 'Member', key: 'name' },
+      { title: 'IST Id', key: 'istId' },
+      { title: 'Role', key: 'admin', filterable: false },
+      { title: 'State', key: 'active', filterable: false },
+      { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
     ],
-    editedIndex: -1,
-    editedItem: {
-      name: '',
-    },
-    defaultItem: {
-      name: '',
-      istId: '',
-      admin: '',
-      active: '',
-    },
-    roleColors: ['yellow darken-4', 'blue'],
-    stateColors: ['grey', 'green'],
+    roleColors: ['yellow-darken-4', 'blue'],
+    stateColors: ['error', 'success'],
     roles: [
-      { text: 'Admin', value: 1 },
-      { text: 'User', value: 0 },
+      { title: 'Admin', value: 1 },
+      { title: 'User', value: 0 },
     ],
     states: [
-      { text: 'Active', value: 1 },
-      { text: 'Inactive', value: 0 },
+      { title: 'Active', value: 1 },
+      { title: 'Inactive', value: 0 },
     ],
   }),
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New User' : 'Edit User';
+    editFields() {
+      return [
+        [
+          { key: 'name', label: 'Name', required: true, props: { variant: 'filled' }},
+        ],
+        [
+          { key: 'istId', label: 'Id', required: true, props: { variant: 'filled' } },
+          { key: 'admin', type: 'select', items: 'roles', required: true, props: { items: this.roles, variant: 'filled' } },
+          { key: 'active', type: 'select', items: 'states', required: true, props: { items: this.states, variant: 'filled' } },
+        ],
+      ];
     },
     ...mapGetters('user', ['getPermission']),
   },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
-  },
-
   mounted() {
     this.users = this.members;
   },
   methods: {
-    editItem(item) {
-      this.editedIndex = this.users.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    editInitialization(item) {
+      return Object.assign({}, item);
     },
-
-    deleteItem(item) {
-      this.editedIndex = this.users.indexOf(item);
-      this.dialogDelete = true;
-    },
-
-    async deleteItemConfirm() {
-      try {
-        await deleteUser(this.users[this.editedIndex].id);
-        const deleted = this.users.splice(this.editedIndex, 1);
+    async editItem(item, values) {
+      if (item) {
+        const response = await updateUser(item.id, values);
+        this.users.splice(this.users.indexOf(item), 1, response.data);
         this.$notify({
           type: 'success',
-          title: 'User deleted',
-          text: `You have deleted user ${deleted[0].name}`,
+          title: 'User updated',
+          text: `You have updated user ${response.data.name}`,
         });
-      } finally {
-        this.closeDelete();
+      } else {
+        const response = await createUser(values);
+        this.users.push(response.data);
+        this.$notify({
+          type: 'success',
+          title: 'User created',
+          text: `You have created user ${response.data.name}`,
+        });
       }
     },
-
-    close() {
-      this.dialog = false;
-      this.$refs.form.resetValidation();
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+    async deleteItemConfirm(item) {
+      await deleteUser(item.id);
+      const deleted = this.users.splice(this.users.indexOf(item), 1);
+      this.$notify({
+        type: 'success',
+        title: 'User deleted',
+        text: `You have deleted user ${deleted[0].name}`,
       });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    async save() {
-      // Don't save if validation is unsuccessful
-      if (!this.$refs.form.validate()) return;
-      try {
-        if (this.editedIndex > -1) {
-          const response = await updateUser(this.users[this.editedIndex].id, this.editedItem);
-          this.users.splice(this.editedIndex, 1, response.data);
-          this.$notify({
-            type: 'success',
-            title: 'User updated',
-            text: `You have updated user ${response.data.name}`,
-          });
-        } else {
-          const response = await createUser(this.editedItem);
-          this.users.push(response.data);
-          this.$notify({
-            type: 'success',
-            title: 'User created',
-            text: `You have created user ${response.data.name}`,
-          });
-        }
-      } finally {
-        this.close();
-      }
     },
   },
 };

@@ -7,6 +7,7 @@
       <v-divider
         class="mx-4 border-opacity-100"
         vertical
+        inset
       />
       <v-text-field
         v-model="search"
