@@ -1,32 +1,15 @@
 <template>
-  <v-data-table
+  <DashboardTable
+    title="Users"
     :headers="headers"
     :items="users"
-    :search="search"
+    search
     :sort-by="[{ key: 'name'}]"
-    class="elevation-1"
   >
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>Users</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        />
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          hide-details
-        />
-      </v-toolbar>
-    </template>
     <template #[`item.state`]="{ item }">
       <v-chip
         :color="(states.find(v => v.value === item.state).color)"
-        theme="dark"
-        class="capitalized"
+        variant="elevated"
       >
         {{ (states.find(v => v.value === item.state)).text }}
       </v-chip>
@@ -34,13 +17,16 @@
     <template #[`item.last_modified`]="{ item }">
       {{ getTimeDiff(item.last_modified) }}
     </template>
-  </v-data-table>
+  </DashboardTable>
 </template>
 
 <script>
 
+import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
+
 export default {
   name: 'UserTable',
+  components: { DashboardTable },
   props: {
     members: {
       type: Array,
@@ -58,28 +44,17 @@ export default {
     },
   },
   data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    search: '',
     users: [],
     headers: [
-      { text: 'User', value: 'name' },
-      { text: 'Workstation', value: 'workstation' },
-      { text: 'IST Id', value: 'ist_id' },
-      { text: 'Email', value: 'email', filterable: false },
-      { text: 'Course', value: 'course' },
-      { text: 'State', value: 'state' },
-      { text: 'Mifare ID', value: 'mifare_id', sortable: false, filterable: false },
-      { text: 'Time since last action', value: 'last_modified', sortable: false, filterable: false },
+      { title: 'User', key: 'name' },
+      { title: 'Workstation', key: 'workstation' },
+      { title: 'IST Id', key: 'ist_id' },
+      { title: 'Email', key: 'email', filterable: false },
+      { title: 'Course', key: 'course' },
+      { title: 'State', key: 'state' },
+      { title: 'Mifare ID', key: 'mifare_id', sortable: false, filterable: false },
+      { title: 'Time since last action', key: 'last_modified', sortable: false, filterable: false },
     ],
-    defaultItem: {
-      name: '',
-      ist_id: '',
-      email: '',
-      course: '',
-      state: '',
-      mifare_id: '',
-    },
     states: [
       { text: 'Online', value: "online", color: 'blue' },
       { text: 'Offline', value: "offline", color: 'gray' },

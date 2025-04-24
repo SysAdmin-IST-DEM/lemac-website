@@ -7,7 +7,7 @@ module.exports = {
       return;
     }
     if (req.body && req.body.title && req.body.text) {
-      const data = await controller.addPublication(req.db, req.body.title, req.body.text);
+      const data = await controller.addPublication(req.db, req.body.title, req.body.text, req.body.active);
 
       const response = {
         id: data.id,
