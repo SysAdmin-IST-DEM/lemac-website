@@ -1,5 +1,8 @@
 <template>
-  <v-dialog v-model="isOpen" max-width="550px">
+  <v-dialog
+    v-model="isOpen"
+    max-width="550px"
+  >
     <v-card>
       <v-card-title class="text-h5">
         {{ item ? 'Edit ' : 'New ' }}
@@ -8,11 +11,22 @@
         </slot>
       </v-card-title>
       <v-card-text class="!p-0">
-        <v-form ref="form" @submit.prevent="$emit('edit', values)">
+        <v-form
+          ref="form"
+          @submit.prevent="$emit('edit', values)"
+        >
           <v-container>
-            <v-row v-for="(row, index) in fields" :key="index" no-gutters>
-              <v-col v-for="(field, fieldIndex) in row" :key="fieldIndex">
-                <LemacDynamicField
+            <v-row
+              v-for="(row, index) in fields"
+              :key="index"
+              no-gutters
+            >
+              <v-col
+                v-for="(field, fieldIndex) in row"
+                :key="fieldIndex"
+                v-bind="field.colProps"
+              >
+                <DashboardDynamicField
                   v-if="field.permission ? field.permission >= getPermission : true"
                   v-model="values[field.key]"
                   :type="field.type"
@@ -49,12 +63,12 @@
 </template>
 
 <script>
-import LemacDynamicField from '@/components/LemacDataTable/LemacDynamicField.vue';
+import DashboardDynamicField from '@/components/DashboardDataTable/DashboardDynamicField.vue';
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'LemacEditDialog',
-  components: { LemacDynamicField },
+  name: 'DashboardEditDialog',
+  components: { DashboardDynamicField },
   props: {
     modelValue: {
       type: Boolean,

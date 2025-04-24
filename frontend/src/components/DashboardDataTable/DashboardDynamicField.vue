@@ -60,24 +60,24 @@
     v-bind="props"
     :label="label"
     :prepend-icon="labelIcon"
-    variant="underlined"
+    :variant="props.variant ? props.variant : 'underlined'"
     :required="required"
     :rules="validationRules"
   />
 </template>
 <script>
 import { VTimePicker } from 'vuetify/labs/components';
-import { VDatePicker, VTextField, VAutocomplete } from 'vuetify/components';
+import { VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect } from 'vuetify/components';
 import moment from 'moment';
 
 export default {
-  name: 'LemacDynamicField',
+  name: 'DashboardDynamicField',
   props: {
     type: { type: String, default: 'text' },
     wrapper: { type: String, default: '' }, // e.g. 'menu' | 'dialog' | '',
     label: { type: String, default: '' },
     labelIcon: { type: String, default: '' },
-    modelValue: [String, Number, Object, Array, Date],
+    modelValue: [String, Number, Object, Array, Date, Boolean],
     required: { type: Boolean, default: false },
     props: { type: Object, default: () => ({}), },
   },
@@ -107,6 +107,12 @@ export default {
         return VTimePicker;
       } else if(this.type === 'autocomplete') {
         return VAutocomplete;
+      } else if(this.type === 'switch') {
+        return VSwitch;
+      } else if(this.type === 'textarea') {
+        return VTextarea;
+      } else if(this.type === 'select') {
+        return VSelect;
       }
       return VTextField;
     },
