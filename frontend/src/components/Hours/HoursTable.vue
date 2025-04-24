@@ -1,11 +1,10 @@
 <template>
-  <LemacDataTable
-    ref="table"
+  <DashboardTable
     title="Hours"
     :headers="headers"
     :items="hours"
     :sort-by="[{ key: 'id', order: 'desc' }]"
-    new-button="Add Entry"
+    new-button="New Entry"
     :edit-fields="editFields"
     :edit-initialization="editInitialization"
     @edit="editItem"
@@ -38,7 +37,7 @@
     <template #[`item.sold_amount`]="{ item }">
       {{ item.sold_amount > 0 ? item.sold_amount : '-' }}
     </template>
-  </LemacDataTable>
+  </DashboardTable>
 </template>
 
 <script>
@@ -46,12 +45,12 @@ import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours
 import { getUsers } from '@/api/user.api';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
-import LemacDataTable from '@/components/LemacDataTable/LemacTable.vue';
+import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'HourTable',
   components: {
-    LemacDataTable,
+    DashboardTable,
   },
   props: {
     propHours: {
@@ -177,9 +176,8 @@ export default {
     },
 
     async deleteItemConfirm(item) {
-      this.editedIndex = this.hours.indexOf(item);
-      await deleteHours(this.hours[this.editedIndex].id);
-      const deleted = this.hours.splice(this.editedIndex, 1);
+      await deleteHours(item.id);
+      const deleted = this.hours.splice(this.hours.indexOf(item), 1);
       this.$notify({
         type: 'success',
         title: 'Entry deleted',

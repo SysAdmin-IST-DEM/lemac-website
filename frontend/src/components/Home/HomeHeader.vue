@@ -1,36 +1,37 @@
 <template>
-  <!-- TODO: app inside v-app-bar vuetify2 > vuetify3 -->
   <v-app-bar
     density="compact"
   >
-    <v-row>
-      <router-link to="/">
-        <h2 class="mx-3 text-primary">
-          LEMAC
-        </h2>
-      </router-link>
-      <v-divider vertical />
-      <router-link to="/about">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-          About
-        </h2>
-      </router-link>
-      <router-link to="/reservations">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-          Reservations
-        </h2>
-      </router-link>
-      <router-link to="/software">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-          Software DEM
-        </h2>
-      </router-link>
-      <router-link to="/printing">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-          3DPrinting
-        </h2>
-      </router-link>
-    </v-row>
+    <router-link to="/">
+      <h2 class="mx-3 text-primary">
+        LEMAC
+      </h2>
+    </router-link>
+    <v-divider
+      class="border-opacity-100"
+      vertical
+      inset
+    />
+    <router-link to="/about">
+      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        About
+      </h2>
+    </router-link>
+    <router-link to="/reservations">
+      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        Reservations
+      </h2>
+    </router-link>
+    <router-link to="/software">
+      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        Software DEM
+      </h2>
+    </router-link>
+    <router-link to="/printing">
+      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        3DPrinting
+      </h2>
+    </router-link>
     <v-spacer />
     <div v-if="!getId">
       <v-btn
@@ -86,5 +87,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

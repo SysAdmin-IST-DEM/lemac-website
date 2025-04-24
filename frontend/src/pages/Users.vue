@@ -1,28 +1,34 @@
 <template>
-  <div>
-    <v-tabs grow>
-      <v-tab key="1">
-        Monitors
-      </v-tab>
-      <v-tab key="2">
-        Users
-      </v-tab>
+  <v-tabs
+    v-model="tab"
+    color="primary"
+    bg-color="white"
+    slider-color="primary"
+    grow
+  >
+    <v-tab value="1">
+      Monitors
+    </v-tab>
+    <v-tab value="2">
+      Users
+    </v-tab>
+  </v-tabs>
 
-      <v-window-item>
-        <v-container
-          v-if="monitors"
-          class="mt-6"
-        >
-          <MonitorTable :members="monitors" />
-        </v-container>
-      </v-window-item>
-      <v-window-item>
-        <v-container>
-          <UserTable :members="users" />
-        </v-container>
-      </v-window-item>
-    </v-tabs>
-  </div>
+  <v-tabs-window v-model="tab">
+    <v-tabs-window-item value="1">
+      <v-container
+        v-if="monitors"
+        class="mt-6"
+      >
+        <MonitorTable :members="monitors" />
+      </v-container>
+    </v-tabs-window-item>
+    <v-tabs-window-item value="2">
+      <v-container>
+        <UserTable :members="users" />
+      </v-container>
+    </v-tabs-window-item>
+  </v-tabs-window>
 </template>
 
 <script>
@@ -35,12 +41,11 @@ import { getEntries } from '@/api/entries.api';
 export default {
   name: 'UserPage',
   components: { MonitorTable, UserTable },
-  data() {
-    return {
-      monitors: null,
-      users: null,
-    };
-  },
+  data: () => ({
+    tab: null,
+    monitors: null,
+    users: null,
+  }),
   async mounted() {
     this.$loading.show();
     this.monitors = (await getUsers()).data;

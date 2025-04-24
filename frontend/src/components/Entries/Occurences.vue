@@ -1,25 +1,22 @@
 <template>
-  <v-data-table
-    :columns="columns"
+  <DashboardTable
+    title="Occurrence List"
+    :headers="headers"
     :items="data"
     class="elevation-1"
-  >
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>Occurrence list</v-toolbar-title>
-      </v-toolbar>
-    </template>
-  </v-data-table>
+  />
 </template>
 
 <script>
 import { getEntries } from '@/api/entries.api';
 import moment from 'moment';
+import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
 
 export default {
+  components: { DashboardTable },
   data() {
     return {
-      columns: [
+      headers: [
         { title: 'Date', key: 'date', sortable: false },
         { title: 'Entry hour', key: 'entry', sortable: false },
         { title: 'Student number', key: 'stuId', sortable: false },
