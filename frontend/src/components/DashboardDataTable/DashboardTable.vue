@@ -4,7 +4,8 @@
     :items="items"
     :search="searchQuery"
     :sort-by="sortBy"
-    class="elevation-1"
+    :single-expand="expand"
+    :show-expand="expand"
   >
     <!-- Forward all the item.<> slots -->
     <template
@@ -16,6 +17,15 @@
         v-if="$slots[`item.${col.key}`]"
         :name="`item.${col.key}`"
         v-bind="slotProps"
+      />
+    </template>
+
+    <!-- Forward the expanded-row slot -->
+    <template #expanded-row="{ columns, item }">
+      <slot
+        name="expanded-row"
+        :columns="columns"
+        :item="item"
       />
     </template>
 
@@ -137,6 +147,10 @@ export default {
     editInitialization: {
       type: Function,
       default: () => {},
+    },
+    expand: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['delete', 'edit'],
