@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^3.4.1",
-    "axios": "^1.7.9",
+    "axios": "^1.9.0",
     "chart.js": "^4.4.7",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",
@@ -22,7 +22,7 @@
     "vue": "^3.5.13",
     "vue-ics": "^0.1.4",
     "vue-router": "^4.5.0",
-    "vuetify": "^3.8.2",
+    "vuetify": "^3.8.4",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

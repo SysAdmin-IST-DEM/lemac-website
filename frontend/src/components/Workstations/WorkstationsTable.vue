@@ -1,247 +1,125 @@
 <template>
-  <v-data-table
+  <DashboardTable
+    title="Workstations"
     :headers="headers"
     :items="workstations"
-    :search="search"
-    :single-expand="singleExpand"
-    :sort-by="[{ key: 'name'}]"
-    show-expand
-    class="elevation-1"
-    item-value="id"
+    search
+    :sort-by="[{ key: 'name' }]"
+    :new-button="getPermission === 1 ? 'New Workstation' : undefined"
+    expand
   >
-    <template #top>
-      <v-toolbar flat>
-        <v-toolbar-title>Workstations</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        />
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          hide-details
-        />
-        <v-spacer />
-        <v-dialog
-          v-model="dialog_filter"
-          max-width="550px"
-        >
-          <template #activator="{ props }">
-            <v-btn
-              color="secondary"
-              variant="elevated"
-              class="mb-2 mr-2"
-              v-bind="props"
-            >
-              Filters
-            </v-btn>
-          </template>
-          <v-card>
-            <v-form
-              ref="form_filter"
-              @submit.prevent="save"
-            >
-              <v-card-title>
-                <span class="text-h5"> Filter </span>
-              </v-card-title>
-              <v-card-text>
-                <v-select
-                  v-model="selected_softwares"
-                  :items="available_software"
-                  label="Software to filter"
-                  :rules="[(v) => v.length > 0 || 'Software to filter is required!']"
-                  multiple
-                >
-                  <template #prepend-item>
-                    <v-checkbox
-                      v-model="select_all"
-                      class="ml-4"
-                      label="Select all"
-                      @update:model-value="selectAll"
-                    />
-                    <v-divider class="mt-2" />
-                  </template>
-                </v-select>
-                <v-checkbox
-                  v-model="filter_with_issues"
-                  label="Filter all with issues"
-                />
-                <v-checkbox
-                  v-model="filter_with_unresolved_issues"
-                  label="Filter all with unresolved"
-                />
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="clear_filter"
-                >
-                  Clear Filter
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="close_filter"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="save_filter"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-form>
-          </v-card>
-        </v-dialog>
-        <v-dialog
-          v-if="getPermission === 1"
-          v-model="dialog"
-          max-width="550px"
-        >
-          <template #activator="{ props }">
-            <v-btn
-              color="secondary"
-              variant="elevated"
-              class="mb-2"
-              v-bind="props"
-            >
-              New Workstation
-            </v-btn>
-          </template>
-          <v-card>
-            <v-form
-              ref="form"
-              @submit.prevent="save"
-            >
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-              <v-card-text>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      :rules="[(v) => !!v || 'Workstation name is required']"
-                      label="Name"
-                      required
-                      variant="filled"
-                    />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
-                      v-model="editedItem.capacity"
-                      label="Capacity"
-                      type="number"
-                      required
-                      variant="filled"
-                    />
-                  </v-col>
-                  <v-col cols="6">
-                    <v-select
-                      v-model="editedItem.type"
-                      label="Type"
-                      required
-                      :items="types"
-                      variant="filled"
-                    />
-                  </v-col>
-                </v-row>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-form>
-          </v-card>
-        </v-dialog>
-        <v-dialog
-          v-model="dialogDelete"
-          max-width="500px"
-        >
-          <v-card>
-            <v-card-title class="text-h5">
-              Are you sure you want to delete this item?
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn
-                color="primary"
-                variant="text"
-                @click="closeDelete"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="error"
-                variant="text"
-                @click="deleteItemConfirm"
-              >
-                OK
-              </v-btn>
-              <v-spacer />
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template #[`item.actions`]="{ item }">
-      <v-icon
-        v-if="getPermission === 1"
-        size="small"
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        v-if="getPermission === 1"
-        size="small"
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
     <template #[`item.capacity`]="{ item }">
       {{ `${item.occupation} / ${item.capacity}` }}
     </template>
     <template #[`item.type`]="{ item }">
-      <v-chip
-        :color="typeColors[item.type]"
-        variant="elevated"
-        class="capitalized"
-      >
+      <v-chip :color="typeColors[item.type]" variant="elevated" class="capitalized">
         {{ (types.find((v) => v.value == item.type) || {}).text }}
       </v-chip>
     </template>
-  </v-data-table>
+
+    <template #expanded-row="{ columns, item }">
+      <tr>
+        <td class="!p-0" :colspan="columns.length">
+          <v-container class="!h-full shadow-inner bg-gray-50">
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-list
+                  density="compact"
+                  class="!bg-gray-50"
+                >
+                  <v-list-subheader>
+                    <span>Softwares</span>
+                    <v-btn
+                      color="secondary"
+                      density="comfortable"
+                      icon="mdi-plus"
+                      size="small"
+                      class="ml-2"
+                      @click="addSoftware"
+                    />
+                  </v-list-subheader>
+
+                  <v-list-item
+                    v-for="(software, i) in item.softwares"
+                    :key="i"
+                    :value="software"
+                    :title="software"
+                  >
+                    <template #prepend>
+                      <v-icon>mdi-desktop-classic</v-icon>
+                    </template>
+
+                    <template
+                      v-if="getPermission === 1"
+                      #append
+                    >
+                      <v-icon
+                        size="small"
+                        @click="deleteSoftware(item, i)"
+                      >
+                        mdi-delete
+                      </v-icon>
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-list
+                  density="compact"
+                  class="!bg-gray-50"
+                  lines="three"
+                >
+                  <v-list-subheader>
+                    <span>Problems</span>
+                    <v-btn
+                      color="secondary"
+                      density="comfortable"
+                      icon="mdi-plus"
+                      size="small"
+                      class="ml-2"
+                      @click="addIssue"
+                    />
+                  </v-list-subheader>
+
+                  <v-list-item
+                    v-for="(problem, i) in item.problems"
+                    :key="i"
+                    :value="problem"
+                    class="!min-h-0"
+                  >
+                    <v-list-item-subtitle>
+                      {{ problem.message }}
+                    </v-list-item-subtitle>
+
+                    <template #prepend>
+                      <v-checkbox
+                        v-model="problem.resolved"
+                        :disabled="getPermission !== 1"
+                        hide-details
+                        density="compact"
+                        class="mr-1"
+                        @update:model-value="(e) => change_issue_status(e, item, i)"
+                      />
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+            </v-row>
+          </v-container>
+        </td>
+      </tr>
+    </template>
+  </DashboardTable>
 </template>
 
 <script>
 import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api';
 import { mapGetters } from 'vuex';
+import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'WorkstationsTable',
+  components: { DashboardTable },
   props: {
     passedData: {
       type: Array,
@@ -259,12 +137,6 @@ export default {
     },
   },
   data: () => ({
-    dialog: false,
-    dialog_filter: false,
-    dialog_issue: false,
-    dialog_software: false,
-    dialogDelete: false,
-    search: '',
     workstations: [],
     headers: [
       { title: 'Name', key: 'name' },
@@ -272,18 +144,6 @@ export default {
       { title: 'Type', key: 'type' },
       { title: 'Actions', key: 'actions', sortable: false, filterable: false },
     ],
-    editedIndex: -1,
-    editedItem: {
-      name: '',
-      type: 'active',
-      capacity: 0,
-    },
-    defaultItem: {
-      name: '',
-      type: 'active',
-      capacity: 0,
-    },
-    singleExpand: true,
     types: [
       { text: 'Active', value: 'active' },
       { text: 'Disabled', value: 'disabled' },
@@ -304,9 +164,6 @@ export default {
   }),
 
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Workstation' : 'Edit Workstation';
-    },
     ...mapGetters('user', ['getPermission']),
   },
 
