@@ -366,7 +366,7 @@ export default {
     switchValue: false,
     events: [],
     colors: {
-      1: '#ffcc00', // New color
+      1: '#00ffbb', // New color
       2: '#3366cc', // New color
       3: '#93c47d', // Existing color
       4: '#cc0033', // New color
@@ -387,7 +387,7 @@ export default {
       19: '#cc99ff', // New color
       20: '#ff6699', // New color
       21: '#00ff00', // New color
-      22: '#9f8b0b', // New color
+      22: '#ffcc00', // New color
     },
     dragEvent: null,
     lastEvent: '',
