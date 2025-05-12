@@ -463,6 +463,7 @@ export default {
           timed: true,
         };
 
+      console.log(this.colors[user.id] + " " + user.id);
       return {
         name: user.name,
         start: this.toTimestamp(val.entry),
