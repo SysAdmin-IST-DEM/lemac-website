@@ -386,6 +386,8 @@ export default {
       18: '#00ccff', // New color
       19: '#cc99ff', // New color
       20: '#ff6699', // New color
+      21: '#00ff00', // New color
+      22: '#00ffc0', // New color
     },
     dragEvent: null,
     lastEvent: '',
