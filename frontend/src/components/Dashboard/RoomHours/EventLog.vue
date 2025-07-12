@@ -120,10 +120,10 @@
 </template>
 
 <script>
-import { getEvents, deleteEvent, updateEvent } from '@/api/room_events.api';
-import { getUsers } from '@/api/user.api';
+import { getEvents, deleteEvent, updateEvent } from '@/api/room_events.api.js';
+import { getUsers } from '@/api/user.api.js';
 export default {
-  name: 'SumTable',
+  name: 'EventLog',
   data: () => ({
     dialog: false,
     dialogDelete: false,

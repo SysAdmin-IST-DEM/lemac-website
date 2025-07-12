@@ -86,6 +86,8 @@
             </template>
           </DashboardEditDialog>
         </slot>
+
+        <slot name="dialogs-append" />
       </v-toolbar>
     </template>
 
@@ -111,8 +113,8 @@
 </template>
 
 <script>
-import DashboardEditDialog from '@/components/DashboardDataTable/DashboardEditDialog.vue';
-import DashboardDeleteDialog from '@/components/DashboardDataTable/DashboardDeleteDialog.vue';
+import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
+import DashboardDeleteDialog from '@/components/Dashboard/DashboardDataTable/DashboardDeleteDialog.vue';
 import { mapGetters } from 'vuex';
 
 export default {

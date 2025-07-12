@@ -28,8 +28,6 @@ export default {
   display: flex;
   position: relative;
   flex-direction: column;
-  align-items: center;
-  margin-top: 100px;
 }
 .card > h1 {
   margin: 20px;

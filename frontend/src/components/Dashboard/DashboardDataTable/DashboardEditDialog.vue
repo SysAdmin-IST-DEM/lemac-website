@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import DashboardDynamicField from '@/components/DashboardDataTable/DashboardDynamicField.vue';
+import DashboardDynamicField from '@/components/Dashboard/DashboardDataTable/DashboardDynamicField.vue';
 import { mapGetters } from 'vuex';
 
 export default {

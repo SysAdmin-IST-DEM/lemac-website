@@ -46,6 +46,7 @@ export default {
           this.loginUser(data.user);
         }
       } catch (e) {
+        console.log(e);
         this.$notify({
           type: 'error',
           title: 'Unauthorized user',

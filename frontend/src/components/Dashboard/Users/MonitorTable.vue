@@ -9,7 +9,7 @@
     :edit-initialization="editInitialization"
     :edit-fields="editFields"
     @edit="editItem"
-    @delete="deleteItemConfirm"
+    @delete="deleteItem"
   >
     <template #[`item.admin`]="{ item }">
       <v-chip
@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import { createUser, deleteUser, updateUser } from '@/api/user.api';
+import { createUser, deleteUser, updateUser } from '@/api/user.api.js';
 import { mapGetters } from 'vuex';
-import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
+import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'MonitorTable',
@@ -117,7 +117,7 @@ export default {
         });
       }
     },
-    async deleteItemConfirm(item) {
+    async deleteItem(item) {
       await deleteUser(item.id);
       const deleted = this.users.splice(this.users.indexOf(item), 1);
       this.$notify({

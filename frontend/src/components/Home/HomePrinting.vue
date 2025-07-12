@@ -101,7 +101,7 @@
 <script>
 import * as THREE from 'three';
 import axios from 'axios';
-import PrintingDialog from '@/components/Printing/PrintingDialog.vue';
+import PrintingDialog from '@/components/Dashboard/Printing/PrintingDialog.vue';
 
 export default {
   name: 'HomePrinting',

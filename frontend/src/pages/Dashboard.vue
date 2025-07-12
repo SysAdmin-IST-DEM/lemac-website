@@ -37,9 +37,9 @@
 </template>
 
 <script>
-import EntriesList from '@/components/Entries/EntriesList.vue';
-import Occurences from '@/components/Entries/Occurences.vue';
-import WorkstationData from '@/components/Entries/WorkstationData.vue';
+import EntriesList from '@/components/Dashboard/Entries/EntriesList.vue';
+import Occurences from '@/components/Dashboard/Entries/Occurences.vue';
+import WorkstationData from '@/components/Dashboard/Entries/WorkstationData.vue';
 
 export default {
   components: { EntriesList, Occurences, WorkstationData },

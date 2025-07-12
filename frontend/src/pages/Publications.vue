@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import PublicationsTable from '@/components/Publications/PublicationsTable.vue';
+import PublicationsTable from '@/components/Dashboard/Publications/PublicationsTable.vue';
 import { getPublications } from '@/api/publications.api';
 import { mapGetters } from 'vuex';
 

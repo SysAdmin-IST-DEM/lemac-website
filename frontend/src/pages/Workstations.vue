@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import WorkstationsTable from '@/components/Workstations/WorkstationsTable.vue';
+import WorkstationsTable from '@/components/Dashboard/Workstations/WorkstationsTable.vue';
 import { getWorkstations } from '@/api/workstations.api';
 import { mapGetters } from 'vuex';
 

@@ -703,8 +703,8 @@ import {
   createHours,
   deleteHours,
   updateHours,
-} from '@/api/room_hours.api';
-import { createEvent, getEvents } from '@/api/room_events.api';
+} from '@/api/room_hours.api.js';
+import { createEvent, getEvents } from '@/api/room_events.api.js';
 import moment from 'moment';
 
 export default {

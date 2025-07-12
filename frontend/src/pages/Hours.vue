@@ -47,9 +47,9 @@
 </template>
 
 <script>
-import HourTable from '@/components/Hours/HoursTable.vue';
-import Calendar from '@/components/Hours/Calendar.vue';
-import SumTable from '@/components/Hours/SumTable.vue';
+import HourTable from '@/components/Dashboard/Hours/HoursTable.vue';
+import Calendar from '@/components/Dashboard/Hours/Calendar.vue';
+import SumTable from '@/components/Dashboard/Hours/SumTable.vue';
 import { getHoursSelf, getHours } from '@/api/hours.api';
 import { mapGetters } from 'vuex';
 import { getUsers } from '@/api/user.api';

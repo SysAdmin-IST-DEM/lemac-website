@@ -8,7 +8,7 @@
     :edit-fields="editFields"
     :edit-initialization="editInitialization"
     @edit="editItem"
-    @delete="deleteItemConfirm"
+    @delete="deleteItem"
   >
     <template #[`item.entry`]="{ item }">
       {{
@@ -41,11 +41,11 @@
 </template>
 
 <script>
-import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours.api';
-import { getUsers } from '@/api/user.api';
+import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours.api.js';
+import { getUsers } from '@/api/user.api.js';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
-import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
+import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'HourTable',
@@ -175,7 +175,7 @@ export default {
       }
     },
 
-    async deleteItemConfirm(item) {
+    async deleteItem(item) {
       await deleteHours(item.id);
       const deleted = this.hours.splice(this.hours.indexOf(item), 1);
       this.$notify({

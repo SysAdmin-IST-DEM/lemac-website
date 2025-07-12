@@ -469,7 +469,7 @@
 </template>
 
 <script>
-import { getUsers } from '@/api/user.api';
+import { getUsers } from '@/api/user.api.js';
 import {
   createHours,
   getHours,
@@ -482,7 +482,7 @@ import {
   getOffDays,
   setOffDays,
   deleteOffDay,
-} from '@/api/schedule.api';
+} from '@/api/schedule.api.js';
 //import Vue from 'vue';
 //import ICS from 'vue-ics';
 import { saveAs } from 'file-saver';
