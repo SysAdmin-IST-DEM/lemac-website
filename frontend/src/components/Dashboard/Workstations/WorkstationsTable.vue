@@ -6,6 +6,10 @@
     search
     :sort-by="[{ key: 'name' }]"
     :new-button="getPermission === 1 ? 'New Workstation' : undefined"
+    :edit-initialization="editInitialization"
+    :edit-fields="editFields"
+    @edit="editItem"
+    @delete="deleteItem"
     expand
   >
     <template #[`item.capacity`]="{ item }">
@@ -13,11 +17,51 @@
     </template>
     <template #[`item.type`]="{ item }">
       <v-chip :color="typeColors[item.type]" variant="elevated" class="capitalized">
-        {{ (types.find((v) => v.value == item.type) || {}).text }}
+        {{ (types.find((v) => v.value == item.type) || {}).title }}
       </v-chip>
     </template>
 
     <template #expanded-row="{ columns, item }">
+      <v-dialog
+        v-if="getPermission === 1"
+        v-model="expanded_dialog_open"
+        max-width="550px"
+      >
+        <v-card>
+          <v-form
+            :ref="`form_${item.id}`"
+            @submit.prevent="expanded_dialog === 'software' ? addSoftware(item) : addIssue(item)"
+          >
+            <v-card-title>
+              <span>Add</span>
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="expanded_dialog_text"
+                :label="expanded_dialog === 'software' ? 'Sofware to add' : 'Issue to report'"
+                variant="outlined"
+                :rules="[(v) => !!v || 'Field is required']"
+              />
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                @click="expanded_dialog_open = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                color="primary"
+                type="submit"
+              >
+                {{ expanded_dialog === 'text' ? 'Add Software' : 'Report' }}
+              </v-btn>
+            </v-card-actions>
+          </v-form>
+        </v-card>
+      </v-dialog>
+
       <tr>
         <td class="!p-0" :colspan="columns.length">
           <v-container class="!h-full shadow-inner bg-gray-50">
@@ -35,7 +79,7 @@
                       icon="mdi-plus"
                       size="small"
                       class="ml-2"
-                      @click="addSoftware"
+                      @click="openSoftwareDialog(item)"
                     />
                   </v-list-subheader>
 
@@ -77,12 +121,12 @@
                       icon="mdi-plus"
                       size="small"
                       class="ml-2"
-                      @click="addIssue"
+                      @click="openIssueDialog(item)"
                     />
                   </v-list-subheader>
 
                   <v-list-item
-                    v-for="(problem, i) in item.problems"
+                    v-for="(problem, i) in item.problems.filter(p => !p.closed)"
                     :key="i"
                     :value="problem"
                     class="!min-h-0"
@@ -93,12 +137,12 @@
 
                     <template #prepend>
                       <v-checkbox
-                        v-model="problem.resolved"
+                        v-model="problem.closed"
                         :disabled="getPermission !== 1"
                         hide-details
                         density="compact"
                         class="mr-1"
-                        @update:model-value="(e) => change_issue_status(e, item, i)"
+                        @update:model-value="(e) => changeIssueStatus(e, item, i)"
                       />
                     </template>
                   </v-list-item>
@@ -113,9 +157,9 @@
 </template>
 
 <script>
-import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api';
+import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api.js';
 import { mapGetters } from 'vuex';
-import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
+import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'WorkstationsTable',
@@ -145,91 +189,175 @@ export default {
       { title: 'Actions', key: 'actions', sortable: false, filterable: false },
     ],
     types: [
-      { text: 'Active', value: 'active' },
-      { text: 'Disabled', value: 'disabled' },
-      { text: 'Remote', value: 'remote' },
+      { title: 'Active', value: 'active' },
+      { title: 'Disabled', value: 'disabled' },
+      { title: 'Remote', value: 'remote' },
     ],
     typeColors: {
       active: 'green',
       disabled: 'red',
       remote: 'blue',
     },
-    available_software: [],
-    selected_softwares: '',
-    issue_description: null,
-    software_to_add: null,
-    filter_with_issues: false,
-    filter_with_unresolved_issues: false,
-    select_all: false,
+    expanded_dialog: null,
+    expanded_dialog_text: '',
   }),
-
   computed: {
+    editFields() {
+      return [
+        [
+          { key: 'name', label: 'Name', required: true },
+        ],
+        [
+          { key: 'capacity', label: 'Capacity', required: true, props: { type: 'number' } },
+          { key: 'type', type: 'select', label: 'Type', required: true, props: { items: this.types } },
+        ],
+      ];
+    },
+    expanded_dialog_open: {
+      get() {
+        return this.expanded_dialog !== null;
+      },
+      set(value) {
+        if (!value) {
+          this.expanded_dialog = null;
+          this.expanded_dialog_text = '';
+        }
+      },
+    },
     ...mapGetters('user', ['getPermission']),
   },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    dialogDelete(val) {
-      val || this.closeDelete();
-    },
-    selected_softwares(val) {
-      this.select_all = val.length === this.available_software.length;
-    },
-  },
-
   mounted() {
     this.workstations = [...this.passedData];
-    console.log(this.workstations);
 
     const uniqueSoftwareSet = new Set();
-
     this.available_software = this.workstations.forEach((val) => {
       val.softwares.forEach((software) => {
         uniqueSoftwareSet.add(software);
       });
     });
-
     this.available_software = Array.from(uniqueSoftwareSet);
   },
   methods: {
-    editItem(item) {
-      this.editedIndex = this.workstations.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    editInitialization(item) {
+      return Object.assign({}, item);
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.workstations.indexOf(item);
-      this.dialogDelete = true;
-    },
-
-    async deleteItemConfirm() {
-      try {
-        await deleteWorkstation(this.workstations[this.editedIndex].id);
-        const deleted = this.workstations.splice(this.editedIndex, 1);
+    async editItem(item, values) {
+      if(item) {
+        const response = await updateWorkstation(
+          item.id,
+          values
+        );
+        this.workstations.splice(this.workstations.indexOf(item), 1, response.data);
         this.$notify({
           type: 'success',
-          title: 'Workstation deleted',
-          text: `You have deleted Workstation ${deleted[0].name}`,
+          title: 'Workstation updated',
+          text: `You have updated Workstation ${response.data.name}`,
         });
-      } finally {
-        this.closeDelete();
+      } else {
+        const response = await createWorkstation(values);
+        this.workstations.push(response.data);
+        this.$notify({
+          type: 'success',
+          title: 'Workstation created',
+          text: `You have created Workstation ${response.data.name}`,
+        });
       }
     },
 
-    close() {
-      this.dialog = false;
-      this.$refs.form.resetValidation();
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
+    async deleteItem(item) {
+      await deleteWorkstation(item.id);
+      const deleted = this.workstations.splice(this.workstations.indexOf(item), 1);
+      this.$notify({
+        type: 'success',
+        title: 'Workstation deleted',
+        text: `You have deleted Workstation ${deleted[0].name}`,
       });
     },
 
-    close_filter() {
-      this.dialog_filter = false;
+    openSoftwareDialog() {
+      this.expanded_dialog = 'software';
+    },
+
+    async addSoftware(item) {
+      const { valid } = await this.$refs[`form_${item.id}`].validate();
+      if (!valid) return;
+
+      try {
+        this.$loading.show();
+        const response = await updateWorkstation(item.id, item);
+        this.$notify({
+          type: 'success',
+          title: 'Workstation updated',
+          text: `You have updated Workstation ${response.data.name}`,
+        });
+      } finally {
+        item.softwares.push(this.expanded_dialog_text);
+        this.expanded_dialog_open = false;
+        this.$loading.hide();
+      }
+    },
+
+    async deleteSoftware(item, i) {
+      if (this.getPermission !== 1) return;
+
+      try {
+        item.softwares.splice(i, 1);
+
+        const response = await updateWorkstation(item.id, item);
+        this.$notify({
+          type: 'success',
+          title: 'Workstation updated',
+          text: `You have updated Workstation ${response.data.name}`,
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    async openIssueDialog() {
+      this.expanded_dialog = 'issue';
+    },
+
+    async addIssue(item) {
+      const { valid } = await this.$refs[`form_${item.id}`].validate();
+      if (!valid) return;
+
+      const issue = {
+        message: this.expanded_dialog_text,
+        created: new Date(),
+        closed: null,
+      }
+
+      try {
+        this.$loading.show();
+
+        const response = await updateWorkstation(item.id, item);
+        this.$notify({
+          type: 'success',
+          title: 'Workstation updated',
+          text: `You have updated Workstation ${response.data.name}`,
+        });
+      } finally {
+        item.problems.push(issue);
+        this.expanded_dialog_open = false;
+        this.$loading.hide();
+      }
+    },
+
+    async changeIssueStatus(event, item, problem_index) {
+      item.problems[problem_index].closed = event ? new Date() : null;
+
+      try {
+        const response = await updateWorkstation(item.id, item);
+        this.$notify({
+          type: 'success',
+          title: 'Workstation updated',
+          text: `You have updated Workstation ${response.data.name}`,
+        });
+      } catch (e) {
+        console.log(e);
+      }
     },
 
     save_filter() {
@@ -264,43 +392,6 @@ export default {
       this.close_filter();
     },
 
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    async save() {
-      // Don't save if validation is unsuccessful
-      if (!this.$refs.form.validate()) return;
-      try {
-        if (this.editedIndex > -1) {
-          const response = await updateWorkstation(
-            this.workstations[this.editedIndex].id,
-            this.editedItem
-          );
-          this.workstations.splice(this.editedIndex, 1, response.data);
-          this.$notify({
-            type: 'success',
-            title: 'Workstation updated',
-            text: `You have updated Workstation ${response.data.name}`,
-          });
-        } else {
-          const response = await createWorkstation(this.editedItem);
-          this.workstations.push(response.data);
-          this.$notify({
-            type: 'success',
-            title: 'Workstation created',
-            text: `You have created Workstation ${response.data.name}`,
-          });
-        }
-      } finally {
-        this.close();
-      }
-    },
-
     async save_issue(item) {
       if (!this.$refs.form_issue.validate()) return;
 
@@ -331,51 +422,6 @@ export default {
 
     async close_issue_dialog() {
       this.dialog_issue = false;
-    },
-
-    async change_issue_status(event, item, problem_index) {
-      console.log({ event, item, problem_index });
-
-      const new_item = { ...item };
-
-      new_item.problems[problem_index].resolved = event;
-      new_item.problems[problem_index].closed = event ? new Date() : null;
-
-      try {
-        const response = await updateWorkstation(new_item.id, new_item);
-        //this.workstations.splice(this.editedIndex, 1, response.data);
-        this.$notify({
-          type: 'success',
-          title: 'Workstation updated',
-          text: `You have updated Workstation ${response.data.name}`,
-        });
-      } catch (e) {
-        console.log(e);
-      }
-    },
-
-    async save_software(item) {
-      if (!this.$refs.form_software.validate()) return;
-
-      const new_item = { ...item };
-
-      new_item.softwares.push(this.software_to_add);
-
-      try {
-        const response = await updateWorkstation(new_item.id, new_item);
-        //this.workstations.splice(this.editedIndex, 1, response.data);
-        this.$notify({
-          type: 'success',
-          title: 'Workstation updated',
-          text: `You have updated Workstation ${response.data.name}`,
-        });
-      } finally {
-        this.close_software_dialog();
-      }
-    },
-
-    async close_software_dialog() {
-      this.dialog_software = false;
     },
 
     selectAll(event) {

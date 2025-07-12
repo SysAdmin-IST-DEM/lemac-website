@@ -1,304 +1,75 @@
 <template>
-  <v-row class="fill-height">
-    <v-col>
-      <v-sheet height="64">
-        <v-toolbar flat>
-          <v-btn
-            class="mr-4"
-            color="secondary"
-            @click="setToday"
-          >
-            Today
-          </v-btn>
-          <v-btn
-            icon
-            variant="text"
-            size="small"
-            color="grey-darken-2"
-            @click="prev"
-          >
-            <v-icon size="small">
-              mdi-chevron-left
-            </v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            variant="text"
-            size="small"
-            color="grey-darken-2"
-            @click="next"
-          >
-            <v-icon size="small">
-              mdi-chevron-right
-            </v-icon>
-          </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-          <v-spacer />
-
-          <v-menu
-            location="bottom right"
-            offset-y
-          >
-            <template #activator="{ props }">
-              <v-btn
-                color="secondary"
-                v-bind="props"
-                class="mr-3"
-              >
-                <span>{{ filter == '' ? 'Room' : filter }}</span>
-                <v-icon end>
-                  mdi-menu-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="filter = 'SDM'">
-                <v-list-item-title>SDM</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="filter = 'MOM'">
-                <v-list-item-title>MOM</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="filter = 'LTI'">
-                <v-list-item-title>LTI</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="filter = ''">
-                <v-list-item-title>Any</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-
-          <v-menu
-            location="bottom right"
-            offset-y
-          >
-            <template #activator="{ props }">
-              <v-btn
-                color="secondary"
-                v-bind="props"
-              >
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon end>
-                  mdi-menu-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
-      </v-sheet>
-
-      <v-sheet height="75vh">
-        <v-calendar
-          ref="calendar"
-          v-model="focus"
-          color="primary"
-          :events="filteredEvents"
-          :event-color="getEventColor"
-          :view-mode="type"
-          interval-count="14"
-          first-interval="8"
-          @click:more="viewDay"
-          @click:date="viewDay"
-          @click:event="showEvent"
-          @change="updateRange"
-        >
-          <template #interval="{ weekday, hour, date }">
-            <div
-              v-if="hour < 9 || hour >= 21"
-              style="height: 100%; width: 100%; background-color: #f2f2f2"
-            />
-            <div
-              v-else
-              style="height: 100%; width: 100%"
-            />
+  <v-sheet height="85vh">
+    <LemacCalendar
+      :events="events"
+      :filter="filter"
+      @change="updateRange"
+    >
+      <template #dropdowns>
+        <v-menu location="bottom right">
+          <template #activator="{ props }">
+            <v-btn color="secondary" variant="elevated" class="mr-4" v-bind="props">
+              <span>{{ room ?? 'Room' }}</span>
+              <v-icon end>mdi-menu-down</v-icon>
+            </v-btn>
           </template>
-        </v-calendar>
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-        >
-          <v-card
-            v-if="selectedElement"
-            color="grey-lighten-4"
-            min-width="250px"
-            flat
-          >
-            <v-toolbar
-              :color="selectedEvent.color"
-              theme="dark"
+          <v-list>
+            <v-list-item
+              v-for="(r, index) in ['SDM', 'MOM', 'LTI']"
+              :key="index"
+              @click="room = r"
             >
-              <v-toolbar-title v-if="selectedElement">
-                {{
-                  selectedEvent.details.title
-                }}
-              </v-toolbar-title>
-              <v-spacer />
-            </v-toolbar>
-            <v-card-text>
-              <p>
-                Classroom: <b>{{ selectedEvent.details.room }}</b>
-              </p>
-              <p>
-                Entry:
-                {{ formatTime(selectedEvent.details.entry) }}
-              </p>
-              <p>
-                Exit:
-                {{ formatTime(selectedEvent.details.exit) }}
-              </p>
-              <p v-if="typeof selectedEvent.details.id !== 'number'">
-                Description: {{ selectedEvent.details.description }}
-              </p>
-            </v-card-text>
-          </v-card>
+              <v-list-item-title>{{ r }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="room = undefined">
+              <v-list-item-title>Any</v-list-item-title>
+            </v-list-item>
+          </v-list>
         </v-menu>
-      </v-sheet>
-    </v-col>
-  </v-row>
+      </template>
+    </LemacCalendar>
+  </v-sheet>
 </template>
 
 <script>
 import { getHoursFenix, getHours } from '@/api/room_hours.api';
 import { getEvents } from '@/api/room_events.api';
-import moment from 'moment';
+import LemacCalendar from '@/components/LemacCalendar/LemacCalendar.vue';
 
 export default {
   name: 'HomeReservations',
-  components: {},
+  components: { LemacCalendar },
   data: () => ({
-    focus: [new Date()],
-    type: 'week',
-    typeToLabel: {
-      month: 'Month',
-      week: 'Week',
-      day: 'Day',
-    },
-    menu: false,
-    menu2: false,
-    menu3: false,
-    menu4: false,
-    menu5: false,
-    menu6: false,
-    date: false,
-    roomDropdown: '',
-    dialog: false,
-    dialogCard: false,
-    selectedEvent: {},
-    selectedElement: null,
-    selectedOpen: false,
+    room: undefined,
     events: [],
     colors: { SDM: 'blue', MOM: 'green', LTI: 'orange' },
-    editedItem: {
-      entry: '',
-      exit: '',
-      date: '',
-    },
     requested: [],
-    items: ['SDM', 'MOM', 'LTI'],
     name: '',
     ist_id: '',
-    filter: '',
-    filteredEvents: [],
   }),
-  watch: {
-    events() {
-      if (this.filter === '') {
-        this.filteredEvents = [...this.events];
-      } else {
-        this.filteredEvents = this.events.filter((val) => val.details.room == this.filter);
-      }
-    },
-    filter() {
-      if (this.filter === '') {
-        this.filteredEvents = [...this.events];
-      } else {
-        this.filteredEvents = this.events.filter((val) => val.details.room == this.filter);
-      }
-    },
-  },
+  watch: {},
   mounted() {},
   methods: {
-    viewDay({ date }) {
-      this.focus = date;
-      this.type = 'day';
-    },
-    getEventColor(event) {
-      if (event.givenKey) {
-        return `${event.color} darken-4`;
-      } else {
-        return event.color;
+    filter(event) {
+      if (this.room) {
+        return event.details.room === this.room;
       }
+      return true;
     },
-    setToday() {
-      this.focus = [new Date()];
-    },
-    prev() {
-      const date = this.focus[0];
-      if (this.type === 'day') {
-        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)]
-      } else if (this.type === 'week') {
-        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)]
-      } else {
-        this.focus = [new Date(date.getFullYear(), date.getMonth() - 1, 1)]
-      }
-    },
-    next() {
-      const date = this.focus[0];
-      if (this.type === 'day') {
-        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)]
-      } else if (this.type === 'week') {
-        this.focus = [new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)]
-      } else {
-        this.focus = [new Date(date.getFullYear(), date.getMonth() + 1, 1)]
-      }
-    },
-    showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event;
-        this.selectedElement = nativeEvent.target;
-        requestAnimationFrame(() => requestAnimationFrame(() => (this.selectedOpen = true)));
-      };
-
-      if (this.selectedOpen) {
-        this.selectedOpen = false;
-        requestAnimationFrame(() => requestAnimationFrame(() => open()));
-      } else {
-        open();
-      }
-
-      nativeEvent.stopPropagation();
-    },
-
     async updateRange({ start, end }) {
       this.$loading.show();
 
       await this.pushEventsFenix();
-
-      if (!this.requested.includes('' + start.month + start.year)) {
-        await this.pushEvents(start.month, start.year);
-        this.requested.push('' + start.month + start.year);
+      if (!this.requested.includes('' + start.getMonth() + start.getFullYear())) {
+        await this.pushEvents(start.getMonth(), start.getFullYear());
+        this.requested.push('' + start.getMonth() + start.getFullYear());
       }
-      if (!this.requested.includes('' + end.month + end.year)) {
-        await this.pushEvents(end.month, end.year);
-        this.requested.push('' + end.month + end.year);
+      if (!this.requested.includes('' + end.getMonth() + end.getFullYear())) {
+        await this.pushEvents(end.getMonth(), end.getFullYear());
+        this.requested.push('' + end.getMonth() + end.getFullYear());
       }
       this.$loading.hide();
     },
-
     async pushEvents(month, year) {
       const date = new Date();
       const dates = [];
@@ -307,7 +78,6 @@ export default {
       date.setDate(date.getDate() + 6);
       dates[1] = date.toISOString().slice(0, 10);
 
-      const events = [];
       const data = (await getHours(month, year)).data;
       const data_events = (await getEvents(dates[0], dates[1])).data;
 
@@ -316,23 +86,21 @@ export default {
         event.title = `Reservation of ${event.user.name}`;
         event.events = data_event;
 
-        events.push({
-          name: event.title,
-          start: moment(event.entry).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
-          end: moment(event.exit).utcOffset('+0000').format('YYYY-MM-DD HH:mm'),
-          color: this.colors[event.room],
-          timed: true,
-          id: event.id,
-          givenKey: event.givenKey,
-          details: event,
-        });
+        if (!this.events.find((el) => el.id === event.id)) {
+          this.events.push({
+            title: event.title,
+            start: new Date(event.entry),
+            end: new Date(event.exit),
+            color: this.colors[event.room] + (event.givenKey ? ' darken-4' : ''),
+            id: event.id,
+            givenKey: event.givenKey,
+            details: event,
+            allDay: false
+          });
+        }
       }
-
-      this.events = events.concat(this.events);
     },
-
     async pushEventsFenix() {
-      const events = [];
       let date;
       let curDate = this.focus ? new Date(this.focus) : new Date();
 
@@ -358,24 +126,18 @@ export default {
 
       for (const event of data) {
         if (!this.events.find((el) => el.id === event.id)) {
-          events.push({
-            name: event.title,
-            start: moment(event.entry).format('YYYY-MM-DD HH:mm'),
-            end: moment(event.exit).format('YYYY-MM-DD HH:mm'),
-            color: this.colors[event.room],
-            timed: true,
+          this.events.push({
+            title: event.title,
+            start: new Date(event.entry),
+            end: new Date(event.exit),
+            diff: (new Date(event.exit) - new Date(event.entry)) / (1000 * 60), // in minutes
+            color: this.colors[event.room] + (event.givenKey ? ' darken-4' : ''),
             id: event.id,
             givenKey: false,
             details: event,
           });
         }
       }
-
-      this.events = events.concat(this.events);
-    },
-
-    formatTime(time) {
-      return moment(time).utcOffset('+0000').format('HH:mm');
     },
   },
 };

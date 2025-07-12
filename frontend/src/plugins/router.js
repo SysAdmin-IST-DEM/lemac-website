@@ -4,7 +4,7 @@ import Home from '@/pages/Home.vue';
 import Login from '@/pages/Login.vue';
 import NotFoundPage from '@/pages/404.vue';
 import Dashboard from '@/pages/Dashboard.vue';
-import NavBar from '@/components/Navbar/NavBar.vue';
+import NavBar from '@/components/Dashboard/Navbar/NavBar.vue';
 import Users from '@/pages/Users.vue';
 import Hours from '@/pages/Hours.vue';
 import Workstations from '@/pages/Workstations.vue';

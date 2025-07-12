@@ -76,6 +76,7 @@ export default {
         this.userData = data;
         this.personKey++;
       } catch (e) {
+        console.log(e);
         this.$notify({
           type: 'error',
           title: 'Unauthorized user',
@@ -98,6 +99,7 @@ export default {
           this.loginUser(data.user);
         }
       } catch (e) {
+        console.log(e);
         this.$notify({
           type: 'error',
           title: 'Unauthorized user',

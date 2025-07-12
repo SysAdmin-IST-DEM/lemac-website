@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import { getEntries } from '@/api/entries.api';
+import { getEntries } from '@/api/entries.api.js';
 import moment from 'moment';
-import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
+import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
   components: { DashboardTable },

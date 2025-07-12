@@ -1,31 +1,24 @@
 <template>
   <div class="px-4">
     <v-row>
-      <v-col
-        cols="11"
-        sm="5"
-      >
+      <v-col>
         <v-menu
           ref="menu"
           v-model="menu"
           v-model:return-value="timeStart"
           :close-on-content-click="false"
           persistent
-          :offset="40"
           transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
         >
           <template #activator="{ props }">
             <v-text-field
               v-model="timeStart"
               label="Entry Hours"
               prepend-icon="mdi-clock-time-four-outline"
+              variant="underlined"
               readonly
               required
               :rules="[() => !!timeStart || 'This field is required']"
-             
               v-bind="props"
             />
           </template>
@@ -35,8 +28,8 @@
             :max="timeEnd"
             full-width
             format="24hr"
+            color="secondary"
           >
-            <v-spacer />
             <v-btn
               variant="text"
               color="success"
@@ -54,33 +47,26 @@
           </v-time-picker>
         </v-menu>
       </v-col>
-      <v-spacer />
+
       <!--Exit hours menu-->
-      <v-col
-        cols="11"
-        sm="5"
-      >
+      <v-col>
         <v-menu
           ref="menu2"
           v-model="menu2"
           v-model:return-value="timeEnd"
           :close-on-content-click="false"
           persistent
-          :offset="40"
           transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
         >
           <template #activator="{ props }">
             <v-text-field
               v-model="timeEnd"
               label="Exit Hours"
               prepend-icon="mdi-clock-time-four-outline"
+              variant="underlined"
               readonly
               required
               :rules="[() => !!timeEnd || 'This field is required']"
-             
               v-bind="props"
             />
           </template>
@@ -90,6 +76,7 @@
             :min="timeStart"
             full-width
             format="24hr"
+            color="secondary"
           >
             <v-spacer />
             <v-btn
@@ -110,25 +97,30 @@
         </v-menu>
       </v-col>
     </v-row>
+
     <v-row>
       <v-text-field
         v-model="entryNumber"
         label="Entry ticket"
         prepend-icon="mdi-ticket-confirmation"
+        variant="underlined"
         required
         :rules="[() => !!entryNumber || 'This field is required']"
       />
-      <v-spacer />
       <v-text-field
         v-model="exitNumber"
         label="Exit ticket"
         prepend-icon="mdi-ticket-confirmation"
+        variant="underlined"
       />
-      <v-spacer />
+    </v-row>
+
+    <v-row>
       <v-text-field
         v-model="safeAmount"
         label="Money in safe"
         prepend-icon="mdi-safe-square-outline"
+        variant="underlined"
         required
         :rules="[() => !!safeAmount || 'This field is required']"
       />
@@ -137,7 +129,7 @@
 </template>
 
 <script>
-import { getLastEntry } from '@/api/hours.api';
+import { getLastEntry } from '@/api/hours.api.js';
 
 export default {
   name: 'LoginTimePicker',

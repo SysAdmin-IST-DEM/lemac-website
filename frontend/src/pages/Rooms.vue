@@ -18,26 +18,21 @@
     </v-window-item>
     <v-window-item value="2">
       <v-container>
-        <EventLogVue />
+        <EventLog />
       </v-container>
     </v-window-item>
   </v-tabs-window>
 </template>
 
 <script>
-import RoomCalenderVue from '@/components/RoomHours/RoomCalender.vue';
-import EventLogVue from '@/components/RoomHours/EventLog.vue';
+import RoomCalenderVue from '@/components/Dashboard/RoomHours/RoomCalender.vue';
+import EventLog from '@/components/Dashboard/RoomHours/EventLog.vue';
 
 export default {
   name: 'Rooms',
-  components: { RoomCalenderVue, EventLogVue },
+  components: { RoomCalenderVue, EventLog },
   data: () => ({
     tab: null,
   }),
-  methods: {
-    goHome() {
-      window.location = '/';
-    },
-  },
 };
 </script>

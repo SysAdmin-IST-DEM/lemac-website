@@ -368,9 +368,9 @@
 </template>
 
 <script>
-import { getEntries, updateEntry, addEntry } from '@/api/entries.api';
-import { getWorkstations } from '@/api/workstations.api';
-import { getLemacUsers, setLemacUser } from '@/api/lemacUsers.api';
+import { getEntries, updateEntry, addEntry } from '@/api/entries.api.js';
+import { getWorkstations } from '@/api/workstations.api.js';
+import { getLemacUsers, setLemacUser } from '@/api/lemacUsers.api.js';
 
 export default {
   data() {

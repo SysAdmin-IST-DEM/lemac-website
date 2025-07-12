@@ -4,11 +4,13 @@
       <v-card-title class="text-h5">
         Hour Register
       </v-card-title>
-      <v-card-subtitle>
+      <v-card-subtitle
+        class="whitespace-normal! overflow-visible! [text-overflow:unset]!"
+      >
         Please log your work hours for today, or press the skip button if you are not working in the
         lab today.
       </v-card-subtitle>
-      <v-card-text>
+      <v-card-text class="w-full!">
         <LoginTimePicker
           @set-start="setStart"
           @set-end="setEnd"
@@ -17,8 +19,12 @@
           @set-exit-number="setExitNumber"
         />
       </v-card-text>
-      <v-spacer vertical />
-      <v-divider horizontal />
+
+      <v-divider
+        class="mx-4 border-opacity-100"
+        horizontal
+      />
+
       <v-card-actions>
         <v-spacer />
         <v-btn
@@ -42,7 +48,7 @@
 </template>
 
 <script>
-import LoginTimePicker from '../components/Login/LoginTimePicker.vue';
+import LoginTimePicker from '@/components/Dashboard/Login/LoginTimePicker.vue';
 import { createHours } from '@/api/hours.api';
 export default {
   name: 'LoginPage',

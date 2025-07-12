@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { getHours } from '@/api/hours.api';
+import { getHours } from '@/api/hours.api.js';
 import moment from 'moment';
 import { useDate } from 'vuetify'
 

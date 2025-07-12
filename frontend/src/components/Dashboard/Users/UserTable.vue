@@ -22,7 +22,7 @@
 
 <script>
 
-import DashboardTable from '@/components/DashboardDataTable/DashboardTable.vue';
+import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
   name: 'UserTable',

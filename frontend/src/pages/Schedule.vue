@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ScheduleCalendar from '@/components/Schedule/ScheduleCalendar.vue';
+import ScheduleCalendar from '@/components/Dashboard/Schedule/ScheduleCalendar.vue';
 import { mapGetters } from 'vuex';
 
 export default {
