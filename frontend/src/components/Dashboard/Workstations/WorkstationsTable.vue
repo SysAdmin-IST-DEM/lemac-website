@@ -197,7 +197,7 @@ export default {
     ],
     typeColors: {
       active: 'green',
-      disabled: 'red',
+      disabled: 'error',
       remote: 'blue',
     },
     expanded_dialog: null,

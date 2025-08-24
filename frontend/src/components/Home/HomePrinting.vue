@@ -1,22 +1,19 @@
 <template>
-  <div class="w-full h-full">
-    <v-card
-      class="max-w-6xl px-4 mx-auto"
-      @submit.prevent
-    >
-      <h1 class="w-full m-6 text-4xl font-medium text-center">
-        3D Printing submission form:
-      </h1>
+  <v-card class="max-w-6xl px-4 mx-auto">
+    <v-form @submit.prevent>
+      <h1 class="w-full text-4xl font-medium text-center m-6!">3D Printing submission form:</h1>
       <v-row class="gap-4 mx-0">
         <v-text-field
           v-model="firstName"
           :rules="rules"
           label="First name"
+          variant="underlined"
         />
         <v-text-field
           v-model="lastName"
           :rules="rules"
           label="Last Name"
+          variant="underlined"
         />
       </v-row>
       <v-row class="gap-4 mx-0">
@@ -24,11 +21,13 @@
           v-model="tecnicoId"
           :rules="rules"
           label="IST ID"
+          variant="underlined"
         />
         <v-text-field
           v-model="webmail"
           :rules="rules"
           label="Técnico Webmail"
+          variant="underlined"
         />
       </v-row>
       <v-row class="gap-4 mx-0">
@@ -37,11 +36,13 @@
             v-model="chosen_unit"
             :items="units"
             label="Unit of file"
+            variant="underlined"
           />
         </div>
         <v-file-input
           v-model="file"
           label="Model STL"
+          variant="underlined"
           accept=".stl,.step,.stp"
           @change="test"
         />
@@ -50,6 +51,7 @@
             v-model="chosen_material"
             :items="materials"
             label="Material"
+            variant="underlined"
           />
         </div>
       </v-row>
@@ -68,34 +70,35 @@
       <div class="flex flex-col items-start justify-start gap-4 mx-0 my-4">
         <span class="text-base"><b class="text-xl">Volume:</b> {{ volume?.toFixed(2) ?? 0 }}</span>
         <span class="text-base"><b class="text-xl">Bounding box size:</b> ({{ boundingBoxSize?.x.toFixed(2) ?? 0 }},
-          {{ boundingBoxSize?.y.toFixed(2) ?? 0 }}, {{ boundingBoxSize?.z.toFixed(2) ?? 0 }})</span>
+        {{ boundingBoxSize?.y.toFixed(2) ?? 0 }}, {{ boundingBoxSize?.z.toFixed(2) ?? 0 }})</span>
         <span class="text-base"><b class="text-xl">Price (€):</b> {{ price?.toFixed(2) ?? 0 }}</span>
       </div>
       <v-btn
         type="submit"
         block
-        class="mt-2"
+        class="mt-2 mb-2"
+        color="secondary"
         @click="submitDialog"
       >
         Submit
       </v-btn>
-    </v-card>
-    <print-dialog
-      ref="printDialog"
-      :dialog-visible="confirmPrint"
-      :first-name="firstName"
-      :last-name="lastName"
-      :tecnico-id="tecnicoId"
-      :file-name="fileName"
-      :webmail="webmail"
-      :chosen-unit="chosen_unit"
-      :material="chosen_material"
-      :volume="volume"
-      :price="price"
-      @close="onCloseConfirmationDialog"
-      @confirm="onConfirm"
-    />
-  </div>
+    </v-form>
+  </v-card>
+  <print-dialog
+    ref="printDialog"
+    :dialog-visible="confirmPrint"
+    :first-name="firstName"
+    :last-name="lastName"
+    :tecnico-id="tecnicoId"
+    :file-name="fileName"
+    :webmail="webmail"
+    :chosen-unit="chosen_unit"
+    :material="chosen_material"
+    :volume="volume"
+    :price="price"
+    @close="onCloseConfirmationDialog"
+    @confirm="onConfirm"
+  />
 </template>
 
 <script>
