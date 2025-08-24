@@ -4,8 +4,10 @@ import Notifications from './plugins/notifications';
 import router from './plugins/router';
 import store from './plugins/store';
 import vuetify from './plugins/vuetify';
+import 'vue-cal/style'
 import './plugins/notifications';
 import './assets/tailwind.css';
+import moment from 'moment'
 
 const app = createApp(App);
 
@@ -19,6 +21,7 @@ app.config.globalProperties.$loading = {
     store.dispatch('hideLoadingBar');
   },
 };
+app.config.globalProperties.$moment = moment;
 
 app.use(Notifications);
 app.use(router);

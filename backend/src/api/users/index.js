@@ -46,6 +46,7 @@ module.exports = {
         id: x.user_id,
         istId: x.ist_id,
         name: x.name,
+        color: x.color,
         active: x.active,
         admin: x.admin,
         current: x.user_id === req.user.id,

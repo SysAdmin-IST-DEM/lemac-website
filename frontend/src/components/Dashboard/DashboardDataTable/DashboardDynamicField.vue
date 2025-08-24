@@ -9,7 +9,6 @@
     persistent
     :offset="40"
     transition="scale-transition"
-    offset-y
   >
     <template #activator="{ props }">
       <v-text-field
@@ -67,7 +66,7 @@
 </template>
 <script>
 import { VTimePicker } from 'vuetify/labs/components';
-import { VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect } from 'vuetify/components';
+import { VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect, VNumberInput } from 'vuetify/components';
 import moment from 'moment';
 
 export default {
@@ -96,6 +95,11 @@ export default {
     },
     formattedInternalValue() {
       if (this.type === 'date') {
+        if(this.props.multiple === 'range' && Array.isArray(this.internalValue)) {
+          const start = this.internalValue[0] ? moment(this.internalValue[0]).format('YYYY-MM-DD') : '';
+          const end = this.internalValue[this.internalValue.length - 1] ? moment(this.internalValue[this.internalValue.length - 1]).format('YYYY-MM-DD') : '';
+          return start && end ? `${start} to ${end}` : '';
+        }
         return this.internalValue ? moment(this.internalValue).format('YYYY-MM-DD') : '';
       }
       return this.internalValue
@@ -113,6 +117,8 @@ export default {
         return VTextarea;
       } else if(this.type === 'select') {
         return VSelect;
+      } else if(this.type === 'number') {
+        return VNumberInput;
       }
       return VTextField;
     },

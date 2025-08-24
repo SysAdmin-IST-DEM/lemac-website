@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_id` int PRIMARY KEY AUTO_INCREMENT,
   `ist_id` varchar(12) UNIQUE NOT NULL,
   `name` varchar(255),
+  `color` char(7) DEFAULT '#0076DC',
   `active` bool DEFAULT true,
   `admin` bool DEFAULT false
 );
