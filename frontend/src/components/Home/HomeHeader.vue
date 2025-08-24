@@ -36,11 +36,9 @@
     <div v-if="!getId">
       <v-btn
         class="mx-3 bg-primary"
-        :loading="loading"
-        :disabled="loading"
         elevation="2"
         size="small"
-        @click="$emit('login')"
+        @click="login"
       >
         Login
       </v-btn>
@@ -62,11 +60,9 @@
       </v-tooltip>
       <v-btn
         class="mx-3 bg-error"
-        :loading="loadingOut"
-        :disabled="loadingOut"
         elevation="2"
         size="small"
-        @click="$emit('logout')"
+        @click="logout()"
       >
         Logout
       </v-btn>
@@ -75,15 +71,52 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { apiLogin } from '@/api/auth.api.js';
 export default {
   name: 'HomeHeader',
   props: {
-    loading: Boolean,
-    loadingOut: Boolean,
+    disableLogin: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     ...mapGetters('user', ['getId']),
   },
+  mounted() {
+    const fenixCode = this.$route.query.code;
+    if (fenixCode && !this.disableLogin) this.authBackend(fenixCode);
+  },
+  methods: {
+    login() {
+      window.location = `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL}`;
+    },
+    logout() {
+      localStorage.removeItem('token');
+      this.logoutUser();
+      window.open('https://fenix.tecnico.ulisboa.pt/logout', '_blank').focus();
+    },
+    async authBackend(code) {
+      try {
+        const { data } = await apiLogin(code);
+        if (data.jwt) {
+          localStorage.setItem('token', data.jwt);
+          this.loginUser(data.user);
+        }
+      } catch (e) {
+        //print exception
+        console.log(e);
+        this.$notify({
+          type: 'error',
+          title: 'Unauthorized user',
+          text: "You don't have permission to access this ",
+          duration: -1,
+        });
+      }
+      this.$router.push('login');
+    },
+    ...mapActions('user', ['loginUser', 'logoutUser'])
+  }
 };
 </script>
