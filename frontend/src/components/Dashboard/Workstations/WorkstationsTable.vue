@@ -8,9 +8,10 @@
     :new-button="getPermission === 1 ? 'New Workstation' : undefined"
     :edit-initialization="editInitialization"
     :edit-fields="editFields"
+    expand
+    :custom-filter="filterWorkstations"
     @edit="editItem"
     @delete="deleteItem"
-    expand
   >
     <template #[`item.capacity`]="{ item }">
       {{ `${item.occupation} / ${item.capacity}` }}
@@ -55,7 +56,7 @@
                 color="primary"
                 type="submit"
               >
-                {{ expanded_dialog === 'text' ? 'Add Software' : 'Report' }}
+                {{ expanded_dialog === 'software' ? 'Add Software' : 'Report' }}
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -74,6 +75,7 @@
                   <v-list-subheader>
                     <span>Softwares</span>
                     <v-btn
+                      v-if="getPermission === 1"
                       color="secondary"
                       density="comfortable"
                       icon="mdi-plus"
@@ -186,7 +188,7 @@ export default {
       { title: 'Name', key: 'name' },
       { title: 'Occupation/Capacity', key: 'capacity', filterable: false },
       { title: 'Type', key: 'type' },
-      { title: 'Actions', key: 'actions', sortable: false, filterable: false },
+      { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
     ],
     types: [
       { title: 'Active', value: 'active' },
@@ -264,7 +266,6 @@ export default {
         });
       }
     },
-
     async deleteItem(item) {
       await deleteWorkstation(item.id);
       const deleted = this.workstations.splice(this.workstations.indexOf(item), 1);
@@ -274,11 +275,9 @@ export default {
         text: `You have deleted Workstation ${deleted[0].name}`,
       });
     },
-
     openSoftwareDialog() {
       this.expanded_dialog = 'software';
     },
-
     async addSoftware(item) {
       const { valid } = await this.$refs[`form_${item.id}`].validate();
       if (!valid) return;
@@ -297,7 +296,6 @@ export default {
         this.$loading.hide();
       }
     },
-
     async deleteSoftware(item, i) {
       if (this.getPermission !== 1) return;
 
@@ -314,11 +312,9 @@ export default {
         console.error(e);
       }
     },
-
     async openIssueDialog() {
       this.expanded_dialog = 'issue';
     },
-
     async addIssue(item) {
       const { valid } = await this.$refs[`form_${item.id}`].validate();
       if (!valid) return;
@@ -344,7 +340,6 @@ export default {
         this.$loading.hide();
       }
     },
-
     async changeIssueStatus(event, item, problem_index) {
       item.problems[problem_index].closed = event ? new Date() : null;
 
@@ -356,77 +351,12 @@ export default {
           text: `You have updated Workstation ${response.data.name}`,
         });
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     },
-
-    save_filter() {
-      if (!this.$refs.form_filter.validate()) return;
-      this.workstations = [...this.passedData];
-
-      if (!this.select_all)
-        this.workstations = [...this.passedData].filter((val) => {
-          return this.selected_softwares.reduce(
-            (prev, cur) => val.softwares.includes(cur) || prev,
-            false
-          );
-        });
-
-      if (this.filter_with_issues)
-        this.workstations = this.workstations.filter((val) => val.problems.length > 0);
-      if (this.filter_with_unresolved_issues)
-        this.workstations = this.workstations.filter((val) => {
-          const test = val.problems.reduce((acc, val) => {
-            return acc || !val.resolved;
-          }, false);
-
-          return val.problems.length > 0 && test;
-        });
-
-      this.close_filter();
-    },
-
-    clear_filter() {
-      this.workstations = [...this.passedData];
-
-      this.close_filter();
-    },
-
-    async save_issue(item) {
-      if (!this.$refs.form_issue.validate()) return;
-
-      const new_item = { ...item };
-
-      new_item.problems = new_item.problems ?? [];
-
-      new_item.problems.push({
-        message: this.issue_description,
-        closed: null,
-        created: new Date(),
-        resolved: false,
-      });
-
-      try {
-        const response = await updateWorkstation(new_item.id, new_item);
-        //this.workstations.splice(this.editedIndex, 1, response.data);
-        this.$notify({
-          type: 'success',
-          title: 'Workstation updated',
-          text: `You have updated Workstation ${response.data.name}`,
-        });
-      } finally {
-        this.close_issue_dialog();
-        this.issue_description = '';
-      }
-    },
-
-    async close_issue_dialog() {
-      this.dialog_issue = false;
-    },
-
-    selectAll(event) {
-      this.select_all = event;
-      this.selected_softwares = event ? [...this.available_software] : [];
+    filterWorkstations(value, search, item) {
+      return item.raw.name.toLowerCase().includes(search.toLowerCase()) ||
+        item.raw.softwares.some(v => v.toLowerCase().includes(search.toLowerCase()));
     },
   },
 };
