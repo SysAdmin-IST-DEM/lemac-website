@@ -29,7 +29,6 @@ export default {
     this.$loading.show();
     const response = await getWorkstations();
     this.workstations = response.data;
-    console.log(this.workstations);
     this.$loading.hide();
   },
 };
