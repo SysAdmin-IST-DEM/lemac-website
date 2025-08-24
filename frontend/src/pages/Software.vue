@@ -1,11 +1,6 @@
 <template>
   <div class="home">
-    <HomeHeader
-      :loading="loading"
-      :loading-out="false"
-      @login="login"
-      @logout="logout"
-    />
+    <HomeHeader disable-login />
     <v-container>
       <v-row
         v-if="userData == null"
@@ -32,9 +27,7 @@
 
 <script>
 import HomeHeader from '@/components/Home/HomeHeader.vue';
-import { apiLogin } from '@/api/auth.api';
 import { getFenixInfo } from '@/api/auth.api';
-import { mapActions } from 'vuex';
 import HomeSoftware from '@/components/Home/HomeSoftware.vue';
 
 export default {
@@ -62,7 +55,6 @@ export default {
     loginFenix() {
       window.location = `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_SOFTWARE_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL_SOFTWARE}`;
     },
-    //only runs after fenix login
     async getFenixInfo(code) {
       this.loading = true;
       try {
@@ -85,35 +77,7 @@ export default {
         });
       }
       this.loading = false;
-    },
-    //only runs after fenix login
-    async authBackend(code) {
-      this.loading = true;
-      try {
-        const { data } = await apiLogin(code);
-        if (data.jwt) {
-          localStorage.setItem('token', data.jwt);
-          this.loginUser(data.user);
-        }
-      } catch (e) {
-        console.log(e);
-        this.$notify({
-          type: 'error',
-          title: 'Unauthorized user',
-          text: "You don't have permission to access this ",
-          duration: -1,
-        });
-      }
-      this.loading = false;
-      this.$router.push('login');
-    },
-    logout() {
-      this.loadingOut = true;
-      localStorage.removeItem('token');
-      this.logoutUser();
-      this.loadingOut = false;
-    },
-    ...mapActions('user', ['loginUser', 'logoutUser']),
+    }
   },
 };
 </script>

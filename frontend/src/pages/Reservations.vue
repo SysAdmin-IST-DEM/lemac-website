@@ -9,8 +9,6 @@
 
 <script>
 import HomeHeader from '@/components/Home/HomeHeader.vue';
-import { apiLogin } from '@/api/auth.api';
-import { mapActions } from 'vuex';
 import HomeRoomCalendar from '@/components/Home/HomeRoomCalendar.vue';
 
 export default {
