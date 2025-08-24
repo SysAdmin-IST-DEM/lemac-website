@@ -31,7 +31,10 @@
 
     <template #top>
       <!-- Table toolbar -->
-      <v-toolbar flat>
+      <v-toolbar
+        v-if="!hideHeader"
+        flat
+      >
         <v-toolbar-title class="flex-0-0">
           {{ title }}
         </v-toolbar-title>
@@ -55,40 +58,37 @@
             color="secondary"
             variant="elevated"
             class="mb-2 mr-4"
-            @click="
-              selectedItem = null;
-              editDialog = true;
-            "
+            @click="openEditDialog(null)"
           >
             {{ newButton }}
           </v-btn>
         </slot>
-
-        <!-- Custom slot for dialogs -->
-        <slot name="dialogs">
-          <!-- Delete dialog -->
-          <DashboardDeleteDialog
-            v-model="deleteDialog"
-            :item="selectedItem"
-            @delete="$emit('delete', selectedItem)"
-          />
-
-          <!-- Edit dialog -->
-          <DashboardEditDialog
-            v-model="editDialog"
-            :item="selectedItem"
-            :fields="editFields"
-            :on-initialization="editInitialization"
-            @edit="(item, values) => $emit('edit', selectedItem, values)"
-          >
-            <template #title>
-              {{ title }}
-            </template>
-          </DashboardEditDialog>
-        </slot>
-
-        <slot name="dialogs-append" />
       </v-toolbar>
+
+      <!-- Custom slot for dialogs -->
+      <slot name="dialogs">
+        <!-- Delete dialog -->
+        <DashboardDeleteDialog
+          v-model="deleteDialog"
+          :item="selectedItem"
+          @delete="$emit('delete', selectedItem)"
+        />
+
+        <!-- Edit dialog -->
+        <DashboardEditDialog
+          v-model="editDialog"
+          :item="selectedItem"
+          :fields="editFields"
+          :on-initialization="editInitialization"
+          @edit="(item, values) => $emit('edit', selectedItem, values)"
+        >
+          <template #title>
+            {{ title }}
+          </template>
+        </DashboardEditDialog>
+      </slot>
+
+      <slot name="dialogs-append" />
     </template>
 
     <template
@@ -123,7 +123,7 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
+      default: "Dashboard Table",
     },
     items: {
       type: Array,
@@ -132,6 +132,10 @@ export default {
     headers: {
       type: Array,
       required: true,
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false,
     },
     sortBy: {
       type: Array,

@@ -17,6 +17,7 @@
         Hour Table
       </v-tab>
     </v-tabs>
+
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="1">
         <v-container v-if="hours">
@@ -25,7 +26,7 @@
       </v-tabs-window-item>
       <v-tabs-window-item value="2">
         <v-container>
-          <Calendar />
+          <HoursCalendar />
         </v-container>
       </v-tabs-window-item>
       <v-tabs-window-item value="3">
@@ -48,7 +49,7 @@
 
 <script>
 import HourTable from '@/components/Dashboard/Hours/HoursTable.vue';
-import Calendar from '@/components/Dashboard/Hours/Calendar.vue';
+import HoursCalendar from '@/components/Dashboard/Hours/HoursCalendar.vue';
 import SumTable from '@/components/Dashboard/Hours/SumTable.vue';
 import { getHoursSelf, getHours } from '@/api/hours.api';
 import { mapGetters } from 'vuex';
@@ -56,7 +57,7 @@ import { getUsers } from '@/api/user.api';
 
 export default {
   name: 'Hours',
-  components: { HourTable, Calendar, SumTable },
+  components: { HourTable, HoursCalendar, SumTable },
   data() {
     return {
       tab: null,

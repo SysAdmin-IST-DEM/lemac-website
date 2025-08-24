@@ -1,30 +1,53 @@
 <template>
-  <v-calendar
-    v-model="date"
-    v-bind="props"
+  <VueCal
+    ref="vuecal"
+    v-bind="$attrs"
     :events="filteredEvents"
-    :view-mode="type"
-    :interval-start="8"
-    :intervals="14"
-    class="bg-white"
+    :view="type"
+    :start-week-on-sunday="startWeekOnSunday"
+    :events-on-month-view="true"
+    :time-from="480"
+    :time-to="timeTo"
     @click:date="viewDay"
-    @click:event="showEvent"
-    @update:model-value="onChange"
+    @event-click="showEvent"
+    @ready="onReady"
+    @view-change="onChange"
   >
-    <template #header="{ title, clickNext, clickPrev, clickToday }">
+    <template #header="{ view }">
       <v-sheet height="64">
         <v-toolbar flat>
-          <v-btn class="ml-4 mr-4" color="secondary" variant="elevated" @click="clickToday">
+          <v-btn
+            class="ml-4 mr-4"
+            color="secondary"
+            variant="elevated"
+            @click="view.goToToday"
+          >
             Today
           </v-btn>
-          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="clickPrev">
-            <v-icon size="small"> mdi-chevron-left </v-icon>
+          <v-btn
+            icon
+            variant="text"
+            size="small"
+            color="grey-darken-2"
+            @click="view.previous"
+          >
+            <v-icon size="small">
+              mdi-chevron-left
+            </v-icon>
           </v-btn>
-          <v-btn icon variant="text" size="small" color="grey-darken-2" @click="clickNext">
-            <v-icon size="small"> mdi-chevron-right </v-icon>
+          <v-btn
+            icon
+            variant="text"
+            size="small"
+            color="grey-darken-2"
+            @click="view.next"
+          >
+            <v-icon size="small">
+              mdi-chevron-right
+            </v-icon>
           </v-btn>
           <v-toolbar-title>
-            {{ title }}
+            <span v-html="view.title" />
           </v-toolbar-title>
           <v-spacer />
 
@@ -33,9 +56,16 @@
           <!-- Type select -->
           <v-menu location="bottom right">
             <template #activator="{ props }">
-              <v-btn color="secondary" variant="elevated" class="mr-4" v-bind="props">
+              <v-btn
+                color="secondary"
+                variant="elevated"
+                class="mr-4"
+                v-bind="props"
+              >
                 <span>{{ type }}</span>
-                <v-icon end> mdi-menu-down </v-icon>
+                <v-icon end>
+                  mdi-menu-down
+                </v-icon>
               </v-btn>
             </template>
             <v-list>
@@ -53,55 +83,48 @@
         </v-toolbar>
       </v-sheet>
     </template>
-  </v-calendar>
+  </VueCal>
   <v-menu
     v-model="showEventOpen"
     :activator="selectedEventActivator"
     :close-on-content-click="false"
   >
-    <v-card color="grey-lighten-4" min-width="250px" flat>
-      <v-toolbar :color="selectedEvent.color">
+    <v-card
+      color="grey-lighten-4"
+      min-width="250px"
+      flat
+    >
+      <v-toolbar :color="selectedEvent.customColor">
         <v-toolbar-title>
           {{ selectedEvent.title }}
         </v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
-        <p>
-          Classroom: <b>{{ selectedEvent.details.room }}</b>
-        </p>
-        <p>
-          Entry:
-          {{ moment(selectedEvent.details.entry).format('HH:mm') }}
-        </p>
-        <p>
-          Exit:
-          {{ moment(selectedEvent.details.exit).format('HH:mm') }}
-        </p>
-        <p v-if="typeof selectedEvent.details.id !== 'number'">
-          Description: {{ selectedEvent.details.description }}
-        </p>
+        <slot
+          name="event-details"
+          :event="selectedEvent"
+        />
       </v-card-text>
+      <v-card-actions>
+        <slot
+          name="event-details-actions"
+          :event="selectedEvent"
+        />
+      </v-card-actions>
     </v-card>
   </v-menu>
 </template>
 
-<style>
-.v-calendar-weekly__head-weekday .v-calendar-day-label__today {
-  background-color: rgba(var(--v-theme-secondary)) !important;
-  color: white !important;
-}
-
-.v-calendar__container {
-  overflow-y: auto;
-}
-</style>
-
 <script>
-import moment from 'moment';
+import { VueCal } from 'vue-cal';
 
 export default {
   name: 'LemacCalendar',
+  inheritAttrs: false,
+  components: {
+    VueCal,
+  },
   props: {
     events: {
       type: Array,
@@ -109,50 +132,95 @@ export default {
     },
     filter: {
       type: Function,
-      default: () => { return true },
+      default: () => {
+        return true;
+      },
     },
-    props: {
-      type: Object,
-      default: () => {}
+    defaultView: {
+      type: String,
+      default: 'week',
+    },
+    clickableEvent: {
+      type: Boolean,
+      default: true
+    },
+    timeTo: {
+      type: Number,
+      default: 1320,
+    },
+    startWeekOnSunday: {
+      type: Boolean,
+      default: true
     }
+  },
+  emits: ['change', 'event-click'],
+  data() {
+    return {
+      type: this.defaultView,
+      showEventOpen: false,
+      selectedEvent: undefined,
+      selectedEventActivator: undefined,
+    };
   },
   computed: {
     filteredEvents() {
-      return this.events.filter(event => this.filter(event));
-    },
-  },
-  emits: ['change'],
-  data() {
-    return {
-      date: [new Date()],
-      type: 'week',
-      showEventOpen: false,
-      selectedEvent: undefined,
-      selectedEventActivator: undefined
-    };
-  },
-  watch: {
-    events() {
-      console.log(this.events);
+      return this.events.filter((event) => {
+        return this.filter(event)
+      });
     },
   },
   methods: {
-    moment,
+    getVueCal() {
+      return this.$refs.vuecal;
+    },
     viewDay() {
-      this.date = [new Date()];
       this.type = 'day';
     },
-    onChange(date) {
-      const start = moment(this.date[0]).startOf(this.type).toDate();
-      const end = moment(this.date[0]).endOf(this.type).toDate();
-      this.$emit('change', { start, end });
+    onReady({ config, view }) {
+      this.$emit('change', view);
     },
-    showEvent(e, { event }) {
-      console.log('CLICKED', event);
+    onChange(event) {
+      this.$emit('change', event);
+    },
+    showEvent({ e, event }) {
+      this.$emit('event-click', { e, event });
+      if(!this.clickableEvent || this.showEventOpen) return;
       this.selectedEvent = event;
       this.selectedEventActivator = e.target;
       this.showEventOpen = true;
     },
+    closeEvent() {
+      this.showEventOpen = false;
+    }
   },
 };
 </script>
+
+<style scoped>
+.vuecal--default-theme {
+  --vuecal-primary-color: rgb(var(--v-theme-secondary));
+  --vuecal-secondary-color: #fff;
+}
+
+::v-deep(.vuecal__cell--selected:before),
+::v-deep(.vuecal__cell--today:before),
+::v-deep(.vuecal__scrollable-wrap) {
+  background-color: transparent !important;
+}
+
+::v-deep(.vuecal__weekday) {
+  flex-direction: column !important;
+}
+
+::v-deep(.vuecal__event) {
+  border: 1px solid white !important;
+}
+
+::v-deep(.vuecal__event-details) {
+  color: white !important;
+}
+
+::v-deep(.vuecal__event-details:hover) {
+  cursor: pointer;
+}
+</style>
