@@ -77,7 +77,7 @@
         type="submit"
         block
         class="mt-2 mb-2"
-        color="secondary"
+        color="primary"
         @click="submitDialog"
       >
         Submit
