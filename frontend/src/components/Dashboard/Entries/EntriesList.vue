@@ -17,6 +17,15 @@
         color="secondary"
       />
       <v-spacer />
+      <v-btn
+        color="error"
+        variant="elevated"
+        class="mb-2 mr-4"
+        title="Clear all entries"
+        @click="clearAllEntries"
+      >
+        <v-icon>mdi-delete-sweep-outline</v-icon>
+      </v-btn>
       <v-dialog
         v-model="dialogAdd"
         max-width="550px"
@@ -156,9 +165,9 @@
               >
                 <template #activator="{ props }">
                   <v-btn
-                    class="bg-primary ma-1"
+                    class="ma-1"
+                    color="primary"
                     size="small"
-
                     v-bind="props"
                     @click="editEntry(entry)"
                   >
@@ -180,8 +189,7 @@
                   <v-btn
                     class="ma-1"
                     size="small"
-                    color="info"
-                    
+                    color="green"
                     v-bind="props"
                     @click="addObservation(entry)"
                   >
@@ -201,9 +209,9 @@
               >
                 <template #activator="{ props }">
                   <v-btn
-                    class="ma-1 bg-error"
+                    class="ma-1"
+                    color="error"
                     size="small"
-
                     v-bind="props"
                     @click="closeEntry(entry)"
                   >
@@ -496,6 +504,19 @@ export default {
         this.closeCancel();
       }
     },
+    async clearAllEntries() {
+      this.$loading.show();
+      for (const entry of this.entries) {
+        await updateEntry(entry.id, { active: 0 });
+      }
+      this.entries = [];
+      this.$notify({
+        type: 'success',
+        title: 'All entries closed',
+        text: `You have closed all registered entries`,
+      });
+      this.$loading.hide();
+    },
     // observations methods
     observationsClose() {
       this.dialog = false;
@@ -531,6 +552,7 @@ export default {
     },
     async save() {
       if (!this.$refs.formAdd.validate()) return;
+      this.close();
       try {
         for (const number of this.numberList) {
           const { data } = await addEntry({
@@ -555,12 +577,12 @@ export default {
           });
         }
       } finally {
-        this.close();
         this.numberList = [null];
       }
     },
     async edit() {
       if (!this.$refs.formAdd.validate()) return;
+      this.close();
       try {
         this.editingEntry.istId = `ist1${this.editingEntry.number}`;
 
@@ -572,7 +594,6 @@ export default {
           text: `You have updated an entry for workstation ${data.workstation.name}`,
         });
       } finally {
-        this.close();
         this.numberList = [null];
       }
     },
