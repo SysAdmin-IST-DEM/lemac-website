@@ -24,7 +24,6 @@
 
     <template #expanded-row="{ columns, item }">
       <v-dialog
-        v-if="getPermission === 1"
         v-model="expanded_dialog_open"
         max-width="550px"
       >

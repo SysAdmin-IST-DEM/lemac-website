@@ -52,3 +52,7 @@
 .pc-selected {
   @apply border bg-[#49caf9] border-[#a5a5a5]
 }
+
+a {
+  color: rgb(var(--v-theme-primary));
+}
