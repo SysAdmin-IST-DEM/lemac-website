@@ -97,8 +97,10 @@ const routes = [
   },
   {
     path: '/drive',
-    beforeEnter() {
+    name: 'drive',
+    beforeEnter: () => {
       window.location.href = "https://drive.google.com/drive/folders/1KFYaJqnscGJ_YC5se43KJcyQQ56kYX2-?usp=drive_link"
+      return false
     }
   },
   {
