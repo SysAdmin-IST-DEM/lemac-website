@@ -65,8 +65,7 @@
   />
 </template>
 <script>
-import { VTimePicker } from 'vuetify/labs/components';
-import { VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect, VNumberInput } from 'vuetify/components';
+import { VTimePicker, VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect, VNumberInput } from 'vuetify/components';
 import moment from 'moment';
 
 export default {
