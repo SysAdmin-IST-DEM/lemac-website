@@ -77,6 +77,7 @@ export default {
     labelIcon: { type: String, default: '' },
     modelValue: [String, Number, Object, Array, Date, Boolean],
     required: { type: Boolean, default: false },
+    rules: { type: Array, default: () => [] },
     props: { type: Object, default: () => ({}), },
   },
   emits: ['update:modelValue'],
@@ -127,6 +128,8 @@ export default {
       if (this.required) {
         rules.push(v => !!v || 'This field is required')
       }
+
+      rules.push(...this.rules);
 
       return rules
     }
