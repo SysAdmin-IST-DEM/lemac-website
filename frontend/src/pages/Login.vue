@@ -1,128 +1,96 @@
 <template>
   <v-container class="container">
-    <v-card class="card">
-      <v-card-title class="text-h5">
-        Hour Register
-      </v-card-title>
-      <v-card-subtitle
-        class="whitespace-normal! overflow-visible! [text-overflow:unset]!"
-      >
-        Please log your work hours for today, or press the skip button if you are not working in the
-        lab today.
-      </v-card-subtitle>
-      <v-card-text class="w-full!">
-        <LoginTimePicker
-          @set-start="setStart"
-          @set-end="setEnd"
-          @set-safe-amount="setSafeAmount"
-          @set-entry-number="setEntryNumber"
-          @set-exit-number="setExitNumber"
+    <DashboardEditDialog
+      v-model="showEditDialog"
+      :item="lastEntry"
+      :fields="editFields"
+      :on-initialization="onInitialization"
+      save-color="success"
+      :should-disable-cancel="true"
+      cancel-color="success"
+      cancel-text="Skip"
+      :cancel-action="() => { $router.push('dashboard') }"
+      :handle-save-error="() => { $router.push('/') }"
+      @edit="saveHours"
+    >
+      <template #prepend-title>
+        <span
+          style="display: none"
+          aria-hidden="true"
         />
-      </v-card-text>
-
-      <v-divider
-        class="mx-4 border-opacity-100"
-        horizontal
-      />
-
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          color="success"
-          variant="text"
-          @click="$router.push('dashboard')"
-        >
-          Skip
-        </v-btn>
-        <v-btn
-          color="secondary"
-          variant="text"
-          :disabled="disabled"
-          @click="saveTime"
-        >
-          Save
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+      </template>
+      <template #title>
+        Hour Register
+      </template>
+      <template #subtitle>
+        Please log your work hours for today, or press the skip button if you are not working in
+        the lab today.
+      </template>
+    </DashboardEditDialog>
   </v-container>
 </template>
 
 <script>
-import LoginTimePicker from '@/components/Dashboard/Login/LoginTimePicker.vue';
-import { createHours } from '@/api/hours.api';
+import { createHours, getLastEntry } from '@/api/hours.api';
+import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 export default {
   name: 'LoginPage',
   components: {
-    LoginTimePicker,
+    DashboardEditDialog,
   },
   data() {
     return {
-      start: '',
-      end: '',
-      safeAmount: '',
-      entryNumber: '',
-      exitNumber: null
+      editFields: [
+        [
+          { key: 'entry_hours', type: 'time', label: 'Entry Hours', labelIcon: 'mdi-clock-time-four-outline', required: true },
+          { key: 'exit_hours', type: 'time', label: 'Exit Hours', labelIcon: 'mdi-clock-time-four-outline', required: true },
+        ],
+        [
+          { key: 'entry_number', type: 'number', label: 'Entry Ticket', labelIcon: 'mdi-ticket-confirmation' },
+          { key: 'exit_number', type: 'number', label: 'Exit Ticket', labelIcon: 'mdi-ticket-confirmation' },
+        ],
+        [
+          { key: 'safe_amount', type: 'number', label: 'Money in Safe', labelIcon: 'mdi-safe-square-outline' },
+        ],
+      ],
+      showEditDialog: false,
+      lastEntry: null
     };
   },
   computed: {
     disabled() {
-      return this.start && this.end ? false : true;
+      return !(this.start && this.end);
     },
   },
+  async mounted() {
+    this.lastEntry = (await getLastEntry()).data;
+    this.showEditDialog = true;
+  },
   methods: {
-    setStart(value) {
-      this.start = value;
+    onInitialization(event) {
+      console.log(event);
+      return {
+        entry_number: event.exit_number,
+        safe_amount: event.safe_amount
+      }
     },
-    setEnd(value) {
-      this.end = value;
-    },
-    setSafeAmount(value) {
-      this.safeAmount = value;
-    },
-    setEntryNumber(value) {
-      this.entryNumber = value;
-    },
-    setExitNumber(value) {
-      this.exitNumber = value;
-    },
-    async saveTime() {
+    async saveHours(event, values) {
       const now = new Date().toJSON();
-      const entry = now.slice(0, 11) + this.start + ':000Z';
-      const exit = now.slice(0, 11) + this.end + ':000Z';
+      values.entry = now.slice(0, 11) + values.entry_hours + ':000Z';
+      values.exit = now.slice(0, 11) + values.exit_hours + ':000Z';
+      delete values.entry_hours;
+      delete values.exit_hours;
 
-      const saveObj = {
-        entry,
-        exit,
-        entry_number: this.entryNumber,
-        exit_number: this.exitNumber,
-        safe_amount: this.safeAmount,
-        sold_amount: 0,
-      }
+      if(!values.exit_number) values.exit_number = values.entry_number;
 
-      console.log(saveObj)
-
-      try {
-        await createHours(saveObj);
-        this.$notify({
-          type: 'success',
-          title: 'Hours saved',
-          text: `You have sucessfully saved your work hours for today`,
-        });
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.$router.push('dashboard');
-      }
-      console.log(entry);
-      console.log(exit);
+      await createHours(values);
+      this.$notify({
+        type: 'success',
+        title: 'Hours saved',
+        text: `You have sucessfully saved your work hours for today`,
+      });
+      this.$router.push('/dashboard');
     },
   },
 };
 </script>
-
-<style scoped>
-.container {
-  width: 50%;
-  margin-top: 10vh;
-}
-</style>

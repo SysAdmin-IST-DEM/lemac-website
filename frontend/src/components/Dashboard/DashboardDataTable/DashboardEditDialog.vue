@@ -5,11 +5,16 @@
   >
     <v-card>
       <v-card-title class="text-h5">
-        {{ item ? 'Edit ' : 'New ' }}
+        <slot name="prepend-title">
+          {{ item ? 'Edit ' : 'New ' }}
+        </slot>
         <slot name="title">
           Element
         </slot>
       </v-card-title>
+      <v-card-subtitle class="whitespace-normal! overflow-visible! [text-overflow:unset]!">
+        <slot name="subtitle" />
+      </v-card-subtitle>
       <v-card-text class="!p-0">
         <v-form
           ref="form"
@@ -44,18 +49,19 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-          color="primary"
+          :color="cancelColor"
           variant="text"
-          @click="isOpen = false"
+          @click="cancelAction"
         >
-          Cancel
+          {{ cancelText }}
         </v-btn>
         <v-btn
-          color="primary"
+          :color="saveColor"
           variant="text"
+          :disabled="cancelDisabled"
           @click="confirm"
         >
-          Save
+          {{ saveText }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -83,10 +89,36 @@ export default {
       required: true
     },
     onInitialization: { type: Function, default: (item) => {} },
+    shouldDisableCancel: { type: Boolean, default: false },
+    cancelText: {
+      type: String,
+      default: 'Cancel'
+    },
+    cancelColor: {
+      type: String,
+      default: 'primary'
+    },
+    cancelAction: { type: Function, default: () => { this.isOpen = false } },
+    saveText: {
+      type: String,
+      default: 'Save'
+    },
+    saveColor: {
+      type: String,
+      default: 'primary'
+    },
+    handleSaveError: { type: Function, default: (e) => {
+        console.error(e);
+        this.$notify({
+          type: 'error',
+          title: 'Server error',
+          text: 'The server threw an error while handling the request',
+        });
+    }},
   },
   emits: ['update:modelValue', 'edit'],
   data: () => ({
-    values: null,
+    values: null
   }),
   computed: {
     isOpen: {
@@ -96,6 +128,18 @@ export default {
       set(value) {
         this.$emit('update:modelValue', value)
       }
+    },
+    cancelDisabled() {
+      if(this.shouldDisableCancel) {
+        for(const row of this.fields) {
+          for (const field of row) {
+            if(field.required && (this.values[field.key] == null || this.values[field.key] === '')) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
     },
     ...mapGetters('user', ['getPermission']),
   },
@@ -116,6 +160,14 @@ export default {
       if (!this.$refs.form.validate()) return;
       try {
         this.$emit('edit', this.item, this.values);
+      } catch(e) {
+        console.error(e);
+        this.$notify({
+          type: 'error',
+          title: 'Server error',
+          text: 'The server threw an error while handling the request',
+        })
+        this.handleSaveError(e);
       } finally {
         this.isOpen = false;
       }
