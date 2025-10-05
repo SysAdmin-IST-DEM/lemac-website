@@ -1,6 +1,7 @@
 <template>
   <v-container class="container">
     <DashboardEditDialog
+      ref="editDialog"
       v-model="showEditDialog"
       :item="lastEntry"
       :fields="editFields"
@@ -43,7 +44,13 @@ export default {
       editFields: [
         [
           { key: 'entry_hours', type: 'time', label: 'Entry Hours', labelIcon: 'mdi-clock-time-four-outline', required: true },
-          { key: 'exit_hours', type: 'time', label: 'Exit Hours', labelIcon: 'mdi-clock-time-four-outline', required: true },
+          { key: 'exit_hours', type: 'time', label: 'Exit Hours', labelIcon: 'mdi-clock-time-four-outline', required: true, rules: [
+              (v) => {
+                if(v > this.$refs.editDialog.values['entry_hours']) return true;
+                return 'Exit hours must be after entry hours';
+              }
+            ]
+          },
         ],
         [
           { key: 'entry_number', type: 'number', label: 'Entry Ticket', labelIcon: 'mdi-ticket-confirmation' },
@@ -57,18 +64,12 @@ export default {
       lastEntry: null
     };
   },
-  computed: {
-    disabled() {
-      return !(this.start && this.end);
-    },
-  },
   async mounted() {
     this.lastEntry = (await getLastEntry()).data;
     this.showEditDialog = true;
   },
   methods: {
     onInitialization(event) {
-      console.log(event);
       return {
         entry_number: event.exit_number,
         safe_amount: event.safe_amount

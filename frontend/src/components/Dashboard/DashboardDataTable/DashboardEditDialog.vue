@@ -40,6 +40,7 @@
                   :label="field.label"
                   :label-icon="field.labelIcon"
                   :required="field.required"
+                  :rules="field.rules"
                 />
               </v-col>
             </v-row>
@@ -136,6 +137,11 @@ export default {
             if(field.required && (this.values[field.key] == null || this.values[field.key] === '')) {
               return true;
             }
+            for(const rule of field.rules ?? []) {
+              if (rule(this.values[field.key]) !== true) {
+                return true;
+              }
+            }
           }
         }
       }
@@ -156,8 +162,9 @@ export default {
     this.initializeEmpty();
   },
   methods: {
-    confirm() {
-      if (!this.$refs.form.validate()) return;
+    async confirm() {
+      const { valid } = await this.$refs.form.value.validate()
+      if (!valid) return
       try {
         this.$emit('edit', this.item, this.values);
       } catch(e) {
