@@ -163,7 +163,7 @@ export default {
   },
   methods: {
     async confirm() {
-      const { valid } = await this.$refs.form.value.validate()
+      const { valid } = await this.$refs.form.validate();
       if (!valid) return
       try {
         this.$emit('edit', this.item, this.values);
