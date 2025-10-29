@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-start justify-start w-full">
     <h2 class="m-6 text-4xl font-semibold">
-      SOLIDWORKS 2024
+      SOLIDWORKS 2025
     </h2>
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
@@ -93,7 +93,7 @@ export default {
 
       this.installInstructions = [
         `<p class="mb-0">The installation process has to be executed while connected to Eduroam on Tecnico's VPN. </p>
-          <p>Go to the <a href='${import.meta.env.VITE_SOLIDWORKS_URL}'>Download URL</a> and insert your data and download the SOLIDWORKS 2024 installer. (images shown ahead might be sujected to change)</p>`,
+          <p>Go to the <a href='${import.meta.env.VITE_SOLIDWORKS_URL}'>Download URL</a> and insert your data and download the SOLIDWORKS 2025 installer. (images shown ahead might be sujected to change)</p>`,
         'Execute the install executable and insert the serial number in the designated area. Make sure that there are no other serial numbers inserted.',
         "Remove 'SOLIDWORKS Eletrical' from the products to install",
         "Accept the license agreement and click the 'Download and Install' button",
