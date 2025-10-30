@@ -2,38 +2,55 @@
   <v-app-bar
     density="compact"
   >
-    <router-link to="/">
+    <!-- Left side: Logo -->
+    <router-link to="/" class="text-decoration-none">
       <h2 class="mx-3 text-primary">
         LEMAC
       </h2>
     </router-link>
-    <v-divider
-      class="border-opacity-100"
-      vertical
-      inset
+
+    <!-- MOBILE: burger icon -->
+    <v-app-bar-nav-icon
+      class="d-md-none"
+      @click="drawer = true"
     />
-    <router-link to="/about">
-      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-        About
-      </h2>
-    </router-link>
-    <router-link to="/reservations">
-      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-        Reservations
-      </h2>
-    </router-link>
-    <router-link to="/software">
-      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-        Software DEM
-      </h2>
-    </router-link>
-    <router-link to="/printing">
-      <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
-        3DPrinting
-      </h2>
-    </router-link>
+
+    <!-- DESKTOP: inline nav links -->
+    <div class="d-none d-md-flex align-center">
+      <v-divider
+        class="border-opacity-100"
+        vertical
+        inset
+      />
+      <router-link to="/about" class="text-decoration-none">
+        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+          About
+        </h2>
+      </router-link>
+      <router-link to="/reservations" class="text-decoration-none">
+        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+          Reservations
+        </h2>
+      </router-link>
+      <router-link to="/software" class="text-decoration-none">
+        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+          Software DEM
+        </h2>
+      </router-link>
+      <router-link to="/printing" class="text-decoration-none">
+        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+          3DPrinting
+        </h2>
+      </router-link>
+    </div>
+
     <v-spacer />
-    <div v-if="!getId">
+
+    <!-- AUTH AREA -->
+    <div
+      v-if="!getId"
+      class="d-flex align-center"
+    >
       <v-btn
         class="mx-3 bg-primary"
         elevation="2"
@@ -43,7 +60,11 @@
         Login
       </v-btn>
     </div>
-    <div v-else>
+
+    <div
+      v-else
+      class="d-flex align-center"
+    >
       <v-tooltip
         location="bottom"
         open-delay="500"
@@ -58,16 +79,75 @@
         </template>
         Admin Dashboard
       </v-tooltip>
+
       <v-btn
         class="mx-3 bg-error"
         elevation="2"
         size="small"
-        @click="logout()"
+        @click="logout"
       >
         Logout
       </v-btn>
     </div>
   </v-app-bar>
+
+  <!-- NAVIGATION DRAWER (mobile) -->
+  <v-navigation-drawer
+    v-model="drawer"
+    location="left"
+    temporary
+    class="d-md-none"
+  >
+    <v-list nav density="comfortable">
+      <v-list-item
+        prepend-icon="mdi-home"
+        title="Home"
+        @click="$router.push('/')"
+      />
+      <v-list-item
+        prepend-icon="mdi-information-outline"
+        title="About"
+        @click="$router.push('about')"
+      />
+      <v-list-item
+        prepend-icon="mdi-calendar-clock"
+        title="Reservations"
+        @click="$router.push('reservations')"
+      />
+      <v-list-item
+        prepend-icon="mdi-laptop"
+        title="Software DEM"
+        @click="$router.push('software')"
+      />
+      <v-list-item
+        prepend-icon="mdi-cube-scan"
+        title="3DPrinting"
+        @click="$router.push('printing')"
+      />
+
+      <v-divider class="my-3" />
+
+      <template v-if="!getId">
+        <v-list-item
+          prepend-icon="mdi-login"
+          title="Login"
+          @click="login"
+        />
+      </template>
+      <template v-else>
+        <v-list-item
+          prepend-icon="mdi-view-dashboard"
+          title="Dashboard"
+          @click="$router.push('dashboard')"
+        />
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Logout"
+          @click="logout"
+        />
+      </template>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -81,6 +161,9 @@ export default {
       default: false,
     },
   },
+  data: () => ({
+    drawer: false,
+  }),
   computed: {
     ...mapGetters('user', ['getId']),
   },
