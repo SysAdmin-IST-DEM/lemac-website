@@ -23,48 +23,12 @@
     </template>
 
     <template #expanded-row="{ columns, item }">
-      <v-dialog
-        v-model="expanded_dialog_open"
-        max-width="550px"
-      >
-        <v-card>
-          <v-form
-            :ref="`form_${item.id}`"
-            @submit.prevent="expanded_dialog === 'software' ? addSoftware(item) : addIssue(item)"
-          >
-            <v-card-title>
-              <span>Add</span>
-            </v-card-title>
-            <v-card-text>
-              <v-text-field
-                v-model="expanded_dialog_text"
-                :label="expanded_dialog === 'software' ? 'Sofware to add' : 'Issue to report'"
-                variant="outlined"
-                :rules="[(v) => !!v || 'Field is required']"
-              />
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="primary"
-                @click="expanded_dialog_open = false"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="primary"
-                type="submit"
-              >
-                {{ expanded_dialog === 'software' ? 'Add Software' : 'Report' }}
-              </v-btn>
-            </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-dialog>
-
       <tr>
-        <td class="!p-0" :colspan="columns.length">
-          <v-container class="!h-full shadow-inner bg-gray-50">
+        <td :colspan="columns.length" class="!p-0">
+          <v-container
+            fluid
+            class="shadow-inner bg-gray-50"
+          >
             <v-row>
               <v-col cols="12" md="6">
                 <v-list
@@ -155,6 +119,45 @@
       </tr>
     </template>
   </DashboardTable>
+
+  <v-dialog
+    v-model="expanded_dialog_open"
+    max-width="550px"
+  >
+    <v-card>
+      <v-form
+        :ref="`form`"
+        @submit.prevent="expanded_dialog === 'software' ? addSoftware() : addIssue()"
+      >
+        <v-card-title>
+          <span>Add</span>
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="expanded_dialog_text"
+            :label="expanded_dialog === 'software' ? 'Sofware to add' : 'Issue to report'"
+            variant="outlined"
+            :rules="[(v) => !!v || 'Field is required']"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="primary"
+            @click="expanded_dialog_open = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="primary"
+            type="submit"
+          >
+            {{ expanded_dialog === 'software' ? 'Add Software' : 'Report' }}
+          </v-btn>
+        </v-card-actions>
+      </v-form>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -200,6 +203,7 @@ export default {
       remote: 'blue',
     },
     expanded_dialog: null,
+    expanded_dialog_item: null,
     expanded_dialog_text: '',
   }),
   computed: {
@@ -242,7 +246,6 @@ export default {
     editInitialization(item) {
       return Object.assign({}, item);
     },
-
     async editItem(item, values) {
       if(item) {
         const response = await updateWorkstation(
@@ -274,15 +277,20 @@ export default {
         text: `You have deleted Workstation ${deleted[0].name}`,
       });
     },
-    openSoftwareDialog() {
+
+    openSoftwareDialog(item) {
       this.expanded_dialog = 'software';
+      this.expanded_dialog_item = item;
     },
-    async addSoftware(item) {
-      const { valid } = await this.$refs[`form_${item.id}`].validate();
+    async addSoftware() {
+      const item = this.expanded_dialog_item;
+      const { valid } = await this.$refs[`form`].validate();
       if (!valid) return;
 
       try {
         this.$loading.show();
+
+        item.softwares.push(this.expanded_dialog_text);
         const response = await updateWorkstation(item.id, item);
         this.$notify({
           type: 'success',
@@ -290,7 +298,6 @@ export default {
           text: `You have updated Workstation ${response.data.name}`,
         });
       } finally {
-        item.softwares.push(this.expanded_dialog_text);
         this.expanded_dialog_open = false;
         this.$loading.hide();
       }
@@ -311,11 +318,14 @@ export default {
         console.error(e);
       }
     },
-    async openIssueDialog() {
-      this.expanded_dialog = 'issue';
+
+    async openIssueDialog(item) {
+      this.expanded_dialog = 'issue'
+      this.expanded_dialog_item = item;
     },
-    async addIssue(item) {
-      const { valid } = await this.$refs[`form_${item.id}`].validate();
+    async addIssue() {
+      const item = this.expanded_dialog_item;
+      const { valid } = await this.$refs[`form`].validate();
       if (!valid) return;
 
       const issue = {
@@ -327,6 +337,7 @@ export default {
       try {
         this.$loading.show();
 
+        item.problems.push(issue);
         const response = await updateWorkstation(item.id, item);
         this.$notify({
           type: 'success',
@@ -334,7 +345,6 @@ export default {
           text: `You have updated Workstation ${response.data.name}`,
         });
       } finally {
-        item.problems.push(issue);
         this.expanded_dialog_open = false;
         this.$loading.hide();
       }
