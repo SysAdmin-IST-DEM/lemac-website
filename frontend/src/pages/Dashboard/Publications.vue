@@ -11,7 +11,7 @@
 
 <script>
 import PublicationsTable from '@/components/Dashboard/Publications/PublicationsTable.vue';
-import { getPublications } from '@/api/publications.api';
+import { getPublications } from '@/api/publications.api.js';
 import { mapGetters } from 'vuex';
 
 export default {

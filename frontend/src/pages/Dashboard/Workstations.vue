@@ -11,7 +11,7 @@
 
 <script>
 import WorkstationsTable from '@/components/Dashboard/Workstations/WorkstationsTable.vue';
-import { getWorkstations } from '@/api/workstations.api';
+import { getWorkstations } from '@/api/workstations.api.js';
 import { mapGetters } from 'vuex';
 
 export default {

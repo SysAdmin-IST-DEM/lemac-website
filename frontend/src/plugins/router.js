@@ -1,20 +1,20 @@
 import { getAuthToken } from '@/api/httpClient.api';
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/pages/Home.vue';
+import Home from '@/pages/Home/Home.vue';
 import Login from '@/pages/Login.vue';
 import NotFoundPage from '@/pages/404.vue';
-import Dashboard from '@/pages/Dashboard.vue';
+import Dashboard from '@/pages/Dashboard/Dashboard.vue';
 import NavBar from '@/components/Dashboard/Navbar/NavBar.vue';
-import Users from '@/pages/Users.vue';
-import Hours from '@/pages/Hours.vue';
-import Workstations from '@/pages/Workstations.vue';
-import Publications from '@/pages/Publications.vue';
-import Rooms from '@/pages/Rooms.vue';
-import Schedule from '@/pages/Schedule.vue';
-import About from '@/pages/About.vue';
-import Reservations from '@/pages/Reservations.vue';
-import Software from '@/pages/Software.vue';
-import Printing from '@/pages/Printing.vue';
+import Users from '@/pages/Dashboard/Users.vue';
+import Hours from '@/pages/Dashboard/Hours.vue';
+import Workstations from '@/pages/Dashboard/Workstations.vue';
+import Publications from '@/pages/Dashboard/Publications.vue';
+import Rooms from '@/pages/Dashboard/Rooms.vue';
+import Schedule from '@/pages/Dashboard/Schedule.vue';
+import About from '@/pages/Home/About.vue';
+import Reservations from '@/pages/Home/Reservations.vue';
+import Software from '@/pages/Home/Software.vue';
+import Printing from '@/pages/Home/Printing.vue';
 
 const routes = [
   {
@@ -55,53 +55,59 @@ const routes = [
   },
   {
     path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
-    meta: { title: 'Dashboard', navBar: NavBar },
-  },
-  {
-    path: '/users',
-    name: 'users',
-    component: Users,
-    meta: { title: 'User Management', navBar: NavBar },
-  },
-  {
-    path: '/hours',
-    name: 'hours',
-    component: Hours,
-    meta: { title: "Hours' Registry", navBar: NavBar },
-  },
-  {
-    path: '/workstations',
-    name: 'workstations',
-    component: Workstations,
-    meta: { title: 'Workstations', navBar: NavBar },
-  },
-  {
-    path: '/publications',
-    name: 'publications',
-    component: Publications,
-    meta: { title: 'Announcements', navBar: NavBar },
-  },
-  {
-    path: '/rooms',
-    name: 'rooms',
-    component: Rooms,
-    meta: { title: 'Room Reservation', navBar: NavBar },
-  },
-  {
-    path: '/schedule',
-    name: 'schedule',
-    component: Schedule,
-    meta: { title: 'Monitor Schedule', navBar: NavBar },
-  },
-  {
-    path: '/drive',
-    name: 'drive',
-    beforeEnter: () => {
-      window.location.href = "https://drive.google.com/drive/folders/1KFYaJqnscGJ_YC5se43KJcyQQ56kYX2-?usp=drive_link"
-      return false
-    }
+    meta: { navBar: NavBar },
+    children: [
+      {
+        path: '',
+        name: 'dashboard-home',
+        component: Dashboard,
+        meta: { title: 'Dashboard' },
+      },
+      {
+        path: 'users',
+        name: 'dashboard-users',
+        component: Users,
+        meta: { title: 'User Management' },
+      },
+      {
+        path: 'hours',
+        name: 'dashboard-hours',
+        component: Hours,
+        meta: { title: "Hours' Registry" },
+      },
+      {
+        path: 'workstations',
+        name: 'dashboard-workstations',
+        component: Workstations,
+        meta: { title: 'Workstations' },
+      },
+      {
+        path: 'publications',
+        name: 'dashboard-publications',
+        component: Publications,
+        meta: { title: 'Announcements' },
+      },
+      {
+        path: 'rooms',
+        name: 'dashboard-rooms',
+        component: Rooms,
+        meta: { title: 'Room Reservation' },
+      },
+      {
+        path: 'schedule',
+        name: 'dashboard-schedule',
+        component: Schedule,
+        meta: { title: 'Monitor Schedule' },
+      },
+      {
+        path: 'drive',
+        name: 'dashboard-drive',
+        beforeEnter: () => {
+          window.location.href = "https://drive.google.com/drive/folders/1KFYaJqnscGJ_YC5se43KJcyQQ56kYX2-?usp=drive_link"
+          return false
+        }
+      },
+    ],
   },
   {
     path: '/:pathMatch(.*)*',

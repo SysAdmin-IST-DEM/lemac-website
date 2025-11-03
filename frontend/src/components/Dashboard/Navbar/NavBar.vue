@@ -95,38 +95,38 @@ export default {
         {
           text: "Hours' Registry",
           icon: 'mdi-clock',
-          link: '/hours',
+          link: '/dashboard/hours',
         },
         {
           text: "Monitor's Schedule",
           icon: 'mdi-calendar-clock',
-          link: '/schedule',
+          link: '/dashboard/schedule',
         },
         {
           text: 'User Management',
           icon: 'mdi-account-multiple',
-          link: '/users',
+          link: '/dashboard/users',
         },
         {
           text: 'Workstations',
           icon: 'mdi-desktop-classic',
-          link: '/workstations',
+          link: '/dashboard/workstations',
         },
         {
           text: 'Announcements',
           icon: 'mdi-bullhorn-variant',
-          link: '/publications',
+          link: '/dashboard/publications',
           permission: 1,
         },
         {
           text: 'Room Management',
           icon: 'mdi-table-chair',
-          link: '/rooms',
+          link: '/dashboard/rooms',
         },
         {
           text: '3D Printing',
           icon: 'mdi-google-drive',
-          link: '/drive',
+          link: '/dashboard/drive',
         },
       ],
     };

@@ -1,33 +1,31 @@
 <template>
-  <div class="home">
-    <HomeHeader disable-login />
-    <v-container>
-      <v-row
-        v-if="userData == null"
-        class="flex items-center justify-center gap-4 m-4"
+  <HomeHeader disable-login />
+  <v-container>
+    <v-row
+      v-if="userData == null"
+      class="flex items-center justify-center gap-4 m-4"
+    >
+      <p class="mb-0 text-xl">
+        Please login in order to request a software:
+      </p>
+      <v-btn
+        color="primary"
+        size="small"
+        @click="loginFenix"
       >
-        <p class="mb-0 text-xl">
-          Please login in order to request a software:
-        </p>
-        <v-btn
-          color="primary"
-          size="small"
-          @click="loginFenix"
-        >
-          Authenticate
-        </v-btn>
-      </v-row>
-      <HomeSoftware
-        v-if="userComputed"
-        :person-data="userComputed"
-      />
-    </v-container>
-  </div>
+        Authenticate
+      </v-btn>
+    </v-row>
+    <HomeSoftware
+      v-if="userComputed"
+      :person-data="userComputed"
+    />
+  </v-container>
 </template>
 
 <script>
 import HomeHeader from '@/components/Home/HomeHeader.vue';
-import { getFenixInfo } from '@/api/auth.api';
+import { getFenixInfo } from '@/api/auth.api.js';
 import HomeSoftware from '@/components/Home/HomeSoftware.vue';
 
 export default {

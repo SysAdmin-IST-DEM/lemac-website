@@ -1,10 +1,8 @@
 <template>
-  <div class="home">
-    <HomeHeader />
-    <v-container fluid>
-      <HomeRoomCalendar />
-    </v-container>
-  </div>
+  <HomeHeader />
+  <v-container fluid>
+    <HomeRoomCalendar />
+  </v-container>
 </template>
 
 <script>

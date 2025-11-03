@@ -51,9 +51,9 @@
 import HourTable from '@/components/Dashboard/Hours/HoursTable.vue';
 import HoursCalendar from '@/components/Dashboard/Hours/HoursCalendar.vue';
 import SumTable from '@/components/Dashboard/Hours/SumTable.vue';
-import { getHoursSelf, getHours } from '@/api/hours.api';
+import { getHoursSelf, getHours } from '@/api/hours.api.js';
 import { mapGetters } from 'vuex';
-import { getUsers } from '@/api/user.api';
+import { getUsers } from '@/api/user.api.js';
 
 export default {
   name: 'Hours',

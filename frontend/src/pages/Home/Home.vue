@@ -1,10 +1,8 @@
 <template>
-  <div class="home">
-    <HomeHeader />
-    <v-container>
-      <RoomMap />
-    </v-container>
-  </div>
+  <HomeHeader />
+  <v-container>
+    <RoomMap />
+  </v-container>
 </template>
 
 <script>

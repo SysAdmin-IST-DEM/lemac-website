@@ -34,9 +34,9 @@
 <script>
 import MonitorTable from '@/components/Dashboard/Users/MonitorTable.vue';
 import UserTable from '@/components/Dashboard/Users/UserTable.vue';
-import { getUsers } from '@/api/user.api';
-import { getLemacUsers } from '@/api/lemacUsers.api';
-import { getEntries } from '@/api/entries.api';
+import { getUsers } from '@/api/user.api.js';
+import { getLemacUsers } from '@/api/lemacUsers.api.js';
+import { getEntries } from '@/api/entries.api.js';
 
 export default {
   name: 'UserPage',
