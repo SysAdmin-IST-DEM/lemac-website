@@ -10,13 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HackerSchool/lemac-project.git"
+    "url": "git+https://github.com/SysAdmin-IST-DEM/lemac-website.git"
   },
-  "author": "HackerSchool",
+  "contributors": [
+    "HackerSchool",
+    "Hugo Teixeira",
+    "Diogo Miranda",
+    "Filipe Miranda"
+  ],
   "bugs": {
-    "url": "https://github.com/HackerSchool/lemac-project/issues"
+    "url": "https://github.com/SysAdmin-IST-DEM/lemac-website/issues"
   },
-  "homepage": "https://github.com/HackerSchool/lemac-project#readme",
+  "homepage": "https://github.com/SysAdmin-IST-DEM/lemac-website#readme",
   "devDependencies": {
     "nodemon": "^3.1.9"
   },

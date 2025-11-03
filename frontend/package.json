@@ -4,7 +4,12 @@
   "type": "module",
   "private": true,
   "description": "Hs project for lemac meant to control and keep track of the lab's usage",
-  "author": "HackerSchool",
+  "contributors": [
+    "HackerSchool",
+    "Hugo Teixeira",
+    "Diogo Miranda",
+    "Filipe Miranda"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -34,11 +39,11 @@
     "vite-plugin-vuetify": "^2.1.1"
   },
   "bugs": {
-    "url": "https://github.com/HackerSchool/lemac-project/issues"
+    "url": "https://github.com/SysAdmin-IST-DEM/lemac-website/issues"
   },
-  "homepage": "https://github.com/HackerSchool/lemac-project#readme",
+  "homepage": "https://github.com/SysAdmin-IST-DEM/lemac-website#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HackerSchool/lemac-project.git"
+    "url": "git+https://github.com/SysAdmin-IST-DEM/lemac-website.git"
   }
 }

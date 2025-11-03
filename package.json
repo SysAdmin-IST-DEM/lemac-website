@@ -14,13 +14,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HackerSchool/lemac-project.git"
+    "url": "git+https://github.com/SysAdmin-IST-DEM/lemac-website.git"
   },
-  "author": "HackerSchool",
+  "contributors": [
+    "HackerSchool",
+    "Hugo Teixeira",
+    "Diogo Miranda",
+    "Filipe Miranda"
+  ],
   "bugs": {
-    "url": "https://github.com/HackerSchool/lemac-project/issues"
+    "url": "https://github.com/SysAdmin-IST-DEM/lemac-website/issues"
   },
-  "homepage": "https://github.com/HackerSchool/lemac-project#readme",
+  "homepage": "https://github.com/SysAdmin-IST-DEM/lemac-website#readme",
   "devDependencies": {
     "eslint": "^9.23.0",
     "eslint-plugin-vue": "^10.0.0",
@@ -28,10 +33,6 @@
     "globals": "^16.0.0",
     "prettier": "3.5.1",
     "vue-eslint-parser": "^10.1.1"
-  },
-  "dependencies": {
-    "file-saver": "^2.0.5",
-    "vue-ics": "^0.1.4"
   },
   "packageManager": "yarn@4.6.0"
 }
