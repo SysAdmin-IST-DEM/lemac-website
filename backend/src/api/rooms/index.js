@@ -67,11 +67,6 @@ module.exports = {
     }
   },
   addHours: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (req.body && req.body.entry && req.body.exit) {
       const body = {
         entry: timeJs2SQL(req.body.entry),
@@ -106,11 +101,6 @@ module.exports = {
   },
 
   deleteHours: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     try {
       const conf = await controller.deleteHours(req.db, req.params.id);
       if (conf) {
@@ -126,11 +116,6 @@ module.exports = {
     }
   },
   updateHours: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.entry &&

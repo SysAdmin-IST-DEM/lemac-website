@@ -8,11 +8,6 @@ function date_to_sql(date) {
 
 module.exports = {
   createEvent: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (req.body && req.body.entry && req.body.exit) {
       const data = await controller.createEvent(
         req.db,
@@ -34,10 +29,6 @@ module.exports = {
     res.sendStatus(400);
   },
   getEvents: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
     const data = await controller.getEvents(req.db);
 
     if (data.length === 0) {
@@ -57,10 +48,6 @@ module.exports = {
     }
   },
   editEvent: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
     if (req.body && req.body.entry && req.body.exit) {
       //how to verifie that the hours exists in db
       const data = await controller.editEvent(
@@ -88,10 +75,6 @@ module.exports = {
     res.sendStatus(400);
   },
   deleteEvents: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
     try {
       const conf = await controller.deleteEvents(req.db, req.params.id);
       if (conf) {
@@ -107,11 +90,6 @@ module.exports = {
     }
   },
   setUserTarget: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.date_start !== null &&
@@ -148,11 +126,6 @@ module.exports = {
     res.sendStatus(400);
   },
   editUserTarget: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.date_start !== null &&
@@ -186,10 +159,6 @@ module.exports = {
     res.sendStatus(400);
   },
   deleteTarget: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
     try {
       const conf = await controller.deleteTarget(req.db, req.params.id);
       if (conf) {
@@ -205,11 +174,6 @@ module.exports = {
     }
   },
   getUserTargets: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     const data = await controller.getUserTargets(req.db);
 
     if (data.length === 0) {
@@ -229,11 +193,6 @@ module.exports = {
     }
   },
   setOffDay: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (req.body && req.body.date !== null) {
       const data = await controller.setOffDays(req.db, date_to_sql(req.body.date));
 
@@ -252,11 +211,6 @@ module.exports = {
     res.sendStatus(400);
   },
   getOffDays: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     const data = await controller.getOffDays(req.db);
 
     if (data.length === 0) {
@@ -273,11 +227,6 @@ module.exports = {
     }
   },
   deleteOffDay: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     try {
       const conf = await controller.deleteOffDay(req.db, req.params.id);
       if (conf) {

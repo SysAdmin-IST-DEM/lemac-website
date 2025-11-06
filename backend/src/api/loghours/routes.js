@@ -8,15 +8,16 @@ const {
   getSum,
   lastEntry,
 } = require('./index');
+const { requiresAuth } = require('../../middleware/requiresAuth');
 
 module.exports = {
   init: (app) => {
-    app.post('/api/loghours', asyncHandler(addHours));
-    app.get('/api/loghours', asyncHandler(getHours));
-    app.get('/api/loghours/self', asyncHandler(getIndividualHours));
-    app.put('/api/loghours/:id', asyncHandler(updateHours));
-    app.delete('/api/loghours/:id', asyncHandler(deleteHours));
-    app.get('/api/loghours/sum', asyncHandler(getSum));
-    app.get('/api/loghours/lastEntry', asyncHandler(lastEntry));
+    app.post('/api/loghours', requiresAuth(), asyncHandler(addHours));
+    app.get('/api/loghours', requiresAuth(1), asyncHandler(getHours));
+    app.get('/api/loghours/self', requiresAuth(), asyncHandler(getIndividualHours));
+    app.put('/api/loghours/:id', requiresAuth(), asyncHandler(updateHours));
+    app.delete('/api/loghours/:id', requiresAuth(), asyncHandler(deleteHours));
+    app.get('/api/loghours/sum', requiresAuth(1), asyncHandler(getSum));
+    app.get('/api/loghours/lastEntry', requiresAuth(1), asyncHandler(lastEntry));
   },
 };

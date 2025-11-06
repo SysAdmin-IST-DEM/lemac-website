@@ -5,12 +5,13 @@ const {
   updateWorkstation,
   deleteWorkstation,
 } = require('./index');
+const { requiresAuth } = require('../../middleware/requiresAuth');
 
 module.exports = {
   init: (app) => {
-    app.post('/api/workstations', asyncHandler(addWorkstation));
+    app.post('/api/workstations', requiresAuth(1), asyncHandler(addWorkstation));
     app.get('/api/workstations', asyncHandler(getWorkstations));
-    app.put('/api/workstations/:id', asyncHandler(updateWorkstation));
-    app.delete('/api/workstations/:id', asyncHandler(deleteWorkstation));
+    app.put('/api/workstations/:id', requiresAuth(), asyncHandler(updateWorkstation));
+    app.delete('/api/workstations/:id', requiresAuth(1), asyncHandler(deleteWorkstation));
   },
 };

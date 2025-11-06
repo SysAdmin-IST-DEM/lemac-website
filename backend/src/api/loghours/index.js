@@ -8,11 +8,6 @@ const timeJs2SQL = (jsTime) => {
 
 module.exports = {
   addHours: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.entry &&
@@ -49,12 +44,6 @@ module.exports = {
     res.sendStatus(400);
   },
   getHours: async (req, res) => {
-    //auth check
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     const data = await controller.getHours(req.db, req.query.month, req.query.year);
     if (data.length === 0) {
       //no hours in db
@@ -82,11 +71,6 @@ module.exports = {
     }
   },
   updateHours: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.entry &&
@@ -130,12 +114,6 @@ module.exports = {
     res.sendStatus(400);
   },
   getIndividualHours: async (req, res) => {
-    //auth check
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     const data = await controller.getIndividualHours(req.db, req.user.id);
     if (data.length === 0) {
       //no hours in db
@@ -161,10 +139,6 @@ module.exports = {
   },
 
   deleteHours: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
     try {
       const conf = await controller.deleteHours(req.db, req.params.id, req.user.id);
       if (conf) {
@@ -181,11 +155,6 @@ module.exports = {
   },
 
   getSum: async (req, res) => {
-    if (!req.user && !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     const data = await controller.getSum(req.db, req.query.start, req.query.finish);
     if (data.length === 0) {
       //no hours in db
@@ -206,10 +175,6 @@ module.exports = {
   },
 
   lastEntry: async (req, res) => {
-    if (!req.user && !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
     const data = await controller.lastEntry(req.db);
     if (data) {
       const response = {

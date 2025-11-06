@@ -4,12 +4,6 @@ const types = ['active', 'disabled', 'remote'];
 
 module.exports = {
   addWorkstation: async (req, res) => {
-    //verifies if the user exists to make sure its authorized to do the operation
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
-
     //if the request body has proper structure inserts it db
     if (
       req.body &&
@@ -63,11 +57,6 @@ module.exports = {
   },
 
   updateWorkstation: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.name &&
@@ -104,10 +93,6 @@ module.exports = {
   },
 
   deleteWorkstation: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
     try {
       const conf = await controller.deleteWorkstation(req.db, req.params.id);
       if (conf) {

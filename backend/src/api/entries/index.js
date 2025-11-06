@@ -10,11 +10,6 @@ const getStatus = async (database, entrieId) => {
 
 module.exports = {
   addEntries: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (
       req.body &&
       req.body.istId &&
@@ -44,11 +39,6 @@ module.exports = {
     }
   },
   updateEntrie: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     if (req.body && req.body.active == 1) {
       const prev_entrie = await controller.getEntrie(req.db, req.params.id);
       console.log(prev_entrie);
@@ -111,11 +101,6 @@ module.exports = {
     }
   },
   getEntries: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
-
     const data = await controller.getEntries(req.db, req.query.active);
     if (data.length === 0) {
       //no entries in db
@@ -141,10 +126,6 @@ module.exports = {
     }
   },
   deleteEntrie: async (req, res) => {
-    if (!req.user) {
-      res.sendStatus(401);
-      return;
-    }
     try {
       await getStatus(req.db, req.params.id);
       if (await controller.deleteEntrie(req.db, req.params.id)) {

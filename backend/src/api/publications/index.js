@@ -2,10 +2,6 @@ const controller = require('./controller');
 
 module.exports = {
   addPublication: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
     if (req.body && req.body.title && req.body.text) {
       const data = await controller.addPublication(req.db, req.body.title, req.body.text, req.body.active);
 
@@ -24,11 +20,6 @@ module.exports = {
     }
   },
   getPublications: async (req, res) => {
-    //if (!req.user) {
-    //  res.sendStatus(401);
-    //  return;
-    //}
-
     const data = await controller.getPublications(req.db, req.query.active);
     if (data.length === 0) {
       res.json([]);
@@ -48,10 +39,6 @@ module.exports = {
     }
   },
   updatePublications: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
     if (req.body && req.body.text && req.body.title) {
       const data = await controller.updatePublication(req.db, req.params.id, req.body);
       if (!data) {
@@ -73,10 +60,6 @@ module.exports = {
     }
   },
   deletePublication: async (req, res) => {
-    if (!req.user || !req.user.admin) {
-      res.sendStatus(401);
-      return;
-    }
     try {
       if (await controller.deletePublication(req.db, req.params.id)) {
         res.sendStatus(204); // no content - success
