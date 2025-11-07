@@ -1,21 +1,29 @@
 <template>
   <DashboardTable
+    v-model:items-per-page="itemsPerPage"
+    :type="tableType"
     title="Occurrence List"
     :headers="headers"
     :items="data"
+    :items-length="totalItems"
+    :loading="tableLoading"
     class="elevation-1"
+    @update:options="update"
   />
 </template>
 
 <script>
-import { getEntries } from '@/api/entries.api.js';
+import { getEntries, getEntriesWithPage } from '@/api/entries.api.js';
 import moment from 'moment';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
+import { VDataTableServer } from 'vuetify/components';
+import { markRaw } from 'vue';
 
 export default {
   components: { DashboardTable },
   data() {
     return {
+      tableType: markRaw(VDataTableServer),
       headers: [
         { title: 'Date', key: 'date', sortable: false },
         { title: 'Entry hour', key: 'entry', sortable: false },
@@ -25,21 +33,24 @@ export default {
         { title: 'Time spent', key: 'spent', sortable: false },
       ],
       data: [],
+      totalItems: 0,
+      tableLoading: true,
       dates: [],
+      itemsPerPage: 10
     };
   },
   watch: {},
-  async mounted() {
-    this.update();
-  },
   methods: {
-    async update() {
+    async update({ page, itemsPerPage, sortBy }) {
+      this.tableLoading = true;
       this.$loading.show();
       this.data = [];
 
       if (new Date(this.dates[0]) > new Date(this.dates[1])) this.dates.reverse();
 
-      const { data } = await getEntries();
+      const response = await getEntriesWithPage(0, page, itemsPerPage, sortBy);
+      const data = response.data.entries;
+      this.totalItems = response.data.total;
 
       for (const value of data) {
         const entry = moment(value.createdAt).utcOffset('+0000');
@@ -68,6 +79,7 @@ export default {
       }
 
       this.$loading.hide();
+      this.tableLoading = false;
     },
   },
 };

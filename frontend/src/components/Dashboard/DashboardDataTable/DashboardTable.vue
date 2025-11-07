@@ -1,5 +1,6 @@
 <template>
-  <v-data-table
+  <component
+    :is="type"
     :headers="headers"
     :items="items"
     :search="searchQuery"
@@ -109,10 +110,11 @@
         mdi-delete
       </v-icon>
     </template>
-  </v-data-table>
+  </component>
 </template>
 
 <script>
+import { VDataTable } from 'vuetify/components';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import DashboardDeleteDialog from '@/components/Dashboard/DashboardDataTable/DashboardDeleteDialog.vue';
 import { mapGetters } from 'vuex';
@@ -121,6 +123,10 @@ export default {
   name: 'DashboardTable',
   components: { DashboardEditDialog, DashboardDeleteDialog },
   props: {
+    type : {
+      type: Object,
+      default: VDataTable,
+    },
     title: {
       type: String,
       default: "Dashboard Table",

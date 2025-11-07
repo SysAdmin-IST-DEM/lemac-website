@@ -101,11 +101,13 @@ module.exports = {
     }
   },
   getEntries: async (req, res) => {
+    const page = req.query.page ? parseInt(req.query.page) : null;
+    const itemsPerPage = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage) : null;
+    const sortBy = req.query.sortBy ? JSON.parse(req.query.sortBy) : null;
     const data = await controller.getEntries(req.db, req.query.active);
     if (data.length === 0) {
       //no entries in db
       res.json([]);
-      return;
     } else if (data.length > 0) {
       const response = data.map((x) => ({
         id: x.id,
@@ -119,8 +121,27 @@ module.exports = {
           name: x.name,
         },
       }));
-      res.json(response);
-      return;
+      const total = response.length;
+
+      if(page && itemsPerPage) {
+        // Pagination
+        const start = (page - 1) * itemsPerPage
+        const end = start + itemsPerPage
+
+        if (sortBy) {
+          const sortKey = sortBy[0].key
+          const sortOrder = sortBy[0].order
+          response.sort((a, b) => {
+            const aValue = a[sortKey]
+            const bValue = b[sortKey]
+            return sortOrder === 'desc' ? bValue - aValue : aValue - bValue
+          })
+        }
+
+        res.json({entries: response.slice(start, end), total});
+      } else {
+        res.json({entries: response, total});
+      }
     } else {
       res.sendStatus(400);
     }
@@ -130,14 +151,11 @@ module.exports = {
       await getStatus(req.db, req.params.id);
       if (await controller.deleteEntrie(req.db, req.params.id)) {
         res.sendStatus(204);
-        return;
       } else {
         res.sendStatus(404);
-        return;
       }
     } catch (e) {
       res.sendStatus(400);
-      return;
-    }
+Z    }
   },
 };
