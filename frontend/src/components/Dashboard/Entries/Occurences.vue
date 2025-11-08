@@ -25,10 +25,10 @@ export default {
     return {
       tableType: markRaw(VDataTableServer),
       headers: [
-        { title: 'Date', key: 'date', sortable: false },
+        { title: 'Date', key: 'date' },
         { title: 'Entry hour', key: 'entry', sortable: false },
-        { title: 'Student number', key: 'stuId', sortable: false },
-        { title: 'Computer', key: 'computer', sortable: false },
+        { title: 'Student number', key: 'stuId' },
+        { title: 'Computer', key: 'computer' },
         { title: 'Exit hour', key: 'exit', sortable: false },
         { title: 'Time spent', key: 'spent', sortable: false },
       ],
