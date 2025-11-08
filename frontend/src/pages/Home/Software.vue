@@ -29,7 +29,7 @@ import { getFenixInfo } from '@/api/auth.api.js';
 import HomeSoftware from '@/components/Home/HomeSoftware.vue';
 
 export default {
-  name: 'Home',
+  name: 'Software',
   components: {
     HomeHeader,
     HomeSoftware,
