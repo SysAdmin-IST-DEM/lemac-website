@@ -18,6 +18,6 @@ module.exports = {
     app.put('/api/loghours/:id', requiresAuth(), asyncHandler(updateHours));
     app.delete('/api/loghours/:id', requiresAuth(), asyncHandler(deleteHours));
     app.get('/api/loghours/sum', requiresAuth(1), asyncHandler(getSum));
-    app.get('/api/loghours/lastEntry', requiresAuth(1), asyncHandler(lastEntry));
+    app.get('/api/loghours/lastEntry', requiresAuth(), asyncHandler(lastEntry));
   },
 };
