@@ -74,9 +74,9 @@ import {
   updateHours,
 } from '@/api/room_hours.api.js';
 import { createEvent, getEvents } from '@/api/room_events.api.js';
-import moment from 'moment';
 import RoomCalendar from '@/components/RoomCalendar.vue';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
+import { DateTime } from 'luxon';
 
 export default {
   components: { DashboardEditDialog, RoomCalendar },
@@ -93,7 +93,7 @@ export default {
       ],
       [
         { key: "name", label: "Name for reservation", required: true},
-        { key: "ist_id", label: "Ist ID (ist*)", required: true},
+        { key: "istId", label: "Ist ID (ist*)", required: true},
       ],
       [
         { key: "room", type: "select", label: "Room for reservation", labelIcon: "mdi-home-outline", required: true, props: { items: ['SDM', 'MOM', 'LTI'] } }
@@ -103,30 +103,30 @@ export default {
   methods: {
     editInitialization(event) {
       return {
-        entry: moment(event.start).format("HH:mm"),
-        exit: moment(event.end).format("HH:mm"),
-        date: moment(event.start).format("YYYY-MM-DD"),
-        ist_id: event.details.user.id,
-        name: event.details.user.name,
+        entry: DateTime.fromJSDate(event.start).toFormat("HH:mm"),
+        exit: DateTime.fromJSDate(event.end).toFormat("HH:mm"),
+        date: DateTime.fromJSDate(event.start).toFormat("yyyy-MM-dd"),
+        istId: event.details.istId,
+        name: event.details.name,
         room: event.details.room
       };
     },
     async editEvent(event, values) {
-      values.entry = moment(values.date).format('YYYY-MM-DD') + 'T' + values.entry;
-      values.exit = moment(values.date).format('YYYY-MM-DD') + 'T' + values.exit;
-      values.reservation_id = values.ist_id;
+      console.log(typeof values.date)
+      values.entry = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.entry;
+      values.exit = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.exit;
 
       if (event) {
         values.givenKey = event.givenKey;
         const response = await updateHours(event.details.id, values);
         await createEvent({
           type: 'res_updated',
-          roomDataId: response.data.id,
+          roomReservationId: response.data.id,
         });
 
-        event.title = `Reservation of ${response.data.user.name}`;
-        event.start = moment(response.data.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm");
-        event.end = moment(response.data.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm");
+        event.title = `Reservation of ${response.data.name}`;
+        event.start = DateTime.fromISO(response.data.entry).toUTC().toFormat("yyyy-MM-dd HH:mm");
+        event.end = DateTime.fromISO(response.data.exit).toUTC().toFormat("yyyy-MM-dd HH:mm");
         event.customColor = this.$refs.calendar.colors[response.data.room] + (event.givenKey ? ' darken-4' : '');
         event.class = "bg-" + this.$refs.calendar.colors[response.data.room] + (event.givenKey ? '-darken-4' : '');
         event.details = response.data
@@ -136,19 +136,20 @@ export default {
           text: `You have updated entry ${response.data.id}`,
         });
       } else {
+        console.log(values)
         const response = await createHours(values);
         await createEvent({
           type: 'res_created',
-          roomDataId: response.data.id,
+          roomReservationId: response.data.id,
         });
 
         const event = response.data;
-        event.title = `Reservation of ${event.user.name}`;
+        event.title = `Reservation of ${event.name}`;
         this.$refs.calendar.events.push({
           id: event.id,
           title: event.title,
-          start: moment(event.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(event.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: DateTime.fromISO(event.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+          end: DateTime.fromISO(event.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
           customColor: this.$refs.calendar.colors[event.room],
           class: 'bg-' + this.$refs.calendar.colors[event.room],
           givenKey: false,
@@ -162,14 +163,16 @@ export default {
       }
     },
     async giveKey(event) {
+      console.log(event.details.istId, typeof event.details.istId)
       const values = {
         entry: event.details.entry,
         exit: event.details.exit,
-        reservation_id: event.details.user.id,
+        istId: event.details.istId,
         room: event.details.room,
         name: event.details.user.name,
         givenKey: !event.givenKey,
       }
+      console.log(values);
 
       event.givenKey = !event.givenKey;
       event.customColor = this.$refs.calendar.colors[event.details.room] + (event.givenKey ? ' darken-4' : '');
@@ -179,7 +182,7 @@ export default {
       const response = await updateHours(event.details.id, values);
       await createEvent({
         type: event.givenKey ? 'key_received' : 'key_given',
-        roomDataId: response.data.id,
+        roomReservationId: response.data.id,
       });
 
       this.$notify({
@@ -195,7 +198,7 @@ export default {
 
       await createEvent({
         type: 'res_deleted',
-        roomDataId: event.id,
+        roomReservationId: event.id,
       });
 
       this.$notify({

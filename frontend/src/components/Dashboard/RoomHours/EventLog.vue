@@ -163,10 +163,10 @@ export default {
         {
           type: `${this.getReservationText(value.type)}`,
           ogType: value.type,
-          res: value.roomId,
+          res: value.roomReservationId,
           user: user.name,
           id: value.id,
-          time: new Date(value.created_at).toLocaleString(undefined, {
+          time: new Date(value.createdAt).toLocaleString(undefined, {
             dateStyle: 'long',
             timeStyle: 'short',
             timeZone: 'UTC',
@@ -195,7 +195,7 @@ export default {
           {
             type: `${this.getReservationText(value.type)}`,
             ogType: value.type,
-            res: value.roomId,
+            res: value.roomReservationId,
             user: user.name,
             id: value.id,
             time: new Date(value.created_at).toLocaleString(undefined, {
@@ -212,15 +212,15 @@ export default {
     },
     getReservationText(type) {
       switch (type) {
-        case 'res_created':
+        case 'RES_CREATED':
           return 'Reservation created';
-        case 'res_updated':
+        case 'RES_UPDATED':
           return 'Reservation updated';
-        case 'res_deleted':
+        case 'RES_DELETED':
           return 'Reservation deleted';
-        case 'key_given':
+        case 'KEY_GIVEN':
           return 'Key given';
-        case 'key_received':
+        case 'KEY_RECEIVED':
           return 'Key received';
         default:
           return 'Unkown type';
@@ -268,7 +268,7 @@ export default {
       try {
         const updateItem = {
           type: item.ogType,
-          roomDataId: item.res,
+          roomReservationId: item.res,
           observations: item.observations,
         };
 

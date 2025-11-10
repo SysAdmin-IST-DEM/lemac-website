@@ -39,7 +39,7 @@
 <script>
 import { getHours } from '@/api/hours.api.js';
 import LemacCalendar from '@/components/LemacCalendar/LemacCalendar.vue';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export default {
   components: { LemacCalendar },
@@ -69,8 +69,8 @@ export default {
         this.events.push({
           id: this.events.length,
           title: allHours[i].user.name,
-          start: moment(allHours[i].entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(allHours[i].exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: DateTime.fromISO(allHours[i].entry).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+          end: DateTime.fromISO(allHours[i].exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
           customColor: color,
           class: 'bg-' + color,
           details: allHours[i],

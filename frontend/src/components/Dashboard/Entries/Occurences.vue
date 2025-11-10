@@ -14,10 +14,10 @@
 
 <script>
 import { getEntries, getEntriesWithPage } from '@/api/entries.api.js';
-import moment from 'moment';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 import { VDataTableServer } from 'vuetify/components';
 import { markRaw } from 'vue';
+import { DateTime } from 'luxon';
 
 export default {
   components: { DashboardTable },
@@ -53,27 +53,23 @@ export default {
       this.totalItems = response.data.total;
 
       for (const value of data) {
-        const entry = moment(value.createdAt).utcOffset('+0000');
-        const exit = moment(value.createdAt).utcOffset('+0000');
+        const entry = DateTime.fromISO(value.createdAt).toUTC();
+        const exit = DateTime.fromISO(value.createdAt).toUTC();
 
         if (value.closedAt) {
           const times = value.closedAt.split(':');
-          exit.set({ hour: times[0], minutes: times[1], seconds: times[2] });
+          exit.set({ hour: times[0], minute: times[1], second: times[2] });
         }
 
         this.data = [
           ...this.data,
           {
-            date: entry.format('DD/MM/YYYY'),
-            entry: entry.format('HH:mm:SS'),
+            date: entry.toFormat('dd/MM/yyyy'),
+            entry: entry.toFormat('HH:mm:ss'),
             stuId: value.istId,
             computer: value.workstation.name,
-            exit: value.closedAt ? exit.format('HH:mm:SS') : '-',
-            spent: value.closedAt
-              ? moment(exit.valueOf() - entry.valueOf())
-                  .utcOffset('+0000')
-                  .format('HH:mm:SS')
-              : '-',
+            exit: value.closedAt ? exit.toFormat('HH:mm:ss') : '-',
+            spent: value.closedAt ? exit.diff(entry).toFormat('HH:mm:ss') : '-',
           },
         ];
       }

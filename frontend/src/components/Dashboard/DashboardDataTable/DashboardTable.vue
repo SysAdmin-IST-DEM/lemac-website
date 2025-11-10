@@ -64,6 +64,8 @@
             {{ newButton }}
           </v-btn>
         </slot>
+
+        <slot name="toolbar-append" />
       </v-toolbar>
 
       <!-- Custom slot for dialogs -->
