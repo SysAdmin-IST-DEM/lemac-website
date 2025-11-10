@@ -66,7 +66,7 @@
 </template>
 <script>
 import { VTimePicker, VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect, VNumberInput } from 'vuetify/components';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'DashboardDynamicField',
@@ -96,11 +96,11 @@ export default {
     formattedInternalValue() {
       if (this.type === 'date') {
         if(this.props.multiple === 'range' && Array.isArray(this.internalValue)) {
-          const start = this.internalValue[0] ? moment(this.internalValue[0]).format('YYYY-MM-DD') : '';
-          const end = this.internalValue[this.internalValue.length - 1] ? moment(this.internalValue[this.internalValue.length - 1]).format('YYYY-MM-DD') : '';
+          const start = this.internalValue[0] ? DateTime.fromISO(this.internalValue[0]).toFormat('yyyy-MM-dd') : '';
+          const end = this.internalValue[this.internalValue.length - 1] ? this.internalValue[this.internalValue.length - 1].toFormat('yyyy-MM-dd') : '';
           return start && end ? `${start} to ${end}` : '';
         }
-        return this.internalValue ? moment(this.internalValue).format('YYYY-MM-DD') : '';
+        return this.internalValue ? DateTime.fromISO(this.internalValue).toFormat('yyyy-MM-dd') : '';
       }
       return this.internalValue
     },

@@ -42,28 +42,28 @@
           <DashboardTable
             ref="targetsTable"
             :headers="[
-              { title: 'Start', key: 'date_start' },
-              { title: 'End', key: 'date_end' },
-              { title: 'Target Hours', key: 'target_hours' },
+              { title: 'Start', key: 'dateStart' },
+              { title: 'End', key: 'dateEnd' },
+              { title: 'Target Hours', key: 'targetHours' },
               { title: '', key: 'buttons' },
             ]"
             :items="userTargets"
             hide-header
             hide-default-footer
             :items-per-page="5"
-            :sort-by="[{ key: 'date_start', order: 'desc'}]"
+            :sort-by="[{ key: 'dateStart', order: 'desc'}]"
             sort
             :page="targetsPage"
             :edit-initialization="editTargetsInitialization"
             :edit-fields="editTargetsFields"
             @edit="editTargetsSubmit"
           >
-            <template #[`item.date_start`]="{ item }">
-              {{ $moment(item.date_start).format('DD/MM/YYYY') }}
+            <template #[`item.dateStart`]="{ item }">
+              {{ DateTime.fromISO(item.dateStart).toFormat('dd/MM/yyyy') }}
             </template>
 
-            <template #[`item.date_end`]="{ item }">
-              {{ $moment(item.date_end).format('DD/MM/YYYY') }}
+            <template #[`item.dateEnd`]="{ item }">
+              {{ DateTime.fromISO(item.dateEnd).toFormat('dd/MM/yyyy') }}
             </template>
 
             <template #[`item.buttons`]="{ item }">
@@ -130,9 +130,9 @@ import {
   setOffDays,
   setUserTarget,
 } from '@/api/schedule.api.js';
-import moment from 'moment';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 import { mapGetters } from 'vuex';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'ScheduleFooter',
@@ -164,7 +164,7 @@ export default {
         { key: 'dates', label: 'Date Range', labelIcon: 'mdi-calendar', type: 'date', required: true, props: { multiple: 'range' } },
       ],
       [
-        { key: 'target_hours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
+        { key: 'targetHours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
       ],
     ],
   }),
@@ -182,7 +182,7 @@ export default {
       this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id);
     },
     offDays(newValue) {
-      this.datesOffDays = newValue.map((val) => moment(val.date).toDate());
+      this.datesOffDays = newValue.map((val) => DateTime.fromISO(val.date));
     },
     targetsPageCount() {
       this.targetsPage = 1;
@@ -194,15 +194,15 @@ export default {
     },
     getCurrentTarget() {
       if (!this.calendar) return null;
-      const currentDate = moment(this.calendar.getVueCal().view.start).add(2, 'days').toDate();
+      const currentDate = DateTime.fromJSDate(this.calendar.getVueCal().view.start).plus({ days: 2 }).toJSDate();
       return this.userTargets.find((val) => {
         if (!this.calendar) return false;
-        return currentDate >= new Date(val.date_start) && currentDate <= new Date(val.date_end);
+        return currentDate >= new Date(val.dateStart) && currentDate <= new Date(val.dateEnd);
       });
     },
     getTargetHours() {
       const currentTarget = this.getCurrentTarget();
-      return currentTarget ? currentTarget.target_hours : '...';
+      return currentTarget ? currentTarget.targetHours : '...';
     },
     getWorkingHours() {
       const currentTarget = this.getCurrentTarget();
@@ -212,8 +212,8 @@ export default {
       const currentEvents = this.calendar.events.filter((event) => {
         const test1 = event.details.userId === this.currentUser.id;
         const test2 =
-          new Date(event.start) >= new Date(currentTarget.date_start) &&
-          new Date(event.end) <= new Date(currentTarget.date_end);
+          new Date(event.start) >= new Date(currentTarget.dateStart) &&
+          new Date(event.end) <= new Date(currentTarget.dateEnd);
 
         return test1 && test2;
       });
@@ -228,11 +228,11 @@ export default {
     },
     editTargetsInitialization(item) {
       const dates = [];
-      const currentDate = new Date(item.date_start);
-      const dateEnd = new Date(item.date_end)
+      const currentDate = new Date(item.dateStart);
+      const dateEnd = new Date(item.dateEnd)
 
       while (currentDate <= dateEnd) {
-        dates.push(moment(currentDate).format('YYYY-MM-DD'));
+        dates.push(DateTime.fromJSDate(currentDate).toFormat('yyyy-MM-dd'));
         currentDate.setDate(currentDate.getDate() + 1);
       }
 
@@ -240,14 +240,14 @@ export default {
 
       return {
         dates,
-        target_hours: item.target_hours
+        targetHours: item.targetHours
       }
     },
     async editTargetsSubmit(item, values) {
       values = {
-        date_start: moment(values.dates[0]).format('YYYY-MM-DD'),
-        date_end: moment(values.dates[values.dates.length - 1]).format('YYYY-MM-DD'),
-        targetHours: values.target_hours,
+        dateStart: values.dates[0].toFormat('yyyy-MM-dd'),
+        dateEnd: values.dates[values.dates.length - 1].toFormat('yyyy-MM-dd'),
+        targetHours: values.targetHours,
       }
 
       if(item) {
@@ -276,7 +276,7 @@ export default {
     },
     async updateOffDays() {
       this.offDaysDisabled = true;
-      const dates = this.datesOffDays.map((date) => moment(date).format('YYYY-MM-DD'));
+      const dates = this.datesOffDays.map((date) => date.toFormat('yyyy-MM-dd'));
       const addedDates = dates.filter((item) => !this.schedule.offDaysDates.includes(item));
       const removedDates = this.schedule.offDaysDates.filter((item) => !dates.includes(item));
 
@@ -286,7 +286,7 @@ export default {
 
       for (const date of removedDates) {
         await deleteOffDay(
-          this.schedule.offDays.find((val) => moment(val.date).format('YYYY-MM-DD') === date).id
+          this.schedule.offDays.find((val) => DateTime.fromISO(val.date).toFormat('yyyy-MM-dd') === date).id
         );
       }
 

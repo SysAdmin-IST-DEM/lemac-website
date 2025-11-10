@@ -378,7 +378,6 @@
 <script>
 import { getEntries, updateEntry, addEntry } from '@/api/entries.api.js';
 import { getWorkstations } from '@/api/workstations.api.js';
-import { getLemacUsers, setLemacUser } from '@/api/lemacUsers.api.js';
 
 export default {
   data() {
@@ -482,17 +481,6 @@ export default {
     },
     async closeConfirm() {
       try {
-        this.users = (await getLemacUsers()).data;
-        const user = this.users.find(
-          (val) => 'ist1' + val.ist_id === this.entries[this.editedIndex].istId
-        );
-        if (user) {
-          const newUserData = user;
-
-          newUserData.state = 'offline';
-          await setLemacUser(newUserData);
-        }
-
         await updateEntry(this.entries[this.editedIndex].id, { active: 0 });
         const closed = this.entries.splice(this.editedIndex, 1);
         this.$notify({
@@ -561,14 +549,6 @@ export default {
           });
 
           this.entries.push(data);
-
-          this.users = (await getLemacUsers()).data;
-          const user = this.users.find((val) => 'ist1' + val.ist_id === data.istId);
-          if (user) {
-            const newUserData = user;
-            newUserData.state = 'online';
-            await setLemacUser(newUserData);
-          }
 
           this.$notify({
             type: 'success',

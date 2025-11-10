@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// User model representing a monitor in the system.
+model User {
+  id               Int               @id @default(autoincrement()) @map("user_id")
+  istId            String            @unique() @map("ist_id") @db.VarChar(12)
+  name             String            @db.VarChar(255)
+  active           Boolean           @default(true)
+  admin            Boolean           @default(false)
+  color            String            @default("#0076DC") @db.Char(7)
+  logHours         LogHour[]
+  monitorSchedules MonitorSchedule[]
+  roomReservations RoomReservation[]
+  roomEvents       RoomEvent[]
+  monitorTargets   MonitorTarget[]
+
+  @@map("users")
+}
+
+enum WorkstationStatus {
+  ACTIVE   @map("active")
+  DISABLED @map("disabled")
+  REMOTE   @map("remote")
+}
+
+model Workstation {
+  id         Int               @id @default(autoincrement())
+  name       String            @unique() @db.VarChar(255)
+  capacity   Int               @default(0)
+  occupation Int               @default(0)
+  type       WorkstationStatus @map("type")
+  softwares  String            @default("[]") @map("software") @db.LongText
+  problems   String            @default("[]") @db.LongText
+  entries    Entry[]
+
+  @@map("workstations")
+}
+
+model Entry {
+  id            Int         @id @default(autoincrement())
+  workstationId Int         @map("workstation_id")
+  istId         String      @map("ist_id") @db.VarChar(12)
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
+  closedAt      DateTime?   @map("closed_at") @db.Time(0)
+  active        Boolean     @default(true)
+  observations  String?     @default("") @db.Text
+  workstation   Workstation @relation(fields: [workstationId], references: [id], onUpdate: Restrict)
+
+  @@index([workstationId])
+  @@map("entries")
+}
+
+/// LemacUser model representing a student in lemac. Currently obsolete and probably will be removed soon.
+model LemacUser {
+  id           Int            @id @default(autoincrement())
+  mifareId     String         @map("mifare_id") @db.VarChar(64)
+  name         String         @db.VarChar(64)
+  istId        String         @map("ist_id")
+  email        String         @db.Text
+  course       String         @db.VarChar(64)
+  state        LemacUserState
+  lastModified DateTime       @default(now()) @map("last_modified") @db.Timestamp(0)
+
+  @@map("lemac_users")
+}
+
+model LogHour {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  entry       DateTime @db.DateTime(0)
+  exit        DateTime @db.DateTime(0)
+  time        Int
+  entryNumber Int      @map("entry_number")
+  exitNumber  Int      @map("exit_number")
+  safeAmount  Int      @map("safe_amount")
+  user        User     @relation(fields: [userId], references: [id], onUpdate: Restrict)
+
+  @@index([userId])
+  @@map("log_hours")
+}
+
+model MonitorSchedule {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  entry     DateTime @db.DateTime(0)
+  exit      DateTime @db.DateTime(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  user      User     @relation(fields: [userId], references: [id], onUpdate: Restrict)
+
+  @@index([userId])
+  @@map("monitor_schedule")
+}
+
+model MonitorTarget {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  dateStart   DateTime @map("date_start") @db.Date
+  dateEnd     DateTime @map("date_end") @db.Date
+  targetHours Int      @map("target_hours")
+  user        User     @relation(fields: [userId], references: [id], onUpdate: Restrict)
+
+  @@map("monitor_targets")
+}
+
+model OffDay {
+  id   Int       @id @default(autoincrement())
+  date DateTime? @db.Date
+
+  @@map("off_days")
+}
+
+model Publication {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  text      String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  active    Boolean  @default(true)
+
+  @@map("publications")
+}
+
+enum RoomEventType {
+  RES_CREATED  @map("res_created")
+  RES_UPDATED  @map("res_updated")
+  RES_DELETED  @map("res_deleted")
+  KEY_GIVEN    @map("key_given")
+  KEY_RECEIVED @map("key_received")
+}
+
+model RoomEvent {
+  id                Int             @id @default(autoincrement())
+  type              RoomEventType
+  userId            Int             @map("user_id")
+  roomReservationId Int             @map("room_data_id")
+  observations      String?         @default("") @db.Text
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
+  user              User            @relation(fields: [userId], references: [id], onUpdate: Restrict)
+  roomReservation   RoomReservation @relation(fields: [roomReservationId], references: [id], onUpdate: Restrict)
+
+  @@map("room_events")
+}
+
+model RoomReservation {
+  id        Int         @id @default(autoincrement())
+  userId    Int         @map("user_id")
+  entry     DateTime    @db.DateTime(0)
+  exit      DateTime    @db.DateTime(0)
+  room      String      @db.VarChar(255)
+  name      String      @map("reservation_name") @db.VarChar(255)
+  istId     String      @map("reservation_id")
+  givenKey  Boolean     @default(false) @map("given_key")
+  user      User        @relation(fields: [userId], references: [id], onUpdate: Restrict)
+  deleted   Boolean     @default(false)
+  RoomEvent RoomEvent[]
+
+  @@index([userId])
+  @@map("room_hours")
+}
+
+enum LemacUserState {
+  ONLINE   @map("online")
+  IN_BREAK @map("in_break")
+  OFFLINE  @map("offline")
+
+  @@map("lemac_users_state")
+}

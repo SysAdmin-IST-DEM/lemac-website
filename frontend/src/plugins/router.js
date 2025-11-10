@@ -14,7 +14,8 @@ import Schedule from '@/pages/Dashboard/Schedule.vue';
 import About from '@/pages/Home/About.vue';
 import Reservations from '@/pages/Home/Reservations.vue';
 import Software from '@/pages/Home/Software.vue';
-import Printing from '@/pages/Home/Printing.vue';
+import PrintingForm from '@/pages/Home/PrintingForm.vue';
+import Printing from '@/pages/Dashboard/Printing.vue';
 
 const routes = [
   {
@@ -38,7 +39,7 @@ const routes = [
   {
     path: '/printing',
     name: 'printing',
-    component: Printing,
+    component: PrintingForm,
     meta: { title: 'Printing', noAuth: true },
   },
   {
@@ -97,6 +98,12 @@ const routes = [
         path: 'schedule',
         name: 'dashboard-schedule',
         component: Schedule,
+        meta: { title: 'Monitor Schedule' },
+      },
+      {
+        path: 'printing',
+        name: 'dashboard-printing',
+        component: Printing,
         meta: { title: 'Monitor Schedule' },
       },
       {

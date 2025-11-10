@@ -1,37 +1,5 @@
 <template>
   <div class="w-full h-full">
-    <OfflineModal
-      v-if="modelType === 'offline'"
-      :close="close"
-      :entry-stations="entryStations"
-      :select="select"
-      :user-data="userData"
-      :entry-modal="entryModal"
-    />
-    <OnlineModal
-      v-if="modelType === 'online'"
-      :close="close"
-      :entry-stations="entryStations"
-      :select="select"
-      :user-data="userData"
-      :entry-modal="entryModal"
-    />
-    <InBreak
-      v-if="modelType === 'in_break'"
-      :close="close"
-      :entry-stations="entryStations"
-      :select="select"
-      :user-data="userData"
-      :entry-modal="entryModal"
-    />
-    <CreateUser
-      v-if="modelType === 'create_user'"
-      :close="close"
-      :entry-stations="entryStations"
-      :select="select"
-      :mifare_id="mifare_id"
-      :entry-modal="entryModal"
-    />
     <div class="grid overflow-hidden lg:grid-rows-8 grid-rows-9 grid-cols-18">
       <div
         class="relative col-span-6 col-start-8 row-span-2 row-start-5 border-2 border-[#a5a5a5] flex justify-center items-center text-4xl font-semibold bg-whit"
@@ -105,21 +73,10 @@
 <script>
 import { getWorkstations } from '@/api/workstations.api';
 import { getPublications } from '@/api/publications.api';
-import { getLemacUser } from '@/api/lemacUsers.api';
-import OfflineModal from '@/components/Home/EntranceModals/OfflineModal.vue';
-import OnlineModal from '@/components/Home/EntranceModals/Online.vue';
-import CreateUser from '@/components/Home/EntranceModals/CreateUser.vue';
-import InBreak from '@/components/Home/EntranceModals/InBreak.vue';
 import { addEntry, getEntries, updateEntry } from '@/api/entries.api';
 
 export default {
   name: 'RoomMap',
-  components: {
-    OfflineModal,
-    OnlineModal,
-    CreateUser,
-    InBreak,
-  },
   data: () => ({
     order: [
       30,
@@ -327,47 +284,11 @@ export default {
     socket: null,
     modelType: 'offline',
     userData: null,
-    mifare_id: null,
+    mifareId: null,
   }),
   async mounted() {
     await this.update();
     setInterval(this.update, 30000);
-    this.socket = new WebSocket(import.meta.env.VITE_BASE_URL_WS || 'ws://localhost:5000');
-
-    this.socket.onopen = (e) => {
-      this.socket.send('Socket Open');
-    };
-
-    const keepSocketAlive = () => {
-      try {
-        this.socket.send('ping');
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    setInterval(keepSocketAlive, 1000);
-
-    this.socket.addEventListener('message', async (event) => {
-      const mifareId = event.data;
-      if (mifareId === 'pong') return;
-
-      try {
-        this.userData = (await getLemacUser(mifareId)).data;
-        this.modelType = this.userData.state;
-      } catch (error) {
-        console.log('test');
-        this.mifare_id = mifareId;
-        this.modelType = 'create_user';
-      }
-
-      this.entryModal = true;
-      this.entryStations = JSON.parse(JSON.stringify(this.stations));
-    });
-    this.socket.addEventListener('close', (event) => {
-      console.log(event);
-      setTimeout(() => {}, 10000);
-      this.socket = new WebSocket(import.meta.env.VITE_BASE_URL_WS || 'ws://localhost:5000');
-    });
   },
 
   unmounted() {

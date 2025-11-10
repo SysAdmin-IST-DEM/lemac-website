@@ -69,12 +69,11 @@ export default {
   },
   async mounted() {
     this.$loading.show();
-    const users = (await getUsers()).data;
     const response = this.getPermission === 1 ? await getHours(-1, -1) : await getHoursSelf();
 
     const data = response.data.map((val) => {
-      val.sold_amount = val.exit_number - val.entry_number;
-      val.user = users.find(user => user.id == val.userId).name;
+      val.soldAmount = val.exitNumber - val.entryNumber;
+      val.user = val.user.name;
 
       return val;
     });

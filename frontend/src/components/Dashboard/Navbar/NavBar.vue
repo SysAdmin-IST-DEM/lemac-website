@@ -125,8 +125,8 @@ export default {
         },
         {
           text: '3D Printing',
-          icon: 'mdi-google-drive',
-          link: '/dashboard/drive',
+          icon: 'mdi-printer-3d',
+          link: '/dashboard/printing',
         },
       ],
     };
