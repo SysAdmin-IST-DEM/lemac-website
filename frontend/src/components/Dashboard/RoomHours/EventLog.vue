@@ -120,8 +120,9 @@
 </template>
 
 <script>
-import { getEvents, deleteEvent, updateEvent } from '@/api/room_events.api.js';
-import { getUsers } from '@/api/user.api.js';
+import { getEvents, deleteEvent, updateEvent } from '@/api/room_events.api';
+import { getUsers } from '@/api/user.api';
+import { DateTime } from 'luxon';
 export default {
   name: 'EventLog',
   data: () => ({
@@ -133,11 +134,11 @@ export default {
     editedItem: {},
     dates: [],
     headers: [
-      { text: 'Type', value: 'type' },
-      { text: 'Reservation id', value: 'res' },
-      { text: 'User', value: 'user' },
-      { text: 'Created At', value: 'time' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { title: 'Type', value: 'type' },
+      { title: 'Reservation id', value: 'res' },
+      { title: 'User', value: 'user' },
+      { title: 'Created At', value: 'time' },
+      { title: 'Actions', value: 'actions', sortable: false },
     ],
   }),
   watch: {
@@ -147,13 +148,12 @@ export default {
   },
   async mounted() {
     this.$loading.show();
-    const date = new Date();
-    date.setDate(date.getDate() - date.getDay());
-    this.dates[0] = date.toISOString().slice(0, 10);
-    date.setDate(date.getDate() + 6);
-    this.dates[1] = date.toISOString().slice(0, 10);
-
-    const data_response = (await getEvents(this.dates[0], this.dates[1])).data;
+    const now = DateTime.now();
+    const start = now.minus({ days: now.weekday }).startOf('day');
+    for(let i = 0; i < 7; i++) {
+      this.dates.push(start.plus({ days: i }));
+    }
+    const data_response = (await getEvents(this.dates[0], this.dates[this.dates.length - 1])).data;
     const users = (await getUsers()).data;
 
     for (const value of data_response) {
@@ -183,9 +183,9 @@ export default {
       this.$loading.show();
       this.data = [];
 
-      if (new Date(this.dates[0]) > new Date(this.dates[1])) this.dates.reverse();
+      if (this.dates[0] > this.dates[this.dates.length - 1]) this.dates.reverse();
 
-      const data_response = (await getEvents(this.dates[0], this.dates[1])).data;
+      const data_response = (await getEvents(this.dates[0], this.dates[this.dates.length - 1])).data;
       const users = (await getUsers()).data;
 
       for (const value of data_response) {

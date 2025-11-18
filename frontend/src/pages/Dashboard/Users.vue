@@ -25,7 +25,7 @@
 
 <script>
 import MonitorTable from '@/components/Dashboard/Users/MonitorTable.vue';
-import { getUsers } from '@/api/user.api.js';
+import { getUsers } from '@/api/user.api';
 
 export default {
   name: 'UserPage',

@@ -11,7 +11,7 @@
       cancel-color="success"
       cancel-text="Skip"
       :cancel-action="() => { $router.push('dashboard') }"
-      :handle-save-error="() => { $router.push('/') }"
+      :on-save-error="() => { $router.push('/') }"
       @edit="saveHours"
     >
       <template #prepend-title>

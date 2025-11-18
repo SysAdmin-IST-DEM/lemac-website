@@ -12,8 +12,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'pinia'
 import { getProfile } from '@/api/auth.api';
+import { useUserStore } from '@/stores/user.js';
 export default {
   name: 'App',
 
@@ -26,7 +27,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('user', ['loginUser']),
+    ...mapActions(useUserStore, ['loginUser']),
   },
 };
 </script>

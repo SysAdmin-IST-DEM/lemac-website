@@ -125,13 +125,13 @@
 import {
   deleteOffDay,
   editUserTarget,
-  getOffDays,
   getUserTargets,
   setOffDays,
   setUserTarget,
-} from '@/api/schedule.api.js';
+} from '@/api/schedule.api';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import { DateTime } from 'luxon';
 
 export default {
@@ -175,7 +175,7 @@ export default {
     targetsPageCount() {
       return Math.max(1, Math.ceil(this.userTargets.length / 5));
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   watch: {
     async currentUser(user) {

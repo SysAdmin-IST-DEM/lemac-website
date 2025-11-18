@@ -33,8 +33,9 @@
 </template>
 
 <script>
-import { createUser, deleteUser, updateUser } from '@/api/user.api.js';
-import { mapGetters } from 'vuex';
+import { createUser, deleteUser, updateUser } from '@/api/user.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
@@ -89,7 +90,7 @@ export default {
         ],
       ];
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   mounted() {
     this.users = this.members;

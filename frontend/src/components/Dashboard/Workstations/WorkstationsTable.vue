@@ -161,8 +161,9 @@
 </template>
 
 <script>
-import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api.js';
-import { mapGetters } from 'vuex';
+import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
@@ -229,7 +230,7 @@ export default {
         }
       },
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   mounted() {
     this.workstations = [...this.passedData];

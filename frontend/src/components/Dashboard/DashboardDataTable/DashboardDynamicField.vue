@@ -2,7 +2,6 @@
   <!-- Menu wrapper -->
   <v-menu
     v-if="wrapper === 'menu'"
-    ref="menu"
     v-model="menu"
     v-model:return-value="internalValue"
     :close-on-content-click="false"
@@ -10,10 +9,10 @@
     :offset="40"
     transition="scale-transition"
   >
-    <template #activator="{ props }">
+    <template #activator="{ activatorProps }">
       <v-text-field
         v-model="formattedInternalValue"
-        v-bind="props"
+        v-bind="activatorProps"
         :label="label"
         :prepend-icon="labelIcon"
         variant="underlined"
@@ -26,7 +25,7 @@
     <component
       :is="resolvedComponent"
       v-model="internalValue"
-      v-bind="props"
+      v-bind="props.props"
       color="secondary"
       format="24hr"
       :landscape="true"
@@ -56,83 +55,109 @@
     :is="resolvedComponent"
     v-if="wrapper !== 'menu'"
     v-model="internalValue"
-    v-bind="props"
+    v-bind="props.props"
     :label="label"
     :prepend-icon="labelIcon"
-    :variant="props.variant ? props.variant : 'underlined'"
+    :variant="(props.props as any).variant ? (props.props as any).variant : 'underlined'"
     :required="required"
     :rules="validationRules"
   />
 </template>
-<script>
-import { VTimePicker, VDatePicker, VTextField, VAutocomplete, VSwitch, VTextarea, VSelect, VNumberInput } from 'vuetify/components';
+
+<script lang="ts" setup>
+import { computed, type ComputedRef, ref } from 'vue';
 import { DateTime } from 'luxon';
+import type { DynamicFieldProps, DynamicModelValue } from '@/types/Dashboard/DashboardDynamicField';
+import {
+  VAutocomplete,
+  VDatePicker,
+  VNumberInput,
+  VSelect,
+  VSwitch,
+  VTextarea,
+  VTextField,
+  VTimePicker,
+} from 'vuetify/components';
 
-export default {
+defineOptions({
   name: 'DashboardDynamicField',
-  props: {
-    type: { type: String, default: 'text' },
-    wrapper: { type: String, default: '' }, // e.g. 'menu' | 'dialog' | '',
-    label: { type: String, default: '' },
-    labelIcon: { type: String, default: '' },
-    modelValue: [String, Number, Object, Array, Date, Boolean],
-    required: { type: Boolean, default: false },
-    rules: { type: Array, default: () => [] },
-    props: { type: Object, default: () => ({}), },
-  },
-  emits: ['update:modelValue'],
-  data: () => ({
-    menu: false,
-  }),
-  computed: {
-    internalValue: {
-      get() {
-        return this.modelValue
-      },
-      set(val) {
-        this.$emit('update:modelValue', val)
-      }
-    },
-    formattedInternalValue() {
-      if (this.type === 'date') {
-        if(this.props.multiple === 'range' && Array.isArray(this.internalValue)) {
-          const start = this.internalValue[0] ? DateTime.fromISO(this.internalValue[0]).toFormat('yyyy-MM-dd') : '';
-          const end = this.internalValue[this.internalValue.length - 1] ? this.internalValue[this.internalValue.length - 1].toFormat('yyyy-MM-dd') : '';
-          return start && end ? `${start} to ${end}` : '';
-        }
-        return this.internalValue ? DateTime.fromISO(this.internalValue).toFormat('yyyy-MM-dd') : '';
-      }
-      return this.internalValue
-    },
-    resolvedComponent() {
-      if (this.type === 'date') {
-        return VDatePicker;
-      } else if(this.type === 'time') {
-        return VTimePicker;
-      } else if(this.type === 'autocomplete') {
-        return VAutocomplete;
-      } else if(this.type === 'switch') {
-        return VSwitch;
-      } else if(this.type === 'textarea') {
-        return VTextarea;
-      } else if(this.type === 'select') {
-        return VSelect;
-      } else if(this.type === 'number') {
-        return VNumberInput;
-      }
-      return VTextField;
-    },
-    validationRules() {
-      const rules = []
+})
 
-      if (this.required) {
-        rules.push(v => !!v || 'This field is required')
-      }
-
-      rules.push(...this.rules);
-
-      return rules
-    }
+const props = withDefaults(
+  defineProps<DynamicFieldProps>(),
+  {
+    type: "text",
+    wrapper: '',
+    label: '',
+    labelIcon: '',
+    required: false,
+    rules: () => [],
+    props: () => ({}),
   }
-}
+)
+
+const resolvedComponent = computed(() => {
+  switch (props.type) {
+    case 'time':
+      return VTimePicker;
+    case 'date':
+      return VDatePicker;
+    case 'text':
+      return VTextField;
+    case 'autocomplete':
+      return VAutocomplete;
+    case 'switch':
+      return VSwitch;
+    case 'textarea':
+      return VTextarea;
+    case 'select':
+      return VSelect;
+    case 'number':
+      return VNumberInput;
+    default:
+      return VTextField;
+  }
+})
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: typeof props.modelValue): void
+}>()
+
+const menu = ref(false);
+
+const internalValue: ComputedRef<DynamicModelValue> = computed({
+  get: () => {
+    return props.modelValue as DynamicModelValue
+  },
+  set: (value) => {
+    emit('update:modelValue', value)
+  }
+});
+const formattedInternalValue = computed(() => {
+  const value = internalValue.value;
+  if (props.type === 'date') {
+    const dateProps = props.props as PropsOf<typeof VDatePicker>;
+
+    if(dateProps.multiple === 'range' && Array.isArray(value)) {
+      const dateValue = value as DateTime[];
+      const start = dateValue[0] ? dateValue[0].toFormat('yyyy-MM-dd') : '';
+      const end = dateValue[dateValue.length - 1] ? dateValue[dateValue.length - 1]?.toFormat('yyyy-MM-dd') : '';
+      return start && end ? `${start} to ${end}` : '';
+    }
+    return value ? (value as DateTime).toFormat('yyyy-MM-dd') : '';
+  }
+  return value;
+})
+
+const validationRules = computed(() => {
+  const rules = []
+
+  if (props.required) {
+    rules.push((v: boolean) => !!v || 'This field is required')
+  }
+
+  rules.push(...props.rules);
+
+  return rules
+})
 </script>

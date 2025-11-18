@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getEntries, getEntriesWithPage } from '@/api/entries.api.js';
+import { getEntriesWithPage } from '@/api/entries.api';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 import { VDataTableServer } from 'vuetify/components';
 import { markRaw } from 'vue';

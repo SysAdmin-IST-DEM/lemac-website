@@ -64,14 +64,15 @@
 </template>
 
 <script>
-import { getUsers } from '@/api/user.api.js';
+import { getUsers } from '@/api/user.api';
 import {
   createHours,
   getHours,
   deleteHours,
   getOffDays,
-} from '@/api/schedule.api.js';
-import { mapGetters } from 'vuex';
+} from '@/api/schedule.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import LemacCalendar from '@/components/LemacCalendar/LemacCalendar.vue';
 import ScheduleFooter from '@/components/Dashboard/Schedule/ScheduleFooter.vue';
 import { DateTime } from 'luxon';
@@ -89,7 +90,7 @@ export default {
     offDaysDates() {
       return this.offDays.map((val) => DateTime.fromISO(val.date).toFormat("yyyy-MM-dd"));
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.users = (await getUsers()).data;

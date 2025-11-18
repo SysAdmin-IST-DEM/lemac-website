@@ -72,7 +72,9 @@ const { lgAndUp, mdAndDown } = useDisplay()
 </script>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
+import { useLoadingStore } from '@/stores/loading.js';
 
 export default {
   name: 'NavBar',
@@ -138,8 +140,8 @@ export default {
         (route) => this.getPermission >= (route.permission || 0)
       );
     },
-    ...mapGetters('user', ['getPermission']),
-    ...mapGetters(['isLoading']),
+    ...mapState(useUserStore, ['getPermission']),
+    ...mapState(useLoadingStore, ['isLoading']),
   },
 
   watch: {
