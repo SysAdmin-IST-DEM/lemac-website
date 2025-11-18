@@ -19,6 +19,6 @@ export default {
     app.put('/api/loghours/:id', requiresAuth(), updateHours);
     app.delete('/api/loghours/:id', requiresAuth(), deleteHours);
     app.get('/api/loghours/sum', requiresAuth(1), getSum);
-    app.get('/api/loghours/lastEntry', requiresAuth(1), lastEntry);
+    app.get('/api/loghours/lastEntry', requiresAuth(), lastEntry);
   },
 };

@@ -11,8 +11,9 @@
 
 <script>
 import WorkstationsTable from '@/components/Dashboard/Workstations/WorkstationsTable.vue';
-import { getWorkstations } from '@/api/workstations.api.js';
-import { mapGetters } from 'vuex';
+import { getWorkstations } from '@/api/workstations.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 
 export default {
   name: 'WorkstationsPage',
@@ -23,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.$loading.show();

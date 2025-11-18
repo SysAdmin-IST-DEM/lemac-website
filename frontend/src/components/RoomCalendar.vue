@@ -89,12 +89,10 @@ export default {
       this.$loading.hide();
     },
     async pushEvents(month, year) {
-      const date = new Date();
       const dates = [];
-      date.setDate(date.getDate() - date.getDay());
-      dates[0] = date.toISOString().slice(0, 10);
-      date.setDate(date.getDate() + 6);
-      dates[1] = date.toISOString().slice(0, 10);
+      const now = DateTime.now();
+      dates[0] = now.minus({ days: now.weekday }).startOf('day');
+      dates[1] = now.plus({ days: 7 - now.weekday }).startOf('day');
 
       const data = (await getHours(month, year)).data;
       const data_events = (await getEvents(dates[0], dates[1])).data;

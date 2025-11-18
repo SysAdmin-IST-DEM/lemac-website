@@ -25,7 +25,7 @@
 
 <script>
 import HomeHeader from '@/components/Home/HomeHeader.vue';
-import { getFenixInfo } from '@/api/auth.api.js';
+import { getFenixInfo } from '@/api/auth.api';
 import HomeSoftware from '@/components/Home/HomeSoftware.vue';
 
 export default {

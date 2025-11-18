@@ -72,8 +72,8 @@ import {
   createHours,
   deleteHours,
   updateHours,
-} from '@/api/room_hours.api.js';
-import { createEvent, getEvents } from '@/api/room_events.api.js';
+} from '@/api/room_hours.api';
+import { createEvent, getEvents } from '@/api/room_events.api';
 import RoomCalendar from '@/components/RoomCalendar.vue';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import { DateTime } from 'luxon';

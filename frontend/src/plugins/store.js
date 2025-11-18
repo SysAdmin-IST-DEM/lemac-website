@@ -1,1 +1,0 @@
-import { createStore } from 'vuex';import modules from '@/store';const store = createStore(modules);export default store;

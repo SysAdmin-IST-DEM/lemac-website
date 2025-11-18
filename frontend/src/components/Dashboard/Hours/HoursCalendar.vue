@@ -7,21 +7,13 @@
             <p>
               Entry:
               {{
-                new Date(event.details.entry).toLocaleString(undefined, {
-                  dateStyle: 'short',
-                  timeStyle: 'short',
-                  timeZone: 'UTC',
-                })
+                DateTime.fromISO(event.details.entry).toUTC().toFormat("yyyy-MM-dd HH:mm")
               }}
             </p>
             <p>
               Exit:
               {{
-                new Date(event.details.exit).toLocaleString(undefined, {
-                  dateStyle: 'short',
-                  timeStyle: 'short',
-                  timeZone: 'UTC',
-                })
+                DateTime.fromISO(event.details.exit).toUTC().toFormat("yyyy-MM-dd HH:mm")
               }}
             </p>
             <p>
@@ -37,11 +29,16 @@
 </template>
 
 <script>
-import { getHours } from '@/api/hours.api.js';
+import { getHours } from '@/api/hours.api';
 import LemacCalendar from '@/components/LemacCalendar/LemacCalendar.vue';
 import { DateTime } from 'luxon';
 
 export default {
+  computed: {
+    DateTime() {
+      return DateTime
+    }
+  },
   components: { LemacCalendar },
   data: () => ({
     events: [],
@@ -52,13 +49,13 @@ export default {
     async updateRange({ start, end }) {
       this.$loading.show();
 
-      if (!this.requested.includes('' + start.getMonth() + start.getFullYear())) {
-        await this.pushEvents(start.getMonth(), start.getFullYear());
+      if (!this.requested.includes('' + (start.getMonth() + 1) + start.getFullYear())) {
+        await this.pushEvents(start.getMonth() + 1, start.getFullYear());
         this.requested.push('' + start.getMonth() + start.getFullYear());
       }
       if (!this.requested.includes('' + end.getMonth() + end.getFullYear())) {
-        await this.pushEvents(end.getMonth(), end.getFullYear());
-        this.requested.push('' + end.getMonth() + end.getFullYear());
+        await this.pushEvents(end.getMonth() + 1, end.getFullYear());
+        this.requested.push('' + (end.getMonth() + 1) + end.getFullYear());
       }
       this.$loading.hide();
     },

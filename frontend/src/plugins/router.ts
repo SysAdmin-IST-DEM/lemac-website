@@ -17,7 +17,9 @@ import Software from '@/pages/Home/Software.vue';
 import PrintingForm from '@/pages/Home/PrintingForm.vue';
 import Printing from '@/pages/Dashboard/Printing.vue';
 
-const routes = [
+import type { RouteRecordRaw } from 'vue-router';
+
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
@@ -109,6 +111,7 @@ const routes = [
       {
         path: 'drive',
         name: 'dashboard-drive',
+        component: Dashboard,
         beforeEnter: () => {
           window.location.href = "https://drive.google.com/drive/folders/1KFYaJqnscGJ_YC5se43KJcyQQ56kYX2-?usp=drive_link"
           return false
@@ -125,9 +128,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  base: import.meta.env.BASE_URL || '/',
-  redirect: '/',
+  history: createWebHistory(import.meta.env.BASE_URL || '/'),
   routes,
 });
 
@@ -143,7 +144,7 @@ router.beforeEach((to, _from, next) => {
   if (to.matched.some((record) => !record.meta.noAuth) && !getAuthToken()) {
     next({
       path: '/',
-      params: { nextUrl: to.fullPath },
+      query: { nextUrl: to.fullPath },
     });
     return;
   }

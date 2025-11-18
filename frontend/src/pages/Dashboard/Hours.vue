@@ -51,9 +51,9 @@
 import HourTable from '@/components/Dashboard/Hours/HoursTable.vue';
 import HoursCalendar from '@/components/Dashboard/Hours/HoursCalendar.vue';
 import SumTable from '@/components/Dashboard/Hours/SumTable.vue';
-import { getHoursSelf, getHours } from '@/api/hours.api.js';
-import { mapGetters } from 'vuex';
-import { getUsers } from '@/api/user.api.js';
+import { getHoursSelf, getHours } from '@/api/hours.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 
 export default {
   name: 'Hours',
@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.$loading.show();

@@ -376,8 +376,8 @@
 </template>
 
 <script>
-import { getEntries, updateEntry, addEntry } from '@/api/entries.api.js';
-import { getWorkstations } from '@/api/workstations.api.js';
+import { getEntries, updateEntry, addEntry } from '@/api/entries.api';
+import { getWorkstations } from '@/api/workstations.api';
 
 export default {
   data() {
@@ -458,15 +458,15 @@ export default {
       let { data } = await getWorkstations();
       data = data.sort((v1, v2) => (v1.name.match(/\d+/)[0] < v2.name.match(/\d+/)[0] ? -1 : 1));
 
-      let available = data.filter((x) => x.occupation == 0 && x.occupation != x.capacity);
-      let partlyAvailable = data.filter((x) => x.occupation > 0 && x.occupation < x.capacity);
-      let notAvailable = data.filter((x) => x.type === 'disabled' || x.occupation === x.capacity);
+      const available = data.filter((x) => x.occupation == 0 && x.occupation != x.capacity);
+      const partlyAvailable = data.filter((x) => x.occupation > 0 && x.occupation < x.capacity);
+      const notAvailable = data.filter((x) => x.type === 'disabled' || x.occupation === x.capacity);
 
-      const workstationsSorted = [{ header: 'Available' }];
+      const workstationsSorted = [{ type: 'subheader', name: 'Available' }];
       available.forEach((x) => workstationsSorted.push(x));
-      workstationsSorted.push({ header: 'Partly Available' });
+      workstationsSorted.push({ type: 'subheader', name: 'Partly Available' });
       partlyAvailable.forEach((x) => workstationsSorted.push(x));
-      workstationsSorted.push({ header: 'Not Available' });
+      workstationsSorted.push({ type: 'subheader', name: 'Not Available' });
       notAvailable.forEach((x) => workstationsSorted.push({ ...x, disabled: 'true' }));
 
       this.workstations = workstationsSorted;

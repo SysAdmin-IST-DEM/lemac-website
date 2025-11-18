@@ -29,7 +29,7 @@
       }}
     </template>
     <template #[`item.time`]="{ item }">
-      {{ Math.floor(parseInt(item.time) / 60) }}h{{ parseInt(item.time % 60) || '' }}
+      {{ Math.floor(parseInt(item.time) / 60) }}h{{ parseInt(item.time) % 60 || '' }}
     </template>
     <template #[`item.exitNumber`]="{ item }">
       {{ item.exitNumber != null ? item.exitNumber : '-' }}
@@ -41,9 +41,10 @@
 </template>
 
 <script>
-import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours.api.js';
-import { getUsers } from '@/api/user.api.js';
-import { mapGetters } from 'vuex';
+import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours.api';
+import { getUsers } from '@/api/user.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 import { DateTime } from 'luxon';
 
@@ -71,22 +72,24 @@ export default {
       },
     },
   },
-  data: () => ({
-    hours: [],
-    users: [],
-    lastEntry : null,
-    headers: [
-      { title: 'Monitor', key: 'user', sortable: false },
-      { title: 'Entry Hour', key: 'entry', sortable: false },
-      { title: 'Exit Hour', key: 'exit', sortable: false },
-      { title: 'Total Time', key: 'time', sortable: false },
-      { title: 'Entry Ticket', key: 'entryNumber', sortable: false },
-      { title: 'Exit Ticket', key: 'exitNumber', sortable: false },
-      { title: 'Tickets Sold', key: 'soldAmount', sortable: false },
-      { title: 'Money in Safe', key: 'safeAmount', sortable: false },
-      { title: 'Actions', key: 'actions', sortable: false },
-    ]
-  }),
+  data() {
+    return {
+      hours: [],
+      users: [],
+      lastEntry: null,
+      headers: [
+        { title: 'Monitor', key: 'user', sortable: false },
+        { title: 'Entry Hour', key: 'entry', sortable: false },
+        { title: 'Exit Hour', key: 'exit', sortable: false },
+        { title: 'Total Time', key: 'time', sortable: false },
+        { title: 'Entry Ticket', key: 'entryNumber', sortable: false },
+        { title: 'Exit Ticket', key: 'exitNumber', sortable: false },
+        { title: 'Tickets Sold', key: 'soldAmount', sortable: false },
+        { title: 'Money in Safe', key: 'safeAmount', sortable: false },
+        { title: 'Actions', key: 'actions', sortable: false },
+      ]
+    }
+  },
   computed: {
     editFields() {
       return [
@@ -95,7 +98,7 @@ export default {
           { key: "exit", type: "time", label: "Exit Hour", labelIcon: "mdi-clock-time-four-outline", required: true }
         ],
         [
-          { key: "entryNumber", type: "number", label: "Entry Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true, default: this.lastEntry ? this.lastEntry.exit_number : undefined },
+          { key: "entryNumber", type: "number", label: "Entry Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true, default: this.lastEntry ? this.lastEntry.exitNumber : undefined },
           { key: "exitNumber", type: "number", label: "Exit Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true }
         ],
         [
@@ -109,7 +112,7 @@ export default {
         ]
       ];
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   watch: {
     async hours() {
@@ -126,21 +129,13 @@ export default {
       return {
         id: item.id,
         userId: item.userId,
-        entry: new Date(item.entry).toLocaleTimeString(undefined, {
-          timeStyle: 'short',
-          timeZone: 'UTC',
-          hourCycle: 'h23',
-        }),
-        exit: new Date(item.exit).toLocaleTimeString(undefined, {
-          timeStyle: 'short',
-          timeZone: 'UTC',
-          hourCycle: 'h23',
-        }),
+        entry: DateTime.fromISO(item.entry).toFormat("HH:mm"),
+        exit: DateTime.fromISO(item.exit).toFormat("HH:mm"),
         entryNumber: item.entryNumber,
         exitNumber: item.exitNumber,
         safeAmount: item.safeAmount,
         soldAmount: item.soldAmount,
-        entryDate: new Date(item.entry)
+        entryDate: DateTime.fromISO(item.entry)
       };
     },
     async editItem(item, values) {
