@@ -105,7 +105,7 @@ export default {
       return {
         entry: DateTime.fromJSDate(event.start).toFormat("HH:mm"),
         exit: DateTime.fromJSDate(event.end).toFormat("HH:mm"),
-        date: DateTime.fromJSDate(event.start).toFormat("yyyy-MM-dd"),
+        date: DateTime.fromJSDate(event.start).toUTC().startOf('day'),
         istId: event.details.istId,
         name: event.details.name,
         room: event.details.room

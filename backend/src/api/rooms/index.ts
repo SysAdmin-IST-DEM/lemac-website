@@ -1,11 +1,6 @@
 import * as controller from './controller.js';
 import type { Request, Response } from 'express';
 
-const timeJs2SQL = (jsTime: string) => {
-  const sqlTime = jsTime.replace('T', ' ').slice(0, -1);
-  return sqlTime;
-};
-
 export async function getHoursFenix(req: Request, res: Response) {
   const rooms = {
     SDM: 2448131364045,
@@ -59,8 +54,8 @@ export async function getHours(req: Request, res: Response) {
 export async function addHours(req: Request, res: Response) {
   if (req.body && req.body.entry && req.body.exit) {
     const body = {
-      entry: timeJs2SQL(req.body.entry),
-      exit: timeJs2SQL(req.body.exit),
+      entry: req.body.entry,
+      exit: req.body.exit,
     };
 
     const data = await controller.addHours(
@@ -100,8 +95,8 @@ export async function updateHours(req: Request, res: Response) {
     req.body.istId
   ) {
     const body = {
-      entry: timeJs2SQL(req.body.entry),
-      exit: timeJs2SQL(req.body.exit),
+      entry: req.body.entry,
+      exit: req.body.exit,
     };
     //how to verifie that the hours exists in db
     const data = await controller.updateHours(
