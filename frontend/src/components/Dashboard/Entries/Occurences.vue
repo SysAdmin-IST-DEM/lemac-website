@@ -54,11 +54,12 @@ export default {
 
       for (const value of data) {
         const entry = DateTime.fromISO(value.createdAt).toUTC();
-        const exit = DateTime.fromISO(value.createdAt).toUTC();
+        let exit = DateTime.fromISO(value.createdAt).toUTC();
 
         if (value.closedAt) {
           const times = value.closedAt.split(':');
-          exit.set({ hour: times[0], minute: times[1], second: times[2] });
+          exit = exit.set({ hour: times[0], minute: times[1], second: times[2] });
+          console.log(times, value.closedAt, exit.toFormat('HH:mm:ss'));
         }
 
         this.data = [
@@ -69,7 +70,7 @@ export default {
             stuId: value.istId,
             computer: value.workstation.name,
             exit: value.closedAt ? exit.toFormat('HH:mm:ss') : '-',
-            spent: value.closedAt ? exit.diff(entry).toFormat('HH:mm:ss') : '-',
+            spent: value.closedAt ? exit.diff(entry).toFormat('hh:mm:ss') : '-',
           },
         ];
       }
