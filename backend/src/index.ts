@@ -8,16 +8,36 @@ import { verifyMiddleware } from './middleware/verifier.js';
 
 import api from './api/index.js';
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@lemac/data-model'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 
+console.log({
+  host: process.env.DB_HOST!,
+  port: Number(process.env.DB_PORT!) || 3306,
+  user: process.env.DB_USERNAME!,
+  password: process.env.DB_PASSWORD!,
+  database: process.env.DB_NAME!
+})
 /* Setup Database Client */
+if(!process.env.DB_HOST || !process.env.DB_USERNAME || !process.env.DB_PASSWORD || !process.env.DB_NAME) {
+  throw new Error("Database environment variables are not properly set.");
+}
+
+const mysqlAdapter = new PrismaMariaDb({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT!) || 3306,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
+
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 export const prisma =
-  globalForPrisma.prisma || new PrismaClient()
+  globalForPrisma.prisma || new PrismaClient({ adapter: mysqlAdapter })
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 /* Enables CORS in dev server */
-var corsOptions = {
+const corsOptions = {
   origin: process.env.URL,
 }
 console.log(corsOptions.origin);
@@ -53,7 +73,7 @@ api.init(app, wsServer);
 
 /* Start Server */
 const server = app.listen(port, () => {
-  console.log(`Example app listening on http://localhost:${port}`);
+  console.log(`lemac-backend listening on http://localhost:${port}`);
 });
 
 /* Handle WebSocket Upgrades */

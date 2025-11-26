@@ -1,12 +1,6 @@
 import * as controller from './controller.js';
 import type { Request, Response } from 'express';
 
-function date_to_sql(date: string | Date): string {
-  const d = new Date(date);
-
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-}
-
 export async function createEvent(req: Request, res: Response) {
   if (req.body && req.body.entry && req.body.exit) {
     const data = await controller.createEvent(
@@ -71,19 +65,17 @@ export async function deleteEvents(req: Request, res: Response) {
 export async function setUserTarget(req: Request, res: Response) {
   if (
     req.body &&
-    req.body.date_start !== null &&
-    req.body.date_end !== null &&
+    req.body.dateStart !== null &&
+    req.body.dateEnd !== null &&
     req.body.userId !== null &&
     req.body.targetHours !== null
   ) {
     const data = await controller.setUserTargets(
       req.body.targetHours,
-      req.body.date_start,
-      req.body.date_end,
+      req.body.dateStart,
+      req.body.dateEnd,
       req.body.userId
     );
-
-    console.log(data);
 
     if (!data) {
       res.sendStatus(404);
@@ -100,14 +92,14 @@ export async function editUserTarget(req: Request, res: Response) {
   const id = parseInt(req.params.id as string);
   if (
     req.body &&
-    req.body.date_start !== null &&
-    req.body.date_end !== null &&
+    req.body.dateStart !== null &&
+    req.body.dateEnd !== null &&
     req.body.targetHours !== null
   ) {
     const data = await controller.editUserTargets(
       req.body.targetHours,
-      req.body.date_start,
-      req.body.date_end,
+      req.body.dateStart,
+      req.body.dateEnd,
       id
     );
 
@@ -149,7 +141,7 @@ export async function getUserTargets(req: Request, res: Response) {
 
 export async function setOffDay(req: Request, res: Response) {
   if (req.body && req.body.date !== null) {
-    const data = await controller.setOffDays(date_to_sql(req.body.date));
+    const data = await controller.setOffDays(req.body.date);
 
     if (!data) {
       res.sendStatus(404);

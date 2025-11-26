@@ -1,6 +1,6 @@
-import type { RoomEventType } from '@prisma/client';
+import type { RoomEventType } from '@lemac/data-model';
 import { prisma } from '../../index.js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@lemac/data-model';
 
 export async function createEvent(type: RoomEventType, userId: number, roomReservationId: number) {
   return prisma.roomEvent.create({

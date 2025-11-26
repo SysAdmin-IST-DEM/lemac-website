@@ -22,7 +22,7 @@
   "dependencies": {
     "@date-io/luxon": "^3.2.0",
     "@kyvg/vue3-notification": "^3.4.1",
-    "@prisma/client": "^6.19.0",
+    "@lemac/data-model": "workspace:^",
     "axios": "^1.9.0",
     "chart.js": "^4.4.7",
     "file-saver": "^2.0.5",

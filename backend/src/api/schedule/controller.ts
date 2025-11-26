@@ -1,5 +1,6 @@
 import { prisma } from '../../index.js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@lemac/data-model';
+import { DateTime } from 'luxon';
 
 export async function createEvent(entry: string, exit: string, userId: number) {
   return prisma.monitorSchedule.create({

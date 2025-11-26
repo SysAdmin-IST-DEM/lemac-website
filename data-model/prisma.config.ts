@@ -5,11 +5,10 @@ import * as dotenvExpand from 'dotenv-expand';
 dotenvExpand.expand(dotenv.config());
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: "schema.prisma",
   migrations: {
-    path: "prisma/migrations",
+    path: "migrations",
   },
-  engine: "classic",
   datasource: {
     url: env("DATABASE_URL"),
   },

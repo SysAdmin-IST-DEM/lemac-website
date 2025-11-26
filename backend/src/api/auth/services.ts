@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client';
+import type { User } from '@lemac/data-model';
 
 import axios from 'axios';
 import jwt from 'jsonwebtoken';

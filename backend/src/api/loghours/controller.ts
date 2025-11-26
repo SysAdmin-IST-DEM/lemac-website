@@ -1,5 +1,5 @@
 import { prisma } from '../../index.js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@lemac/data-model';
 
 function getTime(entry: string, exit: string) {
   //2021-10-23T05:30:00.000Z
