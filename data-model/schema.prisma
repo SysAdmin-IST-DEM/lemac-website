@@ -1,10 +1,16 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "./src/generated/prisma"
+}
+
+generator zod {
+  provider = "prisma-zod-generator"
+  output   = "./src/generated/zod-prisma"
+  // optional config = "./zod-generator.config.json" (relative to schema file)
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 /// User model representing a monitor in the system.
@@ -55,6 +61,14 @@ model Entry {
 
   @@index([workstationId])
   @@map("entries")
+}
+
+enum LemacUserState {
+  ONLINE   @map("online")
+  IN_BREAK @map("in_break")
+  OFFLINE  @map("offline")
+
+  @@map("lemac_users_state")
 }
 
 /// LemacUser model representing a student in lemac. Currently obsolete and probably will be removed soon.
@@ -164,10 +178,52 @@ model RoomReservation {
   @@map("room_hours")
 }
 
-enum LemacUserState {
-  ONLINE   @map("online")
-  IN_BREAK @map("in_break")
-  OFFLINE  @map("offline")
+/**
+ * Printing
+ */
 
-  @@map("lemac_users_state")
+enum Unit {
+  MILIMETERS
+  CENTIMETERS
+  METERS
+}
+
+enum PrintTaskStatus {
+  PENDING   @map("pending")
+  IN_QUEUE  @map("in_queue")
+  PRINTING  @map("printing")
+  COMPLETED @map("completed")
+  DELIVERED @map("delivered")
+  CANCELLED @map("cancelled")
+}
+
+model PrintTask {
+  id           Int             @id @default(autoincrement())
+  name         String          @db.VarChar(255)
+  modelFile    String          @map("model_file") @db.VarChar(255)
+  materialId   Int             @map("material_id")
+  material     PrintMaterial   @relation(fields: [materialId], references: [id], onUpdate: Restrict)
+  status       PrintTaskStatus @default(PENDING)
+  amount       Int             @default(1)
+  istId        String          @map("student_id") @db.VarChar(12)
+  email        String          @db.VarChar(255)
+  unit         Unit
+  price        Float
+  duration     Int
+  deadline     DateTime        @db.Date
+  observations String          @default("") @db.Text
+  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
+
+  @@map("print_tasks")
+}
+
+model PrintMaterial {
+  id              Int         @id @default(autoincrement())
+  name            String      @db.VarChar(255)
+  description     String      @db.Text
+  priceMultiplier Float       @map("price_multiplier")
+  active          Boolean     @default(true)
+  PrintTask       PrintTask[]
+
+  @@map("print_materials")
 }

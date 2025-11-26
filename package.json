@@ -5,7 +5,8 @@
   "private": true,
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "data-model"
   ],
   "scripts": {
     "format": "prettier \"**/*.{js,vue}\" --write",

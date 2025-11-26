@@ -1,5 +1,5 @@
 import "express-serve-static-core";
-import type { User } from '@prisma/client';
+import type { User } from '@lemac/data-model';
 
 declare module "express-serve-static-core" {
   interface Request {

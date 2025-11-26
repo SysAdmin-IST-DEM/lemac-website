@@ -169,6 +169,9 @@ export default {
     ],
   }),
   computed: {
+    DateTime() {
+      return DateTime
+    },
     offDays() {
       return this.schedule.offDays || [];
     },
@@ -179,7 +182,13 @@ export default {
   },
   watch: {
     async currentUser(user) {
-      this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id);
+      this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id).map((val) => {
+        return {
+          ...val,
+          dateStart: DateTime.fromISO(val.dateStart),
+          dateEnd: DateTime.fromISO(val.dateEnd)
+        }
+      });
     },
     offDays(newValue) {
       this.datesOffDays = newValue.map((val) => DateTime.fromISO(val.date));
@@ -194,10 +203,10 @@ export default {
     },
     getCurrentTarget() {
       if (!this.calendar) return null;
-      const currentDate = DateTime.fromJSDate(this.calendar.getVueCal().view.start).plus({ days: 2 }).toJSDate();
+      const currentDate = DateTime.fromJSDate(this.calendar.getVueCal().view.start).plus({ days: 2 });
       return this.userTargets.find((val) => {
         if (!this.calendar) return false;
-        return currentDate >= new Date(val.dateStart) && currentDate <= new Date(val.dateEnd);
+        return currentDate >= val.dateStart && currentDate <= val.dateEnd;
       });
     },
     getTargetHours() {
@@ -212,8 +221,8 @@ export default {
       const currentEvents = this.calendar.events.filter((event) => {
         const test1 = event.details.userId === this.currentUser.id;
         const test2 =
-          new Date(event.start) >= new Date(currentTarget.dateStart) &&
-          new Date(event.end) <= new Date(currentTarget.dateEnd);
+          DateTime.fromJSDate(event.start) >= currentTarget.dateStart &&
+          DateTime.fromJSDate(event.end) <= currentTarget.dateEnd;
 
         return test1 && test2;
       });
@@ -228,12 +237,12 @@ export default {
     },
     editTargetsInitialization(item) {
       const dates = [];
-      const currentDate = new Date(item.dateStart);
-      const dateEnd = new Date(item.dateEnd)
+      let currentDate = item.dateStart;
+      const dateEnd = item.dateEnd;
 
       while (currentDate <= dateEnd) {
-        dates.push(DateTime.fromJSDate(currentDate).toFormat('yyyy-MM-dd'));
-        currentDate.setDate(currentDate.getDate() + 1);
+        dates.push(currentDate);
+        currentDate = currentDate.plus({ days: 1 });
       }
 
       console.log(dates);
@@ -245,10 +254,11 @@ export default {
     },
     async editTargetsSubmit(item, values) {
       values = {
-        dateStart: values.dates[0].toFormat('yyyy-MM-dd'),
-        dateEnd: values.dates[values.dates.length - 1].toFormat('yyyy-MM-dd'),
+        dateStart: values.dates[0].toISO(),
+        dateEnd: values.dates[values.dates.length - 1].toISO(),
         targetHours: values.targetHours,
       }
+      console.log(values);
 
       if(item) {
         const response = await editUserTarget(item.id, values);
@@ -276,12 +286,16 @@ export default {
     },
     async updateOffDays() {
       this.offDaysDisabled = true;
-      const dates = this.datesOffDays.map((date) => date.toFormat('yyyy-MM-dd'));
-      const addedDates = dates.filter((item) => !this.schedule.offDaysDates.includes(item));
-      const removedDates = this.schedule.offDaysDates.filter((item) => !dates.includes(item));
+      const dates = this.datesOffDays;
+      console.log(dates)
+      const addedDates = dates.filter((item) => !this.schedule.offDaysDates.includes(item.toFormat('yyyy-MM-dd'))); // DateTime[]
+      const removedDates = this.schedule.offDaysDates.filter((item) => !dates.map(val => val.toFormat('yyyy-MM-dd')).includes(item)); // yyyy-MM-dd[]
+      console.log(addedDates);
+      console.log(removedDates)
 
       for (const date of addedDates) {
-        await setOffDays({ date });
+        console.log(date.toUTC().startOf('day').toISO())
+        await setOffDays({ date: date.toUTC().startOf('day').toISO() });
       }
 
       for (const date of removedDates) {

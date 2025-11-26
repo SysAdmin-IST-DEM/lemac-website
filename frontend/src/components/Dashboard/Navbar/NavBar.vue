@@ -158,7 +158,7 @@ export default {
       window.open('https://fenix.tecnico.ulisboa.pt/logout', '_blank').focus();
     },
 
-    ...mapActions('user', ['logoutUser']),
+    ...mapActions(useUserStore, ['loginUser', 'logoutUser'])
   },
 };
 </script>

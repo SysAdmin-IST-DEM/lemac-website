@@ -1,6 +1,6 @@
-import type { Workstation } from '@prisma/client';
+import type { Workstation } from '@lemac/data-model';
 import { prisma } from '../../index.js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@lemac/data-model';
 
 export async function addWorkstation(workstation: Workstation) {
   try {

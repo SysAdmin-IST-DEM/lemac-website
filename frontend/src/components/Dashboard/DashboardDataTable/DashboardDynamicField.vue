@@ -9,7 +9,7 @@
     :offset="40"
     transition="scale-transition"
   >
-    <template #activator="{ activatorProps }">
+    <template #activator="{ props: activatorProps }">
       <v-text-field
         v-model="formattedInternalValue"
         v-bind="activatorProps"
@@ -153,7 +153,7 @@ const validationRules = computed(() => {
   const rules = []
 
   if (props.required) {
-    rules.push((v: boolean) => !!v || 'This field is required')
+    rules.push((v: unknown) => (v !== null && v !== undefined && v !== '') || 'This field is required')
   }
 
   rules.push(...props.rules);

@@ -1,4 +1,4 @@
-import { RoomEventType } from '@prisma/client';
+import { RoomEventType } from '@lemac/data-model';
 import * as controller from './controller.js';
 import type { Request, Response } from 'express';
 

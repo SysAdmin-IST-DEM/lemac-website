@@ -1,5 +1,5 @@
 import { prisma } from '../../index.js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@lemac/data-model';
 
 import * as services from './services.js';
 

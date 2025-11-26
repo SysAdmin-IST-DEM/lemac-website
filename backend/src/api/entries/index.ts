@@ -97,7 +97,7 @@ export async function getEntries(req: Request, res: Response) {
   } else if (data.length > 0) {
     const total = data.length;
 
-    const response = data.map((val) => {
+    const response = data.map((val: any) => {
       return {
         ...val,
         closedAt: val.closedAt ? DateTime.fromJSDate(val.closedAt).toFormat("HH:mm:ss") : val.closedAt

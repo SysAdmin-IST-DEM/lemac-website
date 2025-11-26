@@ -1,6 +1,6 @@
 import * as controller from './controller.js';
 import type { Request, Response } from 'express';
-import { WorkstationStatus } from '@prisma/client';
+import { WorkstationStatus } from '@lemac/data-model';
 
 const types = [WorkstationStatus.ACTIVE, WorkstationStatus.DISABLED, WorkstationStatus.REMOTE];
 

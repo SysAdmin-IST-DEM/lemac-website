@@ -1,5 +1,5 @@
 import { prisma } from '../../index.js';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@lemac/data-model';
 
 export async function addEntry(istId: string, workstationId: number) {
   return prisma.entry.create({
