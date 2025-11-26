@@ -1,0 +1,20 @@
+{
+  "name": "@lemac/data-model",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "yarn@4.6.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./browser": "./dist/browser.js"
+  },
+  "dependencies": {
+    "prisma": "^7.0.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "prisma-zod-generator": "^2.1.2"
+  }
+}
