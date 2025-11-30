@@ -10,10 +10,10 @@ import HomeHeader from '@/components/Home/HomeHeader.vue';
 import HomePrinting from '@/components/Home/HomePrinting.vue';
 
 export default {
-  name: 'PrintingForm',
+  name: 'RequestPrinting',
   components: {
     HomeHeader,
     HomePrinting,
-  }
+  },
 };
 </script>

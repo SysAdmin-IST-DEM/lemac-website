@@ -1,1 +1,2 @@
-export * from './generated/prisma/browser.js';
+export * from './generated/prisma/browser';
+export * from './http/index';
