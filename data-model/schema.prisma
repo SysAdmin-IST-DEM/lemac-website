@@ -209,8 +209,7 @@ model PrintTask {
   email        String          @db.VarChar(255)
   unit         Unit
   price        Float
-  duration     Int
-  deadline     DateTime        @db.Date
+  deadline     DateTime?       @db.Date
   observations String          @default("") @db.Text
   createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
 

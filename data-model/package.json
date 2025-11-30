@@ -8,7 +8,8 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./browser": "./dist/browser.js"
+    "./browser": "./dist/browser.js",
+    "./enums": "./dist/generated/prisma/enums.js"
   },
   "dependencies": {
     "prisma": "^7.0.1",

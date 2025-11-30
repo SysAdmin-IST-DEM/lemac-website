@@ -36,7 +36,7 @@
         <v-btn
           variant="text"
           color="success"
-          @click="internalValue = undefined; menu = false"
+          @click="internalValue = null; menu = false"
         >
           Cancel
         </v-btn>
