@@ -25,40 +25,61 @@
             :on-initialization="editInitialization"
             @edit="editEvent"
           >
-            <template #title> Event </template>
+            <template #title>
+              Event
+            </template>
           </DashboardEditDialog>
         </template>
 
         <template #extra-event-details="{ event }">
           <span v-if="typeof event.details.id === 'number'">
             <b>Observations:</b>
-            <span v-for="e in event.details.events" :key="e.id">
-              <span v-if="e.observations" style="margin-bottom: 0">
+            <span
+              v-for="e in event.details.events"
+              :key="e.id"
+            >
+              <span
+                v-if="e.observations"
+                style="margin-bottom: 0"
+              >
                 {{ e.observations }}
               </span>
             </span>
           </span>
-          <p v-else>Description: {{ event.details.description }}</p>
+          <p v-else>
+            Description: {{ event.details.description }}
+          </p>
         </template>
 
-        <template #extra-event-details-actions="{ event }">
-          <v-btn
-            color="primary"
-            @click="
-              selectedEvent = event;
-              editEventDialog = true;
-            "
-          >
-            <v-icon>mdi-pencil-outline</v-icon>
-          </v-btn>
-          <v-spacer />
+        <template
+          #extra-event-details-actions="{ event }"
+        >
+          <div v-if="typeof event.details.id === 'number'">
+            <v-btn
+              color="primary"
+              @click="
+                selectedEvent = event;
+                editEventDialog = true;
+              "
+            >
+              <v-icon>mdi-pencil-outline</v-icon>
+            </v-btn>
+            <v-spacer />
 
-          <v-btn color="primary" @click="giveKey(event)">
-            {{ !event.givenKey ? 'Give key' : 'Receive key' }}
-          </v-btn>
-          <v-btn color="primary" variant="text" @click="deleteEvent(event.details)">
-            Delete
-          </v-btn>
+            <v-btn
+              color="primary"
+              @click="giveKey(event)"
+            >
+              {{ !event.givenKey ? 'Give key' : 'Receive key' }}
+            </v-btn>
+            <v-btn
+              color="primary"
+              variant="text"
+              @click="deleteEvent(event.details)"
+            >
+              Delete
+            </v-btn>
+          </div>
         </template>
       </RoomCalendar>
     </v-col>
@@ -67,13 +88,11 @@
 
 <script>
 import {
-  getHoursFenix,
-  getHours,
   createHours,
   deleteHours,
   updateHours,
 } from '@/api/room_hours.api';
-import { createEvent, getEvents } from '@/api/room_events.api';
+import { createEvent } from '@/api/room_events.api';
 import RoomCalendar from '@/components/RoomCalendar.vue';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import { DateTime } from 'luxon';
@@ -163,6 +182,7 @@ export default {
       }
     },
     async giveKey(event) {
+      console.log(event)
       console.log(event.details.istId, typeof event.details.istId)
       const values = {
         entry: event.details.entry,
