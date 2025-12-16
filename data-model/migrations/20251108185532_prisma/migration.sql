@@ -8,11 +8,14 @@
 */
 
 -- DeleteOrphanedData
-DELETE FROM room_events re
+DELETE re
+FROM room_events AS re
 WHERE re.user_id IS NOT NULL
   AND NOT EXISTS (
-    SELECT 1 FROM users u WHERE u.user_id = re.user_id
-);
+    SELECT 1
+    FROM users AS u
+    WHERE u.user_id = re.user_id
+  );
 
 -- DropForeignKey
 ALTER TABLE `entries` DROP FOREIGN KEY `entries_ibfk_1`;

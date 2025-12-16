@@ -1,91 +1,66 @@
 <template>
-  <v-dialog
-    :model-value="dialogVisible"
-    max-width="500"
-  >
+  <v-dialog :model-value="dialogVisible" max-width="500">
     <v-card>
       <v-card-title>Confirmation Step</v-card-title>
       <v-card-text>
         <p>Please confirm the information you have entered is correct:</p>
-        <p>First Name: {{ firstName }}</p>
-        <p>Last Name: {{ lastName }}</p>
-        <p>IST ID: {{ tecnicoId }}</p>
-        <p>Técnico Webmail: {{ webmail }}</p>
-        <p>Model STL: {{ fileName }}</p>
-        <p>Unit of file: {{ chosenUnit }}</p>
-        <p>Volume: {{ volume?.toFixed(2) ?? 0 }}</p>
-        <p>Material: {{ material }}</p>
-        <p class="font-bold">
+        <p>Full Name: {{ values.name }}</p>
+        <p>IST ID: {{ values.istId }}</p>
+        <p>Técnico Webmail: {{ values.email }}</p>
+        <p>Model STL: {{ file ? file.name : '-' }}</p>
+        <p>Unit of file: {{ values.unit }}</p>
+        <!-- <p>Volume: {{ volume?.toFixed(2) ?? 0 }}</p> -->
+        <p>Material: {{ materialTitle }}</p>
+        <!-- <p class="font-bold">
           Price (€): {{ price?.toFixed(2) ?? 0 }}
-        </p>
+        </p> -->
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          color="primary"
-          variant="text"
-          @click="close"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
-          color="primary"
-          :loading="loading"
-          @click="confirm"
-        >
-          Confirm
-        </v-btn>
+        <v-btn color="primary" variant="text" @click="close"> Cancel </v-btn>
+        <v-btn color="primary" :loading="loading" @click="confirm"> Confirm </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import type { AddPrintTaskBody } from '@lemac/data-model/browser';
+import { defineComponent, type PropType } from 'vue';
+
+export default defineComponent({
   name: 'ConfirmationDialog',
   props: {
     dialogVisible: Boolean,
-    firstName: {
-      type: String,
-      default: '',
+    values: {
+      type: Object as PropType<AddPrintTaskBody>,
+      required: true,
     },
-    lastName: {
-      type: String,
-      default: '',
+    file: {
+      type: [Object as PropType<File>, null],
+      required: true,
     },
-    tecnicoId: {
-      type: String,
-      default: '',
-    },
-    fileName: {
-      type: String,
-      default: '',
-    },
-    chosenUnit: {
-      type: String,
-      default: 'Milimeter',
-    },
-    volume: {
-      type: Number,
-      default: null,
-    },
-    material: {
-      type: String,
-      default: 'Grey',
-    },
-    price: {
-      type: Number,
-      default: null,
-    },
-    webmail: {
-      type: String,
-      default: '',
+    materials: {
+      type: Array as PropType<{ title: string; value: number }[]>,
+      required: true,
     },
   },
+  emits: ['close', 'confirm'],
   data() {
     return {
       loading: false,
     };
+  },
+  computed: {
+    materialTitle: {
+      get(): string {
+        return (
+          this.materials.find(
+            (v: { title: string; value: number }) => v.value === this.values.materialId
+          )?.title || ''
+        );
+      },
+    },
   },
   methods: {
     close() {
@@ -97,5 +72,5 @@ export default {
       this.$emit('confirm');
     },
   },
-};
+});
 </script>
