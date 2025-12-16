@@ -1,5 +1,6 @@
 {
   "name": "@lemac/data-model",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "packageManager": "yarn@4.6.0",
@@ -7,9 +8,14 @@
     "build": "tsc -p tsconfig.json"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./browser": "./dist/browser.js",
-    "./enums": "./dist/generated/prisma/enums.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "default": "./dist/browser.js"
+    }
   },
   "dependencies": {
     "prisma": "^7.0.1",

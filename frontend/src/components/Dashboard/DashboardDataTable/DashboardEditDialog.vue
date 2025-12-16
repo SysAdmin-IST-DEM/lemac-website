@@ -84,9 +84,7 @@ export type EditField = {
   colProps?: PropsOf<typeof VCol>
 } & Omit<DynamicFieldProps, 'modelValue'>;
 
-export interface EditItem {
-  [key: string]: DynamicModelValue;
-}
+export type EditItem = any;
 
 const { notify } = useNotification();
 

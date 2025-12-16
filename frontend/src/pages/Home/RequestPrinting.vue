@@ -1,5 +1,5 @@
 <template>
-  <HomeHeader />
+  <HomeHeader disable-login />
   <v-container>
     <HomePrinting />
   </v-container>

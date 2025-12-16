@@ -14,13 +14,29 @@ import { getFenixInfo } from '@/api/auth.api.ts';
 
 export default defineComponent({
   name: 'AuthenticateButton',
+  props: {
+    page: {
+      type: String,
+      required: false,
+      default: 'software',
+    },
+  },
   emits: ['authenticated'],
   mounted() {
     const fenixCode = this.$route.query.code as string;
-    if (fenixCode) this.getFenixInfo(fenixCode);
+    if (fenixCode) {
+      const authenticatePage = sessionStorage.getItem('authenticatePage') || this.page;
+      if(authenticatePage !== this.page) {
+        sessionStorage.removeItem('authenticatePage');
+        this.$router.replace(`/${authenticatePage}?code=${fenixCode}`);
+        return;
+      }
+      this.getFenixInfo(fenixCode);
+    }
   },
   methods: {
     loginFenix() {
+      sessionStorage.setItem('authenticatePage', this.page);
       window.location.href = `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_SOFTWARE_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL_SOFTWARE}`;
     },
     async getFenixInfo(code: string) {

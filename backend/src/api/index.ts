@@ -5,6 +5,8 @@ import auth from './auth/routes.js';
 import users from './users/routes.js';
 import workstations from './workstations/routes.js';
 import loghours from './loghours/routes.js';
+import printingMaterials from './printing_materials/routes.js';
+import printingTasks from './printing_tasks/routes.js';
 import entries from './entries/routes.js';
 import publications from './publications/routes.js';
 import roomhours from './rooms/routes.js';
@@ -17,6 +19,8 @@ export default {  /*export all routes into the main express file*/
     users.init(app);
     workstations.init(app);
     loghours.init(app);
+    printingMaterials.init(app);
+    printingTasks.init(app);
     entries.init(app);
     publications.init(app);
     roomhours.init(app);

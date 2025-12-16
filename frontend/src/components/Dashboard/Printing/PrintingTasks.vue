@@ -1,5 +1,6 @@
 <template>
   <DashboardTable
+    title="Tasks"
     :headers="headers"
     :items="items"
   >

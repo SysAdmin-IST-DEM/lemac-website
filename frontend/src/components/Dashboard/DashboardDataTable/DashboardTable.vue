@@ -128,16 +128,11 @@ import DashboardEditDialog, {
 } from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 
 export type TableHeader = {
-  title: string,
-  key: string,
-  sortable?: boolean,
-  filterable?: boolean,
-  permission?: number
-}
-
-export type TableItemFor<H extends readonly TableHeader[]> =
-  EditItem & {
-  [K in H[number]['key']]: DynamicModelValue;
+  readonly title: string,
+  readonly key: string,
+  readonly sortable?: boolean,
+  readonly filterable?: boolean,
+  readonly permission?: number
 }
 
 export default {
@@ -153,11 +148,11 @@ export default {
       default: "Dashboard Table",
     },
     items: {
-      type: Array as PropType<TableItemFor<TableHeader[]>[]>,
+      type: Array as PropType<EditItem[]>,
       required: true,
     },
     headers: {
-      type: Array as PropType<TableHeader[]>,
+      type: Array as PropType<readonly TableHeader[]>,
       required: true,
     },
     hideHeader: {
@@ -178,7 +173,7 @@ export default {
       default: () => [],
     },
     editInitialization: {
-      type: Function as PropType<(item: TableItemFor<TableHeader[]>) => TableItemFor<TableHeader[]>>,
+      type: Function as PropType<(item: EditItem) => EditItem>,
       default: () => {},
     },
     expand: {
@@ -189,7 +184,7 @@ export default {
   emits: ['delete', 'edit'],
   data(): {
     searchQuery: string,
-    selectedItem: TableItemFor<TableHeader[]> | null,
+    selectedItem: EditItem | null,
     deleteDialog: boolean,
     editDialog: boolean
   } {

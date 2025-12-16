@@ -1,10 +1,7 @@
 import { z, ZodSchema } from "zod";
-import { Unit } from '../generated/prisma/enums';
 import {
-  PrintTaskCreateInputObjectSchema,
   PrintTaskCreateInputObjectZodSchema,
-  PrintTaskCreateOneZodSchema,
-} from '../generated/zod-prisma/schemas';
+} from '../generated/zod-prisma/schemas/index.js';
 
 export const AddPrintTaskBody = PrintTaskCreateInputObjectZodSchema.omit({
   modelFile: true,
@@ -13,5 +10,7 @@ export const AddPrintTaskBody = PrintTaskCreateInputObjectZodSchema.omit({
   createdAt: true,
   material: true
 }).extend({
-  materialId: z.number()
+  materialId: z.coerce.number()
 });
+
+export type AddPrintTaskBody = z.infer<typeof AddPrintTaskBody>;
