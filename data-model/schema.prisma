@@ -27,6 +27,7 @@ model User {
   roomReservations RoomReservation[]
   roomEvents       RoomEvent[]
   monitorTargets   MonitorTarget[]
+  printTasks       PrintTask[]
 
   @@map("users")
 }
@@ -190,29 +191,34 @@ enum Unit {
 }
 
 enum PrintTaskStatus {
-  PENDING   @map("pending")
-  IN_QUEUE  @map("in_queue")
-  PRINTING  @map("printing")
-  COMPLETED @map("completed")
-  DELIVERED @map("delivered")
-  CANCELLED @map("cancelled")
+  WAITING
+  PENDING
+  IN_QUEUE
+  PRINTING
+  COMPLETED
+  DELIVERED
+  CANCELLED
 }
 
 model PrintTask {
   id           Int             @id @default(autoincrement())
   name         String          @db.VarChar(255)
-  modelFile    String          @map("model_file") @db.VarChar(255)
+  modelFiles   Json            @map("model_files")
   materialId   Int             @map("material_id")
   material     PrintMaterial   @relation(fields: [materialId], references: [id], onUpdate: Restrict)
-  status       PrintTaskStatus @default(PENDING)
+  status       PrintTaskStatus @default(WAITING)
   amount       Int             @default(1)
-  istId        String          @map("student_id") @db.VarChar(12)
+  studentName  String          @map("student_name") @db.VarChar(255)
+  studentId    String          @map("student_id") @db.VarChar(12)
   email        String          @db.VarChar(255)
   unit         Unit
   price        Float
   deadline     DateTime?       @db.Date
   observations String          @default("") @db.Text
+  assignedId   Int?            @map("assigned_id")
+  assigned     User?           @relation(fields: [assignedId], references: [id], onUpdate: Restrict)
   createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
+  completedAt  DateTime?       @map("completed_at") @db.Timestamp(0)
 
   @@map("print_tasks")
 }

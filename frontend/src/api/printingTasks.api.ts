@@ -1,5 +1,9 @@
 import httpClient from './httpClient.api';
-import type { AddPrintTaskBody } from '@lemac/data-model/browser';
+import type {
+  AddPrintTaskBody,
+  EditPrintTaskBody,
+  PrintTask,
+} from '@lemac/data-model/browser';
 const ENDPOINT = '/printing';
 
 export const addPrintTask = async (modelFile: File, data: AddPrintTaskBody) => {
@@ -17,3 +21,8 @@ export const addPrintTask = async (modelFile: File, data: AddPrintTaskBody) => {
     }
   });
 }
+
+export const getPrintTasks = () =>
+  httpClient.get<PrintTask[]>(ENDPOINT);
+
+export const updatePrintingTask = (id: number, data: EditPrintTaskBody) => httpClient.put<PrintTask>(`${ENDPOINT}/${id}`, data);

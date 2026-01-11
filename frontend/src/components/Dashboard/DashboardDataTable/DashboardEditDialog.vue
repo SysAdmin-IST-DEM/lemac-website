@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="isOpen"
-    max-width="550px"
+    :max-width="maxWidth"
   >
     <v-card>
       <v-card-title class="text-h5">
@@ -21,28 +21,37 @@
           @submit.prevent="confirm"
         >
           <v-container>
-            <v-row
-              v-for="(row, index) in fields"
-              :key="index"
-              no-gutters
-            >
+            <v-row dense>
               <v-col
-                v-for="(field, fieldIndex) in row"
-                :key="fieldIndex"
-                v-bind="field.colProps"
+                cols="12"
+                :md="$slots['after-row'] ? 8 : 12"
               >
-                <DashboardDynamicField
-                  v-if="field.permission ? field.permission >= getPermission : true"
-                  v-model="valuesAny[field.key]"
-                  :type="field.type"
-                  :wrapper="field.type === 'date' || field.type === 'time' ? 'menu' : ''"
-                  :props="field.props"
-                  :label="field.label"
-                  :label-icon="field.labelIcon"
-                  :required="field.required"
-                  :rules="field.rules"
-                />
+                <v-row
+                  v-for="(row, index) in fields"
+                  :key="index"
+                  dense
+                >
+                  <v-col
+                    v-for="(field, fieldIndex) in row"
+                    :key="fieldIndex"
+                    v-bind="field.colProps"
+                  >
+                    <DashboardDynamicField
+                      v-if="field.permission ? field.permission >= getPermission : true"
+                      v-model="valuesAny[field.key]"
+                      :type="field.type"
+                      :wrapper="field.type === 'date' || field.type === 'time' ? 'menu' : ''"
+                      :props="field.props"
+                      :label="field.label"
+                      :label-icon="field.labelIcon"
+                      :required="field.required"
+                      :rules="field.rules"
+                    />
+                  </v-col>
+                </v-row>
               </v-col>
+
+              <slot name="after-row" />
             </v-row>
           </v-container>
         </v-form>
@@ -98,6 +107,7 @@ const props = withDefaults(
     item: EditItem | null,
     fields: EditField[][],
     onInitialization?: (item: EditItem) => EditItem,
+    maxWidth?: string | number,
     shouldDisableCancel?: boolean
     cancelText?: string,
     cancelColor?: string,
@@ -108,6 +118,7 @@ const props = withDefaults(
   }>(),
   {
     onInitialization: () => {return {} as EditItem},
+    maxWidth: '550px',
     shouldDisableCancel: false,
     cancelText: 'Cancel',
     cancelColor: 'primary',

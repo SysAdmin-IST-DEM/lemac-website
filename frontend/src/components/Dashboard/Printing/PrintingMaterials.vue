@@ -24,7 +24,6 @@ import {
 } from '@/api/printingMaterials.api.ts';
 import type { EditField } from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import type { PrintMaterial } from '@lemac/data-model/browser';
-import { deleteUser } from '@/api/user.api.ts';
 
 export default {
   name: 'PrintingMaterials',

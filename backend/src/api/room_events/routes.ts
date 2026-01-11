@@ -5,7 +5,7 @@ import { requiresAuth } from '../../middleware/requiresAuth.js';
 
 export default {
   init: (app: Express) => {
-    app.get('/api/room-events', requiresAuth(), getEvents);
+    app.get('/api/room-events', getEvents);
     app.post('/api/room-events', requiresAuth(), createEvent);
     app.put('/api/room-events/:id', requiresAuth(), editEvent);
     app.delete('/api/room-events/:id', requiresAuth(1), deleteEvents);
