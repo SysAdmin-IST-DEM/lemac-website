@@ -263,13 +263,10 @@ export default {
       if(item) {
         const response = await editUserTarget(item.id, values);
 
-        console.log("HM " + item.id)
-        console.log(values);
         this.userTargets.splice(this.userTargets.indexOf(item), 1, response.data);
-        console.log(response.data)
         this.$notify({
           type: 'success',
-          title: 'Announcement updated',
+          title: 'Targets updated',
           text: `You have updated targets for selected user`,
         });
       } else {
@@ -279,7 +276,7 @@ export default {
         this.userTargets.push(response.data);
         this.$notify({
           type: 'success',
-          title: 'Announcement updated',
+          title: 'Targets set',
           text: `You have set targets for selected user`,
         });
       }

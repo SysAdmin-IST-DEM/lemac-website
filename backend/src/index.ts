@@ -10,6 +10,7 @@ import api from './api/index.js';
 
 import { PrismaClient } from '@lemac/data-model'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { ensureBucket } from './services/minio.js';
 
 /* Setup Database Client */
 if(!process.env.DB_HOST || !process.env.DB_USERNAME || !process.env.DB_PASSWORD || !process.env.DB_NAME) {
@@ -33,7 +34,6 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 const corsOptions = {
   origin: process.env.URL,
 }
-console.log(corsOptions.origin);
 
 /* Setup Express Server */
 const port = process.env.PORT || 5000;
@@ -63,6 +63,9 @@ wsServer.on('connection', (socket) => {
 
 /* Initialize API routes */
 api.init(app, wsServer);
+
+/* Start MINIO service */
+await ensureBucket();
 
 /* Start Server */
 const server = app.listen(port, () => {

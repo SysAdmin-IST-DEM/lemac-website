@@ -19,7 +19,6 @@ export async function addPrintingMaterial(req: RequestWithBody<typeof AddPrintMa
 
 export async function getPrintingMaterials(req: Request, res: Response) {
   const data = await controller.getPrintMaterials();
-
   res.json(data);
 }
 

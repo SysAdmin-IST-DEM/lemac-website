@@ -20,4 +20,4 @@ export function parseBody<T extends ZodRawShape>(schema: ZodObject<T>) {
 }
 
 export type RequestWithBody<S extends z.ZodTypeAny> =
-  Request<object, any, z.infer<S>>;
+  Request<{ id: string }, any, z.infer<S>>;

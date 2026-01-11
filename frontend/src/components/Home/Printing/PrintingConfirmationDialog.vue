@@ -1,19 +1,19 @@
 <template>
-  <v-dialog :model-value="dialogVisible" max-width="500">
+  <v-dialog :model-value="modelValue" max-width="500">
     <v-card>
       <v-card-title>Confirmation Step</v-card-title>
       <v-card-text>
         <p>Please confirm the information you have entered is correct:</p>
-        <p>Full Name: {{ values.name }}</p>
-        <p>IST ID: {{ values.istId }}</p>
+        <p>Full Name: {{ values.studentName }}</p>
+        <p>IST ID: {{ values.studentId }}</p>
         <p>Técnico Webmail: {{ values.email }}</p>
         <p>Model STL: {{ file ? file.name : '-' }}</p>
         <p>Unit of file: {{ values.unit }}</p>
-        <!-- <p>Volume: {{ volume?.toFixed(2) ?? 0 }}</p> -->
+        <p>Volume (cm³): {{ volume?.toFixed(2) ?? 0 }}</p>
         <p>Material: {{ materialTitle }}</p>
-        <!-- <p class="font-bold">
-          Price (€): {{ price?.toFixed(2) ?? 0 }}
-        </p> -->
+        <p class="font-bold">
+          Price (€): {{ values.price?.toFixed(2) ?? 0 }}
+        </p>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -25,51 +25,55 @@
 </template>
 
 <script lang="ts">
-import type { AddPrintTaskBody } from '@lemac/data-model/browser';
+import type { AddPrintTaskBody, PrintMaterial } from '@lemac/data-model/browser';
 import { defineComponent, type PropType } from 'vue';
 
 export default defineComponent({
-  name: 'ConfirmationDialog',
+  name: 'PrintingConfirmationDialog',
   props: {
-    dialogVisible: Boolean,
+    modelValue: {
+      type: Boolean,
+      required: true,
+    },
     values: {
       type: Object as PropType<AddPrintTaskBody>,
       required: true,
     },
     file: {
-      type: [Object as PropType<File>, null],
+      type: [File, null] as PropType<File | null>,
+      required: true,
+    },
+    volume: {
+      type: Number,
       required: true,
     },
     materials: {
-      type: Array as PropType<{ title: string; value: number }[]>,
+      type: Array as PropType<PrintMaterial[]>,
       required: true,
     },
   },
-  emits: ['close', 'confirm'],
+  emits: ['update:modelValue', 'confirm'],
   data() {
     return {
       loading: false,
     };
   },
   computed: {
-    materialTitle: {
-      get(): string {
-        return (
-          this.materials.find(
-            (v: { title: string; value: number }) => v.value === this.values.materialId
-          )?.title || ''
-        );
-      },
+    materialTitle() {
+      return (
+        this.materials.find((material) => material.id === this.values.materialId)?.name || ''
+      );
     },
   },
   methods: {
     close() {
-      this.$emit('close');
+      this.$emit('update:modelValue', false);
     },
     confirm() {
       this.loading = true;
       // Handle confirmation logic here
       this.$emit('confirm');
+      this.$emit('update:modelValue', false);
     },
   },
 });

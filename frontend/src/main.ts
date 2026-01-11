@@ -11,8 +11,6 @@ import { useLoadingStore } from '@/stores/loading';
 
 const app = createApp(App);
 
-// TODO: Vue.config.productionTip = false;
-
 app.use(Notifications);
 app.use(router);
 app.use(store);

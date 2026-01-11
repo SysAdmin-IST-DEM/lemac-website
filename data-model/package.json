@@ -18,7 +18,7 @@
     }
   },
   "dependencies": {
-    "prisma": "^7.0.1",
+    "prisma": "^7.2.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
