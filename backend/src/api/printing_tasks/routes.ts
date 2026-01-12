@@ -22,8 +22,8 @@ export default {
   init: (app: Express) => {
     app.get('/api/printing/uploads/:filename', requiresAuth(), dowloadModelFile);
     app.post('/api/printing', upload.single('modelFile'), parseBody(AddPrintTaskBody), addPrintingTask);
-    app.get('/api/printing', requiresAuth(1), getPrintTasks);
-    app.put('/api/printing/:id', requiresAuth(1), parseBody(EditPrintTaskBody), updatePrintingTask);
+    app.get('/api/printing', requiresAuth(), getPrintTasks);
+    app.put('/api/printing/:id', requiresAuth(), parseBody(EditPrintTaskBody), updatePrintingTask);
     /*app.delete('/api/publication/:id', requiresAuth(1), deletePublication);*/
   },
 };
