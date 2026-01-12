@@ -13,7 +13,7 @@
   >
     <template #[`item.admin`]="{ item }">
       <v-chip
-        :color="roleColors[item.admin]"
+        :color="(roles.find((v) => v.value === item.admin) || {}).color"
         variant="elevated"
         class="capitalized"
       >
@@ -22,7 +22,7 @@
     </template>
     <template #[`item.active`]="{ item }">
       <v-chip
-        :color="stateColors[item.active]"
+        :color="(states.find((v) => v.value === item.active) || {}).color"
         variant="elevated"
         class="capitalized"
       >
@@ -33,8 +33,9 @@
 </template>
 
 <script>
-import { createUser, deleteUser, updateUser } from '@/api/user.api.js';
-import { mapGetters } from 'vuex';
+import { createUser, deleteUser, updateUser } from '@/api/user.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
@@ -65,15 +66,13 @@ export default {
       { title: 'State', key: 'active', filterable: false },
       { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
     ],
-    roleColors: ['yellow-darken-4', 'blue'],
-    stateColors: ['error', 'success'],
     roles: [
-      { title: 'Admin', value: 1 },
-      { title: 'User', value: 0 },
+      { title: 'Admin', value: true, color: 'yellow-darken-4' },
+      { title: 'User', value: false, color: 'blue' },
     ],
     states: [
-      { title: 'Active', value: 1 },
-      { title: 'Inactive', value: 0 },
+      { title: 'Active', value: true, color: 'error' },
+      { title: 'Inactive', value: false, color: 'success' },
     ],
   }),
   computed: {
@@ -89,7 +88,7 @@ export default {
         ],
       ];
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   mounted() {
     this.users = this.members;

@@ -51,9 +51,9 @@
 import HourTable from '@/components/Dashboard/Hours/HoursTable.vue';
 import HoursCalendar from '@/components/Dashboard/Hours/HoursCalendar.vue';
 import SumTable from '@/components/Dashboard/Hours/SumTable.vue';
-import { getHoursSelf, getHours } from '@/api/hours.api.js';
-import { mapGetters } from 'vuex';
-import { getUsers } from '@/api/user.api.js';
+import { getHoursSelf, getHours } from '@/api/hours.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 
 export default {
   name: 'Hours',
@@ -65,16 +65,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.$loading.show();
-    const users = (await getUsers()).data;
     const response = this.getPermission === 1 ? await getHours(-1, -1) : await getHoursSelf();
 
     const data = response.data.map((val) => {
-      val.sold_amount = val.exit_number - val.entry_number;
-      val.user = users.find(user => user.id == val.userId).name;
+      val.soldAmount = val.exitNumber - val.entryNumber;
+      val.user = val.user.name;
 
       return val;
     });

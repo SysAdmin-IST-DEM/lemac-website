@@ -42,28 +42,28 @@
           <DashboardTable
             ref="targetsTable"
             :headers="[
-              { title: 'Start', key: 'date_start' },
-              { title: 'End', key: 'date_end' },
-              { title: 'Target Hours', key: 'target_hours' },
+              { title: 'Start', key: 'dateStart' },
+              { title: 'End', key: 'dateEnd' },
+              { title: 'Target Hours', key: 'targetHours' },
               { title: '', key: 'buttons' },
             ]"
             :items="userTargets"
             hide-header
             hide-default-footer
             :items-per-page="5"
-            :sort-by="[{ key: 'date_start', order: 'desc'}]"
+            :sort-by="[{ key: 'dateStart', order: 'desc'}]"
             sort
             :page="targetsPage"
             :edit-initialization="editTargetsInitialization"
             :edit-fields="editTargetsFields"
             @edit="editTargetsSubmit"
           >
-            <template #[`item.date_start`]="{ item }">
-              {{ $moment(item.date_start).format('DD/MM/YYYY') }}
+            <template #[`item.dateStart`]="{ item }">
+              {{ DateTime.fromISO(item.dateStart).toFormat('dd/MM/yyyy') }}
             </template>
 
-            <template #[`item.date_end`]="{ item }">
-              {{ $moment(item.date_end).format('DD/MM/YYYY') }}
+            <template #[`item.dateEnd`]="{ item }">
+              {{ DateTime.fromISO(item.dateEnd).toFormat('dd/MM/yyyy') }}
             </template>
 
             <template #[`item.buttons`]="{ item }">
@@ -125,14 +125,14 @@
 import {
   deleteOffDay,
   editUserTarget,
-  getOffDays,
   getUserTargets,
   setOffDays,
   setUserTarget,
-} from '@/api/schedule.api.js';
-import moment from 'moment';
+} from '@/api/schedule.api';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'ScheduleFooter',
@@ -164,25 +164,34 @@ export default {
         { key: 'dates', label: 'Date Range', labelIcon: 'mdi-calendar', type: 'date', required: true, props: { multiple: 'range' } },
       ],
       [
-        { key: 'target_hours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
+        { key: 'targetHours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
       ],
     ],
   }),
   computed: {
+    DateTime() {
+      return DateTime
+    },
     offDays() {
       return this.schedule.offDays || [];
     },
     targetsPageCount() {
       return Math.max(1, Math.ceil(this.userTargets.length / 5));
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   watch: {
     async currentUser(user) {
-      this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id);
+      this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id).map((val) => {
+        return {
+          ...val,
+          dateStart: DateTime.fromISO(val.dateStart),
+          dateEnd: DateTime.fromISO(val.dateEnd)
+        }
+      });
     },
     offDays(newValue) {
-      this.datesOffDays = newValue.map((val) => moment(val.date).toDate());
+      this.datesOffDays = newValue.map((val) => DateTime.fromISO(val.date));
     },
     targetsPageCount() {
       this.targetsPage = 1;
@@ -194,15 +203,15 @@ export default {
     },
     getCurrentTarget() {
       if (!this.calendar) return null;
-      const currentDate = moment(this.calendar.getVueCal().view.start).add(2, 'days').toDate();
+      const currentDate = DateTime.fromJSDate(this.calendar.getVueCal().view.start).plus({ days: 2 });
       return this.userTargets.find((val) => {
         if (!this.calendar) return false;
-        return currentDate >= new Date(val.date_start) && currentDate <= new Date(val.date_end);
+        return currentDate >= val.dateStart && currentDate <= val.dateEnd;
       });
     },
     getTargetHours() {
       const currentTarget = this.getCurrentTarget();
-      return currentTarget ? currentTarget.target_hours : '...';
+      return currentTarget ? currentTarget.targetHours : '...';
     },
     getWorkingHours() {
       const currentTarget = this.getCurrentTarget();
@@ -212,8 +221,8 @@ export default {
       const currentEvents = this.calendar.events.filter((event) => {
         const test1 = event.details.userId === this.currentUser.id;
         const test2 =
-          new Date(event.start) >= new Date(currentTarget.date_start) &&
-          new Date(event.end) <= new Date(currentTarget.date_end);
+          DateTime.fromJSDate(event.start) >= currentTarget.dateStart &&
+          DateTime.fromJSDate(event.end) <= currentTarget.dateEnd;
 
         return test1 && test2;
       });
@@ -228,38 +237,36 @@ export default {
     },
     editTargetsInitialization(item) {
       const dates = [];
-      const currentDate = new Date(item.date_start);
-      const dateEnd = new Date(item.date_end)
+      let currentDate = item.dateStart;
+      const dateEnd = item.dateEnd;
 
       while (currentDate <= dateEnd) {
-        dates.push(moment(currentDate).format('YYYY-MM-DD'));
-        currentDate.setDate(currentDate.getDate() + 1);
+        dates.push(currentDate);
+        currentDate = currentDate.plus({ days: 1 });
       }
 
       console.log(dates);
 
       return {
         dates,
-        target_hours: item.target_hours
+        targetHours: item.targetHours
       }
     },
     async editTargetsSubmit(item, values) {
       values = {
-        date_start: moment(values.dates[0]).format('YYYY-MM-DD'),
-        date_end: moment(values.dates[values.dates.length - 1]).format('YYYY-MM-DD'),
-        targetHours: values.target_hours,
+        dateStart: values.dates[0].toISO(),
+        dateEnd: values.dates[values.dates.length - 1].toISO(),
+        targetHours: values.targetHours,
       }
+      console.log(values);
 
       if(item) {
         const response = await editUserTarget(item.id, values);
 
-        console.log("HM " + item.id)
-        console.log(values);
         this.userTargets.splice(this.userTargets.indexOf(item), 1, response.data);
-        console.log(response.data)
         this.$notify({
           type: 'success',
-          title: 'Announcement updated',
+          title: 'Targets updated',
           text: `You have updated targets for selected user`,
         });
       } else {
@@ -269,24 +276,28 @@ export default {
         this.userTargets.push(response.data);
         this.$notify({
           type: 'success',
-          title: 'Announcement updated',
+          title: 'Targets set',
           text: `You have set targets for selected user`,
         });
       }
     },
     async updateOffDays() {
       this.offDaysDisabled = true;
-      const dates = this.datesOffDays.map((date) => moment(date).format('YYYY-MM-DD'));
-      const addedDates = dates.filter((item) => !this.schedule.offDaysDates.includes(item));
-      const removedDates = this.schedule.offDaysDates.filter((item) => !dates.includes(item));
+      const dates = this.datesOffDays;
+      console.log(dates)
+      const addedDates = dates.filter((item) => !this.schedule.offDaysDates.includes(item.toFormat('yyyy-MM-dd'))); // DateTime[]
+      const removedDates = this.schedule.offDaysDates.filter((item) => !dates.map(val => val.toFormat('yyyy-MM-dd')).includes(item)); // yyyy-MM-dd[]
+      console.log(addedDates);
+      console.log(removedDates)
 
       for (const date of addedDates) {
-        await setOffDays({ date });
+        console.log(date.toUTC().startOf('day').toISO())
+        await setOffDays({ date: date.toUTC().startOf('day').toISO() });
       }
 
       for (const date of removedDates) {
         await deleteOffDay(
-          this.schedule.offDays.find((val) => moment(val.date).format('YYYY-MM-DD') === date).id
+          this.schedule.offDays.find((val) => DateTime.fromISO(val.date).toFormat('yyyy-MM-dd') === date).id
         );
       }
 

@@ -7,7 +7,7 @@
 
 <script>
 import { Chart, registerables } from 'chart.js'
-import { getEntries } from '@/api/entries.api.js';
+import { getEntries } from '@/api/entries.api';
 
 Chart.register(...registerables)
 

@@ -1,343 +1,296 @@
 <template>
-  <v-card class="max-w-6xl px-4 mx-auto">
+  <v-card class="px-4 mx-auto">
     <v-form @submit.prevent>
       <h1 class="w-full text-4xl font-medium text-center m-6!">3D Printing submission form:</h1>
-      <v-row class="gap-4 mx-0">
+
+      <v-row>
+        <div class="m-auto!">
+          <span>Automatic Fill Form</span>
+          <AuthenticateButton
+            page="printing"
+            class="ml-3"
+            @authenticated="fillForm"
+          />
+        </div>
+      </v-row>
+
+      <!-- Form Fields -->
+      <v-row>
         <v-text-field
-          v-model="firstName"
-          :rules="rules"
-          label="First name"
+          v-model="values.studentName"
+          label="Full Name"
+          required
+          prepend-icon="mdi-account"
           variant="underlined"
-        />
-        <v-text-field
-          v-model="lastName"
-          :rules="rules"
-          label="Last Name"
-          variant="underlined"
+          class="m-1!"
         />
       </v-row>
-      <v-row class="gap-4 mx-0">
+
+      <v-row>
         <v-text-field
-          v-model="tecnicoId"
-          :rules="rules"
-          label="IST ID"
+          v-model="values.studentId"
+          label="IST-ID"
+          :rules="[(v: string) => (/^ist[12]\d{5,6}$/.test(v) ? true : '')]"
+          required
+          prepend-icon="mdi-id-card"
           variant="underlined"
+          class="m-1!"
         />
+
         <v-text-field
-          v-model="webmail"
-          :rules="rules"
+          v-model="values.email"
           label="Técnico Webmail"
+          required
+          prepend-icon="mdi-at"
           variant="underlined"
+          class="m-1!"
         />
       </v-row>
-      <v-row class="gap-4 mx-0">
-        <div class="w-48">
-          <v-select
-            v-model="chosen_unit"
-            :items="units"
-            label="Unit of file"
-            variant="underlined"
-          />
-        </div>
+
+      <v-row>
+        <v-select
+          v-model="values.unit"
+          :items="units"
+          label="Unit of file"
+          required
+          prepend-icon="mdi-map-marker-distance"
+          variant="underlined"
+          class="m-1!"
+        />
+
         <v-file-input
-          v-model="file"
+          v-model="modelFile"
           label="Model STL"
+          required
+          prepend-icon="mdi-paperclip"
           variant="underlined"
-          accept=".stl,.step,.stp"
-          @change="test"
+          class="m-1!"
         />
-        <div>
-          <v-select
-            v-model="chosen_material"
-            :items="materials"
-            label="Material"
-            variant="underlined"
-          />
-        </div>
+
+        <v-select
+          v-model="values.materialId"
+          :items="materials"
+          item-title="name"
+          item-value="id"
+          label="Material"
+          required
+          prepend-icon="mdi-palette-swatch"
+          variant="underlined"
+          class="m-1!"
+        />
       </v-row>
-      <v-row class="gap-4 mx-0">
-        <div class="w-full">
-          <v-textarea
-            v-model="notes"
-            label="Additional Notes"
-            rows="3"
-            variant="outlined"
-            maxlength="350"
-            counter
-          />
-        </div>
+
+      <v-row>
+        <v-textarea
+          v-model="values.observations"
+          label="Additional Notes"
+          required
+          prepend-icon="mdi-text"
+          variant="outlined"
+          class="m-1!"
+        />
       </v-row>
-      <div class="flex flex-col items-start justify-start gap-4 mx-0 my-4">
-        <span class="text-base"><b class="text-xl">Volume:</b> {{ volume?.toFixed(2) ?? 0 }}</span>
-        <span class="text-base"><b class="text-xl">Bounding box size:</b> ({{ boundingBoxSize?.x.toFixed(2) ?? 0 }},
-        {{ boundingBoxSize?.y.toFixed(2) ?? 0 }}, {{ boundingBoxSize?.z.toFixed(2) ?? 0 }})</span>
-        <span class="text-base"><b class="text-xl">Price (€):</b> {{ price?.toFixed(2) ?? 0 }}</span>
-      </div>
-      <v-btn
-        type="submit"
-        block
-        class="mt-2 mb-2"
-        color="primary"
-        @click="submitDialog"
-      >
-        Submit
-      </v-btn>
+
+      <v-row>
+        <v-col>
+          <span class="text-base">
+            <b class="text-xl">Volume (cm³):</b> {{ volume.toFixed(3) }}
+          </span>
+          <span class="text-base ml-3">
+            <b class="text-xl">Bounding box size (cm):</b>
+            ({{ boundingBoxSize.x.toFixed(3) }}, {{ boundingBoxSize.y.toFixed(3) }},
+            {{ boundingBoxSize.z.toFixed(3) }})
+          </span>
+          <span class="text-base ml-3">
+            <b class="text-xl">Price (€):</b> {{ values.price.toFixed(2) }}
+          </span>
+        </v-col>
+        <v-col cols="auto">
+          <v-btn
+            type="submit"
+            class="mb-6"
+            color="primary"
+            @click="submitDialog = true"
+          >
+            Submit
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-form>
   </v-card>
-  <print-dialog
-    ref="printDialog"
-    :dialog-visible="confirmPrint"
-    :first-name="firstName"
-    :last-name="lastName"
-    :tecnico-id="tecnicoId"
-    :file-name="fileName"
-    :webmail="webmail"
-    :chosen-unit="chosen_unit"
-    :material="chosen_material"
+
+  <PrintingConfirmationDialog
+    ref="printingDialog"
+    v-model="submitDialog"
+    :values="values"
+    :file="modelFile"
     :volume="volume"
-    :price="price"
-    @close="onCloseConfirmationDialog"
-    @confirm="onConfirm"
+    :materials="materials"
+    @confirm="submit"
   />
 </template>
 
-<script>
+<script lang="ts">
+import PrintingConfirmationDialog from '@/components/Home/Printing/PrintingConfirmationDialog.vue';
+import { Unit, type AddPrintTaskBody, type PrintMaterial } from '@lemac/data-model/browser';
+import AuthenticateButton from '@/components/Home/AuthenticateButton.vue';
+import { addPrintTask } from '@/api/printingTasks.api.ts';
+import { getPrintingMaterials } from '@/api/printingMaterials.api.ts';
 import * as THREE from 'three';
-import axios from 'axios';
-import PrintingDialog from '@/components/Dashboard/Printing/PrintingDialog.vue';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+
+const METERS_PER_UNIT: { [key in Unit]: number } = {
+  MILIMETERS: 1e-3,
+  CENTIMETERS: 1e-2,
+  METERS: 1,
+};
+
+const initialData: AddPrintTaskBody = {
+  studentName: '',
+  studentId: '',
+  email: '',
+  unit: Unit.CENTIMETERS,
+  price: 0,
+  materialId: 0,
+};
 
 export default {
   name: 'HomePrinting',
-  components: {
-    'print-dialog': PrintingDialog,
-  },
-  data() {
+  components: { AuthenticateButton, PrintingConfirmationDialog },
+  data(): {
+    values: AddPrintTaskBody;
+    modelFile: File | null;
+    units: Unit[];
+    materials: PrintMaterial[];
+    volume: number;
+    boundingBoxSize: THREE.Vector3;
+    submitDialog: boolean;
+  } {
     return {
-      rules: [
-        (value) => {
-          if (value) return true;
-
-          return "Field can't be left empty";
-        },
-      ],
-      confirmPrint: false,
-      firstName: '',
-      lastName: '',
-      tecnicoId: '',
-      file: null,
-      fileName: '',
-      webmail: '',
+      values: initialData,
+      modelFile: null,
+      units: Object.values(Unit),
+      materials: [],
       volume: 0,
-      boundingBoxSize: null,
-      price: 0,
-      chosen_unit: 'Milimeter',
-      units: ['Millimeter', 'Meter'],
-      materials: ['Grey', 'T1500'],
-      chosen_material: 'Grey',
-      notes: '',
+      boundingBoxSize: new THREE.Vector3(0, 0, 0),
+      submitDialog: false,
     };
   },
-  watch: {
-    chosen_material() {
-      this.calculatePrice(this.volume);
-    },
-    chosen_unit() {
-      this.calculatePrice(this.volume);
+  computed: {
+    selectedMaterial() {
+      return this.materials.find((material) => material.id === this.values.materialId);
     },
   },
-  mounted() {},
+  watch: {
+    async modelFile() {
+      if (!this.modelFile) {
+        this.boundingBoxSize = new THREE.Vector3(0, 0, 0);
+        this.volume = 0;
+        this.values.price = 0;
+        return;
+      }
+      const { rawVolume, boundingBoxSize } = await this.calculateVolume(this.modelFile);
+      this.boundingBoxSize = new THREE.Vector3(
+        this.convertDistance(boundingBoxSize.x, this.values.unit, Unit.CENTIMETERS),
+        this.convertDistance(boundingBoxSize.y, this.values.unit, Unit.CENTIMETERS),
+        this.convertDistance(boundingBoxSize.z, this.values.unit, Unit.CENTIMETERS)
+      );
+      this.volume = this.convertVolume(rawVolume, this.values.unit, Unit.CENTIMETERS);
+      this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
+    },
+    'values.materialId'() {
+      if (!this.modelFile) {
+        this.boundingBoxSize = new THREE.Vector3(0, 0, 0);
+        this.volume = 0;
+        this.values.price = 0;
+        return;
+      }
+      this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
+    },
+    async 'values.unit'() {
+      if (!this.modelFile) {
+        this.boundingBoxSize = new THREE.Vector3(0, 0, 0);
+        this.volume = 0;
+        this.values.price = 0;
+        return;
+      }
+      const { rawVolume, boundingBoxSize } = await this.calculateVolume(this.modelFile);
+      console.log('RV:', rawVolume);
+      this.boundingBoxSize = new THREE.Vector3(
+        this.convertDistance(boundingBoxSize.x, this.values.unit, Unit.CENTIMETERS),
+        this.convertDistance(boundingBoxSize.y, this.values.unit, Unit.CENTIMETERS),
+        this.convertDistance(boundingBoxSize.z, this.values.unit, Unit.CENTIMETERS)
+      );
+      this.volume = this.convertVolume(rawVolume, this.values.unit, Unit.CENTIMETERS);
+      this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
+    },
+  },
+  async mounted() {
+    this.materials = (await getPrintingMaterials()).data;
+    initialData.materialId = this.materials[0]?.id || 0;
+  },
   methods: {
-    test(e) {
-      if (!e) return;
-      this.fileName = e.name;
-      const read = new FileReader();
-      read.readAsBinaryString(e);
-
-      read.onloadend = () => {
-        if (read.result) {
-          const binaryContents = read.result; // Your binary contents here
-          const arrayBuffer = this.binaryStringToArrayBuffer(binaryContents);
-          this.parseBinarySTL(arrayBuffer);
-
-          const res = 0.1;
-          const layerTime = 16;
-
-          const volume = this.volume * 10e-4;
-          const base = Math.ceil((this.boundingBoxSize.x * this.boundingBoxSize.y) / 100);
-          const printHours = ((this.boundingBoxSize.z / res) * layerTime) / 3600;
-
-          this.calculatePrice(this.volume);
-
-          this.$forceUpdate();
-
-          console.log({ volume, base, printHours, layers: this.boundingBoxSize.z / res });
-        }
-      };
+    async submit() {
+      const task = (await addPrintTask(this.modelFile!, this.values)).data;
+      this.submitDialog = false;
+      (this.$refs.printingDialog as typeof PrintingConfirmationDialog).loading = false;
+      this.values = initialData;
+      this.modelFile = null;
+      this.$notify({
+        type: 'success',
+        title: 'Submission Successful',
+        text: `Your printing task (ID: ${task.id}) has been submitted successfully! Please check your email for further instructions.`,
+      });
     },
-    parseBinarySTL(data) {
-      const geometry = new THREE.BufferGeometry();
-      const vertices = [];
+    fillForm(data: { name: string; username: string; institutionalEmail: string }) {
+      this.values.studentName = data.name;
+      this.values.studentId = data.username;
+      this.values.email = data.institutionalEmail;
+    },
+    // Volume calculation from STL
+    convertVolume(volume: number, fromUnit: Unit, toUnit: Unit) {
+      const from = METERS_PER_UNIT[fromUnit];
+      const to = METERS_PER_UNIT[toUnit];
+      return volume * Math.pow(from / to, 3);
+    },
+    // Unit calculation from STL
+    convertDistance(volume: number, fromUnit: Unit, toUnit: Unit) {
+      const from = METERS_PER_UNIT[fromUnit];
+      const to = METERS_PER_UNIT[toUnit];
+      return volume * Math.pow(from / to, 1);
+    },
+    async calculateVolume(file: File) {
+      const arrayBuffer = await file.arrayBuffer();
 
-      const dv = new DataView(data);
-      let offset = 80; // Skip the header (80 bytes)
+      const loader = new STLLoader();
+      const geometry = loader.parse(arrayBuffer);
 
-      // Read the number of triangles (faces)
-      const numTriangles = dv.getUint32(offset, true);
-      offset += 4;
+      const geo = geometry.index ? geometry.toNonIndexed() : geometry;
+      const pos = geo.attributes.position!.array;
 
-      for (let i = 0; i < numTriangles; i++) {
-        // Skip the normal vector (12 bytes)
-        offset += 12;
+      let rawVolume = 0; // in (modelUnit)^3
+      const a = new THREE.Vector3();
+      const b = new THREE.Vector3();
+      const c = new THREE.Vector3();
+      const cross = new THREE.Vector3();
 
-        // Read the vertices (3 * 12 bytes)
-        for (let j = 0; j < 3; j++) {
-          const x = dv.getFloat32(offset, true);
-          const y = dv.getFloat32(offset + 4, true);
-          const z = dv.getFloat32(offset + 8, true);
+      for (let i = 0; i < pos.length; i += 9) {
+        a.fromArray(pos, i);
+        b.fromArray(pos, i + 3);
+        c.fromArray(pos, i + 6);
 
-          vertices.push(x, y, z);
-          offset += 12;
-        }
-
-        // Skip the attribute byte count (2 bytes)
-        offset += 2;
+        cross.crossVectors(b, c);
+        rawVolume += a.dot(cross) / 6;
       }
 
-      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-      const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial());
+      rawVolume = Math.abs(rawVolume);
 
-      // Calculate volume
-      this.volume = this.calculateVolume(mesh);
+      geometry.computeBoundingBox();
+      const bbox = geometry.boundingBox;
+      const boundingBoxSize = new THREE.Vector3();
+      if (bbox) bbox.getSize(boundingBoxSize);
 
-      // Calculate bounding box size
-      const boundingBox = new THREE.Box3().setFromObject(mesh);
-      this.boundingBoxSize = boundingBox.getSize(new THREE.Vector3());
-    },
-    calculateVolume(mesh) {
-      const geometry = mesh.geometry;
-      const position = geometry.attributes.position.array;
-      const indices = geometry.index ? geometry.index.array : null;
-
-      let volume = 0;
-      let vA, vB, vC;
-      const pA = new THREE.Vector3();
-      const pB = new THREE.Vector3();
-      const pC = new THREE.Vector3();
-
-      if (indices) {
-        let iA, iB, iC;
-        for (let i = 0; i < indices.length; i += 3) {
-          iA = indices[i];
-          iB = indices[i + 1];
-          iC = indices[i + 2];
-
-          vA = this.getVertex(iA, position, pA);
-          vB = this.getVertex(iB, position, pB);
-          vC = this.getVertex(iC, position, pC);
-
-          volume += this.signedVolumeOfTriangle(vA, vB, vC);
-        }
-      } else {
-        for (let i = 0; i < position.length; i += 9) {
-          vA = this.getVertex(i, position, pA);
-          vB = this.getVertex(i + 3, position, pB);
-          vC = this.getVertex(i + 6, position, pC);
-
-          volume += this.signedVolumeOfTriangle(vA, vB, vC);
-        }
-      }
-
-      return Math.abs(volume);
-    },
-    calculatePrice(volume) {
-      if (this.chosen_material === 'Grey') {
-        this.price = volume * 0.0004;
-      } else if (this.chosen_material === 'T1500') {
-        this.price = volume * 0.0005;
-      } else {
-        this.price = 0;
-      }
-    },
-    getVertex(index, position, target) {
-      target.x = position[index];
-      target.y = position[index + 1];
-      target.z = position[index + 2];
-      return target;
-    },
-    signedVolumeOfTriangle(p1, p2, p3) {
-      return p1.dot(p2.cross(p3)) / 6;
-    },
-    binaryStringToArrayBuffer(binaryString) {
-      const buffer = new ArrayBuffer(binaryString.length);
-      const bufferView = new Uint8Array(buffer);
-      for (let i = 0; i < binaryString.length; i++) {
-        bufferView[i] = binaryString.charCodeAt(i);
-      }
-      return buffer;
-    },
-    convertHeaderToHex(binaryContents) {
-      var headerBytes = binaryContents.slice(0, 80);
-      console.log(headerBytes);
-      var hex = '';
-
-      for (var i = 0; i < headerBytes.length; i++) {
-        var byte = headerBytes[i];
-        var hexValue = byte.toString(16).padStart(2, '0');
-        hex += hexValue;
-      }
-
-      return hex;
-    },
-    submitDialog() {
-      // Set confirmPrint to true to show the confirmation dialog
-      this.confirmPrint = true;
-    },
-
-    onCloseConfirmationDialog() {
-      this.confirmPrint = false;
-    },
-
-    async onConfirm() {
-      try {
-        const formData = new FormData();
-        formData.append('file', this.file);
-        formData.append('fileName', this.fileName);
-        formData.append('firstName', this.firstName);
-        formData.append('lastName', this.lastName);
-        formData.append('tecnicoId', this.tecnicoId);
-        formData.append('webmail', this.webmail);
-        formData.append('unit', this.chosen_unit);
-        formData.append('volume', this.volume);
-        formData.append('material', this.chosen_material);
-        formData.append('price', this.price.toFixed(2));
-        formData.append('notes', this.notes);
-
-        const response = await axios.post(
-          'https://lemac.dem.tecnico.ulisboa.pt/submit',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
-
-        if (response.status == 200)
-          this.$notify({
-            type: 'success',
-            title: 'Submission successful',
-            text: `Your submission has been successfully received. You must now wait for a response from LEMAC staff.`,
-          });
-      } catch (error) {
-        this.$notify({
-          type: 'error',
-          title: 'Submission failed',
-          text: `An error occurred while submitting please contact support or LEMAC staff.`,
-        });
-      } finally {
-        this.$refs.printDialog.loading = false;
-        this.confirmPrint = false;
-      }
+      return { rawVolume, boundingBoxSize };
     },
   },
 };

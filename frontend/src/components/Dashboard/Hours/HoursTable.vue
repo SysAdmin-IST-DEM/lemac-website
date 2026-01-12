@@ -29,23 +29,24 @@
       }}
     </template>
     <template #[`item.time`]="{ item }">
-      {{ Math.floor(parseInt(item.time) / 60) }}h{{ parseInt(item.time % 60) || '' }}
+      {{ Math.floor(parseInt(item.time) / 60) }}h{{ parseInt(item.time) % 60 || '' }}
     </template>
-    <template #[`item.exit_number`]="{ item }">
-      {{ item.exit_number != null ? item.exit_number : '-' }}
+    <template #[`item.exitNumber`]="{ item }">
+      {{ item.exitNumber != null ? item.exitNumber : '-' }}
     </template>
-    <template #[`item.sold_amount`]="{ item }">
-      {{ item.sold_amount > 0 ? item.sold_amount : '-' }}
+    <template #[`item.soldAmount`]="{ item }">
+      {{ item.soldAmount > 0 ? item.soldAmount : '-' }}
     </template>
   </DashboardTable>
 </template>
 
 <script>
-import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours.api.js';
-import { getUsers } from '@/api/user.api.js';
-import { mapGetters } from 'vuex';
-import moment from 'moment';
+import { createHours, deleteHours, updateHours, getLastEntry } from '@/api/hours.api';
+import { getUsers } from '@/api/user.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
+import { DateTime } from 'luxon';
 
 export default {
   name: 'HourTable',
@@ -62,31 +63,33 @@ export default {
             entry: String,
             exit: String,
             time: Number,
-            entry_number: Number,
-            exit_number: Number,
-            safe_amount: Number,
-            sold_amount: Number,
+            entryNumber: Number,
+            exitNumber: Number,
+            safeAmount: Number,
+            soldAmount: Number,
           },
         ];
       },
     },
   },
-  data: () => ({
-    hours: [],
-    users: [],
-    lastEntry : null,
-    headers: [
-      { title: 'Monitor', key: 'user', sortable: false },
-      { title: 'Entry Hour', key: 'entry', sortable: false },
-      { title: 'Exit Hour', key: 'exit', sortable: false },
-      { title: 'Total Time', key: 'time', sortable: false },
-      { title: 'Entry Ticket', key: 'entry_number', sortable: false },
-      { title: 'Exit Ticket', key: 'exit_number', sortable: false },
-      { title: 'Tickets Sold', key: 'sold_amount', sortable: false },
-      { title: 'Money in Safe', key: 'safe_amount', sortable: false },
-      { title: 'Actions', key: 'actions', sortable: false },
-    ]
-  }),
+  data() {
+    return {
+      hours: [],
+      users: [],
+      lastEntry: null,
+      headers: [
+        { title: 'Monitor', key: 'user', sortable: false },
+        { title: 'Entry Hour', key: 'entry', sortable: false },
+        { title: 'Exit Hour', key: 'exit', sortable: false },
+        { title: 'Total Time', key: 'time', sortable: false },
+        { title: 'Entry Ticket', key: 'entryNumber', sortable: false },
+        { title: 'Exit Ticket', key: 'exitNumber', sortable: false },
+        { title: 'Tickets Sold', key: 'soldAmount', sortable: false },
+        { title: 'Money in Safe', key: 'safeAmount', sortable: false },
+        { title: 'Actions', key: 'actions', sortable: false },
+      ]
+    }
+  },
   computed: {
     editFields() {
       return [
@@ -95,21 +98,21 @@ export default {
           { key: "exit", type: "time", label: "Exit Hour", labelIcon: "mdi-clock-time-four-outline", required: true }
         ],
         [
-          { key: "entry_number", label: "Entry Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true, default: this.lastEntry ? this.lastEntry.exit_number : undefined },
-          { key: "exit_number", label: "Exit Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true }
+          { key: "entryNumber", type: "number", label: "Entry Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true, default: this.lastEntry ? this.lastEntry.exitNumber : undefined },
+          { key: "exitNumber", type: "number", label: "Exit Ticket", labelIcon: "mdi-ticket-confirmation-outline", required: true }
         ],
         [
-          { key: "safe_amount", label: "Money in safe", labelIcon: "mdi-cash", required: true },
+          { key: "safeAmount", type: "number", label: "Money in safe", labelIcon: "mdi-cash", required: true },
         ],
         [
-          { key: "entry_date", type: "date", label: "Date for entry (OPTIONAL)", labelIcon: "mdi-calendar" },
+          { key: "entryDate", type: "date", label: "Date for entry (OPTIONAL)", labelIcon: "mdi-calendar" },
         ],
         [
           { key: "userId", type: "autocomplete", label: "User", labelIcon: "mdi-account", default: this.users.find((user) => user.current), props: { items: this.users, "item-title": "name", "item-value": "id" } },
         ]
       ];
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   watch: {
     async hours() {
@@ -117,7 +120,7 @@ export default {
     },
   },
   async mounted() {
-    this.hours = this.getPermission === 1 ? this.propHours : []; // TODO: WHY TF
+    this.hours = this.propHours; // TODO: WHY TF
     this.users = (await getUsers()).data;
     this.lastEntry = (await getLastEntry()).data;
   },
@@ -126,31 +129,29 @@ export default {
       return {
         id: item.id,
         userId: item.userId,
-        entry: new Date(item.entry).toLocaleTimeString(undefined, {
-          timeStyle: 'short',
-          timeZone: 'UTC',
-          hourCycle: 'h23',
-        }),
-        exit: new Date(item.exit).toLocaleTimeString(undefined, {
-          timeStyle: 'short',
-          timeZone: 'UTC',
-          hourCycle: 'h23',
-        }),
-        entry_number: item.entry_number,
-        exit_number: item.exit_number,
-        safe_amount: item.safe_amount,
-        sold_amount: item.sold_amount,
-        entry_date: new Date(item.entry)
+        entry: DateTime.fromISO(item.entry).toFormat("HH:mm"),
+        exit: DateTime.fromISO(item.exit).toFormat("HH:mm"),
+        entryNumber: item.entryNumber,
+        exitNumber: item.exitNumber,
+        safeAmount: item.safeAmount,
+        soldAmount: item.soldAmount,
+        entryDate: DateTime.fromISO(item.entry)
       };
     },
     async editItem(item, values) {
-      values.entry = moment(values.entry_date ?? new Date()).format('YYYY-MM-DD') + 'T' + values.entry + ':000Z';
-      values.exit = moment(values.entry_date ?? new Date()).format('YYYY-MM-DD') + 'T' + values.exit + ':000Z';
+      const dateEntry = values.entryDate ? DateTime.fromISO(values.entryDate) : DateTime.now();
+      const [hEntry, mEntry] = values.entry.split(':').map(Number);
+      values.entry = dateEntry.set({hour: hEntry, minute: mEntry}).toUTC().toISO();
+      const [hExit, mExit] = values.exit.split(':').map(Number);
+      values.exit = dateEntry.set({hour: hExit, minute: mExit}).toUTC().toISO();
+
       values.userId = values.userId ?? this.users.find((user) => user.current).id;
+      console.log(values)
       if(item) {
+        console.log(values)
         const response = await updateHours(item.id, values);
 
-        response.data.sold_amount = (response.data.exit_number ?? 0) - response.data.entry_number;
+        response.data.soldAmount = (response.data.exitNumber ?? 0) - response.data.entryNumber;
         response.data.user = this.users.find((user) => user.id === response.data.userId).name;
 
         this.hours.splice(this.hours.indexOf(item), 1, response.data); // Update the entry in the table
@@ -162,9 +163,8 @@ export default {
       } else {
         const response = await createHours(values);
 
-        response.data.sold_amount = response.data.exit_number - response.data.entry_number;
-        response.data.user = this.users.find((user) => user.id == response.data.userId).name;
-        console.log(JSON.stringify(response.data));
+        response.data.soldAmount = response.data.exitNumber - response.data.entryNumber;
+        response.data.user = response.data.user.name;
 
         this.hours.push(response.data);
         this.$notify({

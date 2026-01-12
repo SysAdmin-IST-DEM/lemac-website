@@ -11,8 +11,9 @@
 
 <script>
 import PublicationsTable from '@/components/Dashboard/Publications/PublicationsTable.vue';
-import { getPublications } from '@/api/publications.api.js';
-import { mapGetters } from 'vuex';
+import { getPublications } from '@/api/publications.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 
 export default {
   name: 'PublicationsPage',
@@ -23,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.$loading.show();

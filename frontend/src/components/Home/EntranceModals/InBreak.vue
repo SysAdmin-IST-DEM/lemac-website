@@ -12,7 +12,7 @@
       >
         <v-card-text>
           <span
-            v-if="getTimeDiff(userData.last_modified)"
+            v-if="getTimeDiff(userData.lastModified)"
             class="flex items-center justify-center mb-2 text-2xl font-semibold"
           >
             MAX BREAK TIME EXCEDED

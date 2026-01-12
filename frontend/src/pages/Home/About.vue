@@ -10,7 +10,7 @@
   import HomeAbout from '@/components/Home/HomeAbout.vue';
 
   export default {
-    name: 'Home',
+    name: 'About',
     components: {
         HomeHeader,
         HomeAbout
