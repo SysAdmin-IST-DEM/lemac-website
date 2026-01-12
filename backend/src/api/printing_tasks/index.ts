@@ -4,6 +4,12 @@ import type { RequestWithBody } from '../../middleware/parseBody.js';
 import { type AddPrintTaskBody, EditPrintTaskBody } from '@lemac/data-model';
 import { bucket, minio } from '../../services/minio.js';
 import path from 'path';
+import {
+  sendEmail,
+  sendStatusChangedCustomerEmail,
+  sendSubmissionCustomerEmail,
+  sendSubmissionStaffEmail,
+} from '../../services/mail.js';
 
 export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBody>, res: Response) {
   if(!req.file) {
@@ -37,6 +43,10 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
 
   console.log(data);
 
+  // Send emails
+  await sendSubmissionCustomerEmail(req.body.email, data);
+  await sendSubmissionStaffEmail(data);
+
   return res.json(data);
 }
 
@@ -57,6 +67,11 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
     return res.sendStatus(403); // Forbidden - only admins can assign tasks to others
   }
 
+  const before = await controller.getPrintingTask(Number(id));
+  if (!before) return res.sendStatus(404);
+
+  const beforeStatus = before.status;
+
   const data = await controller.editPrintingTask(
     Number(id),
     req.body.name,
@@ -73,6 +88,13 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
     req.body.assignedId,
     req.body.completedAt
   )
+
+  // Status changed, send email to customer
+  if(beforeStatus !== data.status) {
+    if(data.status !== 'PENDING' && data.status !== 'WAITING') {
+      await sendStatusChangedCustomerEmail(data.email, data);
+    }
+  }
 
   res.json(data);
 }

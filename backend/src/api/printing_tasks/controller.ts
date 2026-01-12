@@ -26,6 +26,18 @@ export async function addPrintTask(name: string, modelFile: string, amount: numb
   });
 }
 
+export async function getPrintingTask(id: number) {
+  return prisma.printTask.findFirst({
+    where: {
+      id
+    },
+    include: {
+      material: true,
+      assigned: true
+    }
+  });
+}
+
 export async function getPrintingTasks() {
   return prisma.printTask.findMany({
     include: {
@@ -39,7 +51,7 @@ export async function editPrintingTask(id: number, name?: string, materialId?: n
                                        status?: PrintTaskStatus, amount?: number, studentName?: string,
                                        studentId?: string, email?: string, unit?: Unit,
                                        price?: number, deadline?: Date | null,
-                                       observations?: string, assignedId?: number,
+                                       observations?: string, assignedId?: number | null,
                                        completedAt?: Date | null) {
   return prisma.printTask.update({
     where: {
