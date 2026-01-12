@@ -22,6 +22,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "prisma-zod-generator": "^2.1.2"
+    "prisma-zod-generator": "^2.1.2",
+    "tsc": "^2.0.4"
   }
 }
