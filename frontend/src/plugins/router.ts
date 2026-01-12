@@ -106,7 +106,7 @@ const routes: RouteRecordRaw[] = [
         path: 'printing',
         name: 'dashboard-printing',
         component: Printing,
-        meta: { title: 'Monitor Schedule' },
+        meta: { title: '3D Printing' },
       },
       {
         path: 'drive',
