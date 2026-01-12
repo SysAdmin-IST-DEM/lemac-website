@@ -61,20 +61,15 @@ ALTER TABLE `room_hours` ADD CONSTRAINT `room_hours_user_id_fkey` FOREIGN KEY (`
 
 -- RedefineIndex
 CREATE INDEX `entries_workstation_id_idx` ON `entries`(`workstation_id`);
-DROP INDEX `workstation_id` ON `entries`;
 
 -- RedefineIndex
 CREATE INDEX `log_hours_user_id_idx` ON `log_hours`(`user_id`);
-DROP INDEX `user_id` ON `log_hours`;
 
 -- RedefineIndex
 CREATE INDEX `monitor_schedule_user_id_idx` ON `monitor_schedule`(`user_id`);
-DROP INDEX `user_id` ON `monitor_schedule`;
 
 -- RedefineIndex
 CREATE INDEX `room_hours_user_id_idx` ON `room_hours`(`user_id`);
-DROP INDEX `user_id` ON `room_hours`;
 
 -- RedefineIndex
 CREATE UNIQUE INDEX `users_ist_id_key` ON `users`(`ist_id`);
-DROP INDEX `ist_id` ON `users`;
