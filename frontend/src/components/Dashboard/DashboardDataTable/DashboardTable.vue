@@ -64,6 +64,8 @@
             {{ newButton }}
           </v-btn>
         </slot>
+
+        <slot name="toolbar-append" />
       </v-toolbar>
 
       <!-- Custom slot for dialogs -->
@@ -81,7 +83,7 @@
           :item="selectedItem"
           :fields="editFields"
           :on-initialization="editInitialization"
-          @edit="(item, values) => $emit('edit', selectedItem, values)"
+          @edit="(item: EditItem | null, values: EditItem) => { $emit('edit', selectedItem, values) }"
         >
           <template #title>
             {{ title }}
@@ -113,18 +115,32 @@
   </component>
 </template>
 
-<script>
-import { VDataTable } from 'vuetify/components';
-import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
+<script lang="ts">
+import { VDataTable, type VDataTableServer } from 'vuetify/components';
 import DashboardDeleteDialog from '@/components/Dashboard/DashboardDataTable/DashboardDeleteDialog.vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
+import type { PropType } from 'vue';
+import type { DynamicModelValue } from '@/types/Dashboard/DashboardDynamicField';
+import DashboardEditDialog, {
+  type EditField,
+  type EditItem,
+} from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
+
+export type TableHeader = {
+  readonly title: string,
+  readonly key: string,
+  readonly sortable?: boolean,
+  readonly filterable?: boolean,
+  readonly permission?: number
+}
 
 export default {
   name: 'DashboardTable',
   components: { DashboardEditDialog, DashboardDeleteDialog },
   props: {
     type : {
-      type: Object,
+      type: Object as PropType<VDataTable | VDataTableServer>,
       default: VDataTable,
     },
     title: {
@@ -132,11 +148,11 @@ export default {
       default: "Dashboard Table",
     },
     items: {
-      type: Array,
+      type: Array as PropType<EditItem[]>,
       required: true,
     },
     headers: {
-      type: Array,
+      type: Array as PropType<readonly TableHeader[]>,
       required: true,
     },
     hideHeader: {
@@ -153,11 +169,11 @@ export default {
       default: null,
     },
     editFields: {
-      type: Array,
+      type: Array as PropType<EditField[][]>,
       default: () => [],
     },
     editInitialization: {
-      type: Function,
+      type: Function as PropType<(item: EditItem) => EditItem>,
       default: () => {},
     },
     expand: {
@@ -166,12 +182,19 @@ export default {
     },
   },
   emits: ['delete', 'edit'],
-  data: () => ({
-    searchQuery: '',
-    selectedItem: null,
-    deleteDialog: false,
-    editDialog: false,
-  }),
+  data(): {
+    searchQuery: string,
+    selectedItem: EditItem | null,
+    deleteDialog: boolean,
+    editDialog: boolean
+  } {
+    return {
+        searchQuery: '',
+        selectedItem: null,
+        deleteDialog: false,
+        editDialog: false
+    }
+  },
   computed: {
     filterSlotHeaders() {
       return this.headers.filter((header) => this.$slots[`item.${header.key}`]);
@@ -179,15 +202,15 @@ export default {
     actionHeader() {
       return this.headers.find((header) => header.key === 'actions');
     },
-    ...mapGetters('user', ['getPermission'])
+    ...mapState(useUserStore, ['getPermission'])
   },
   mounted() {},
   methods: {
-    openDeleteDialog(item) {
+    openDeleteDialog(item: typeof this.items[number]) {
       this.selectedItem = item;
       this.deleteDialog = true;
     },
-    openEditDialog(item) {
+    openEditDialog(item: typeof this.items[number] | null) {
       this.selectedItem = item;
       this.editDialog = true;
     },

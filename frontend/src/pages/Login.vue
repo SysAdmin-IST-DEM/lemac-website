@@ -11,7 +11,7 @@
       cancel-color="success"
       cancel-text="Skip"
       :cancel-action="() => { $router.push('dashboard') }"
-      :handle-save-error="() => { $router.push('/') }"
+      :on-save-error="() => { $router.push('/') }"
       @edit="saveHours"
     >
       <template #prepend-title>
@@ -34,6 +34,7 @@
 <script>
 import { createHours, getLastEntry } from '@/api/hours.api';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
+import { DateTime } from 'luxon';
 export default {
   name: 'LoginPage',
   components: {
@@ -43,21 +44,21 @@ export default {
     return {
       editFields: [
         [
-          { key: 'entry_hours', type: 'time', label: 'Entry Hours', labelIcon: 'mdi-clock-time-four-outline', required: true },
-          { key: 'exit_hours', type: 'time', label: 'Exit Hours', labelIcon: 'mdi-clock-time-four-outline', required: true, rules: [
+          { key: 'entryHours', type: 'time', label: 'Entry Hours', labelIcon: 'mdi-clock-time-four-outline', required: true },
+          { key: 'exitHours', type: 'time', label: 'Exit Hours', labelIcon: 'mdi-clock-time-four-outline', required: true, rules: [
               (v) => {
-                if(v > this.$refs.editDialog.values['entry_hours']) return true;
+                if(v > this.$refs.editDialog.values['entryHours']) return true;
                 return 'Exit hours must be after entry hours';
               }
             ]
           },
         ],
         [
-          { key: 'entry_number', type: 'number', label: 'Entry Ticket', labelIcon: 'mdi-ticket-confirmation' },
-          { key: 'exit_number', type: 'number', label: 'Exit Ticket', labelIcon: 'mdi-ticket-confirmation' },
+          { key: 'entryNumber', type: 'number', label: 'Entry Ticket', labelIcon: 'mdi-ticket-confirmation', required: true },
+          { key: 'exitNumber', type: 'number', label: 'Exit Ticket', labelIcon: 'mdi-ticket-confirmation', required: true },
         ],
         [
-          { key: 'safe_amount', type: 'number', label: 'Money in Safe', labelIcon: 'mdi-safe-square-outline' },
+          { key: 'safeAmount', type: 'number', label: 'Money in Safe', labelIcon: 'mdi-safe-square-outline', required: true },
         ],
       ],
       showEditDialog: false,
@@ -70,19 +71,21 @@ export default {
   },
   methods: {
     onInitialization(event) {
+      console.log(event);
       return {
-        entry_number: event.exit_number,
-        safe_amount: event.safe_amount
+        entryNumber: event.exitNumber,
+        safeAmount: event.safeAmount
       }
     },
     async saveHours(event, values) {
-      const now = new Date().toJSON();
-      values.entry = now.slice(0, 11) + values.entry_hours + ':000Z';
-      values.exit = now.slice(0, 11) + values.exit_hours + ':000Z';
-      delete values.entry_hours;
-      delete values.exit_hours;
+      const [hEntry, mEntry] = values.entryHours.split(':').map(Number);
+      values.entry = DateTime.now().set({hour: hEntry, minute: mEntry, second: 0, millisecond: 0}).toUTC().toISO();
+      const [hExit, mExit] = values.exitHours.split(':').map(Number);
+      values.exit = DateTime.now().set({hour: hExit, minute: mExit, second: 0, millisecond: 0}).toUTC().toISO();
+      delete values.entryHours;
+      delete values.exitHours;
 
-      if(!values.exit_number) values.exit_number = values.entry_number;
+      if(!values.exitNumber) values.exitNumber = values.entryNumber;
 
       await createHours(values);
       this.$notify({

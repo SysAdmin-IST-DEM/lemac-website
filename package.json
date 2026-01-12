@@ -1,11 +1,12 @@
 {
   "name": "lemac-project",
-  "version": "0.0.0",
+  "version": "1.1.0",
   "description": "Hs project for lemac meant to control and keep track of the lab's usage",
   "private": true,
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "data-model"
   ],
   "scripts": {
     "format": "prettier \"**/*.{js,vue}\" --write",
@@ -27,12 +28,7 @@
   },
   "homepage": "https://github.com/SysAdmin-IST-DEM/lemac-website#readme",
   "devDependencies": {
-    "eslint": "^9.23.0",
-    "eslint-plugin-vue": "^10.0.0",
-    "eslint-plugin-vuetify": "^2.5.3",
-    "globals": "^16.0.0",
-    "prettier": "3.5.1",
-    "vue-eslint-parser": "^10.1.1"
+    "globals": "^16.0.0"
   },
   "packageManager": "yarn@4.6.0"
 }

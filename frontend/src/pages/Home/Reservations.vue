@@ -10,7 +10,7 @@ import HomeHeader from '@/components/Home/HomeHeader.vue';
 import HomeRoomCalendar from '@/components/Home/HomeRoomCalendar.vue';
 
 export default {
-  name: 'Home',
+  name: 'Reservations',
   components: {
     HomeHeader,
     HomeRoomCalendar,

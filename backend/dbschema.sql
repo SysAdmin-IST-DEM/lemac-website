@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `room_events` (
   `type` varchar(255),
   `user_id` int,
   `room_data_id` int,
-  `observations` text DEFAULT "",
+  `observations` text DEFAULT '',
   `created_at` timestamp DEFAULT (now())
 );
 CREATE TABLE IF NOT EXISTS `workstations` (

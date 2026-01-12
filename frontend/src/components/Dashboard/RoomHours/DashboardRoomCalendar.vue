@@ -25,40 +25,61 @@
             :on-initialization="editInitialization"
             @edit="editEvent"
           >
-            <template #title> Event </template>
+            <template #title>
+              Event
+            </template>
           </DashboardEditDialog>
         </template>
 
         <template #extra-event-details="{ event }">
           <span v-if="typeof event.details.id === 'number'">
             <b>Observations:</b>
-            <span v-for="e in event.details.events" :key="e.id">
-              <span v-if="e.observations" style="margin-bottom: 0">
+            <span
+              v-for="e in event.details.events"
+              :key="e.id"
+            >
+              <span
+                v-if="e.observations"
+                style="margin-bottom: 0"
+              >
                 {{ e.observations }}
               </span>
             </span>
           </span>
-          <p v-else>Description: {{ event.details.description }}</p>
+          <p v-else>
+            Description: {{ event.details.description }}
+          </p>
         </template>
 
-        <template #extra-event-details-actions="{ event }">
-          <v-btn
-            color="primary"
-            @click="
-              selectedEvent = event;
-              editEventDialog = true;
-            "
-          >
-            <v-icon>mdi-pencil-outline</v-icon>
-          </v-btn>
-          <v-spacer />
+        <template
+          #extra-event-details-actions="{ event }"
+        >
+          <div v-if="typeof event.details.id === 'number'">
+            <v-btn
+              color="primary"
+              @click="
+                selectedEvent = event;
+                editEventDialog = true;
+              "
+            >
+              <v-icon>mdi-pencil-outline</v-icon>
+            </v-btn>
+            <v-spacer />
 
-          <v-btn color="primary" @click="giveKey(event)">
-            {{ !event.givenKey ? 'Give key' : 'Receive key' }}
-          </v-btn>
-          <v-btn color="primary" variant="text" @click="deleteEvent(event.details)">
-            Delete
-          </v-btn>
+            <v-btn
+              color="primary"
+              @click="giveKey(event)"
+            >
+              {{ !event.givenKey ? 'Give key' : 'Receive key' }}
+            </v-btn>
+            <v-btn
+              color="primary"
+              variant="text"
+              @click="deleteEvent(event.details)"
+            >
+              Delete
+            </v-btn>
+          </div>
         </template>
       </RoomCalendar>
     </v-col>
@@ -67,16 +88,14 @@
 
 <script>
 import {
-  getHoursFenix,
-  getHours,
   createHours,
   deleteHours,
   updateHours,
-} from '@/api/room_hours.api.js';
-import { createEvent, getEvents } from '@/api/room_events.api.js';
-import moment from 'moment';
+} from '@/api/room_hours.api';
+import { createEvent } from '@/api/room_events.api';
 import RoomCalendar from '@/components/RoomCalendar.vue';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
+import { DateTime } from 'luxon';
 
 export default {
   components: { DashboardEditDialog, RoomCalendar },
@@ -93,7 +112,7 @@ export default {
       ],
       [
         { key: "name", label: "Name for reservation", required: true},
-        { key: "ist_id", label: "Ist ID (ist*)", required: true},
+        { key: "istId", label: "Ist ID (ist*)", required: true},
       ],
       [
         { key: "room", type: "select", label: "Room for reservation", labelIcon: "mdi-home-outline", required: true, props: { items: ['SDM', 'MOM', 'LTI'] } }
@@ -103,30 +122,30 @@ export default {
   methods: {
     editInitialization(event) {
       return {
-        entry: moment(event.start).format("HH:mm"),
-        exit: moment(event.end).format("HH:mm"),
-        date: moment(event.start).format("YYYY-MM-DD"),
-        ist_id: event.details.user.id,
-        name: event.details.user.name,
+        entry: DateTime.fromJSDate(event.start).toFormat("HH:mm"),
+        exit: DateTime.fromJSDate(event.end).toFormat("HH:mm"),
+        date: DateTime.fromJSDate(event.start).toUTC().startOf('day'),
+        istId: event.details.istId,
+        name: event.details.name,
         room: event.details.room
       };
     },
     async editEvent(event, values) {
-      values.entry = moment(values.date).format('YYYY-MM-DD') + 'T' + values.entry;
-      values.exit = moment(values.date).format('YYYY-MM-DD') + 'T' + values.exit;
-      values.reservation_id = values.ist_id;
+      console.log(typeof values.date)
+      values.entry = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.entry;
+      values.exit = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.exit;
 
       if (event) {
         values.givenKey = event.givenKey;
         const response = await updateHours(event.details.id, values);
         await createEvent({
           type: 'res_updated',
-          roomDataId: response.data.id,
+          roomReservationId: response.data.id,
         });
 
-        event.title = `Reservation of ${response.data.user.name}`;
-        event.start = moment(response.data.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm");
-        event.end = moment(response.data.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm");
+        event.title = `Reservation of ${response.data.name}`;
+        event.start = DateTime.fromISO(response.data.entry).toUTC().toFormat("yyyy-MM-dd HH:mm");
+        event.end = DateTime.fromISO(response.data.exit).toUTC().toFormat("yyyy-MM-dd HH:mm");
         event.customColor = this.$refs.calendar.colors[response.data.room] + (event.givenKey ? ' darken-4' : '');
         event.class = "bg-" + this.$refs.calendar.colors[response.data.room] + (event.givenKey ? '-darken-4' : '');
         event.details = response.data
@@ -136,19 +155,20 @@ export default {
           text: `You have updated entry ${response.data.id}`,
         });
       } else {
+        console.log(values)
         const response = await createHours(values);
         await createEvent({
           type: 'res_created',
-          roomDataId: response.data.id,
+          roomReservationId: response.data.id,
         });
 
         const event = response.data;
-        event.title = `Reservation of ${event.user.name}`;
+        event.title = `Reservation of ${event.name}`;
         this.$refs.calendar.events.push({
           id: event.id,
           title: event.title,
-          start: moment(event.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(event.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: DateTime.fromISO(event.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+          end: DateTime.fromISO(event.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
           customColor: this.$refs.calendar.colors[event.room],
           class: 'bg-' + this.$refs.calendar.colors[event.room],
           givenKey: false,
@@ -162,14 +182,17 @@ export default {
       }
     },
     async giveKey(event) {
+      console.log(event)
+      console.log(event.details.istId, typeof event.details.istId)
       const values = {
         entry: event.details.entry,
         exit: event.details.exit,
-        reservation_id: event.details.user.id,
+        istId: event.details.istId,
         room: event.details.room,
         name: event.details.user.name,
         givenKey: !event.givenKey,
       }
+      console.log(values);
 
       event.givenKey = !event.givenKey;
       event.customColor = this.$refs.calendar.colors[event.details.room] + (event.givenKey ? ' darken-4' : '');
@@ -179,7 +202,7 @@ export default {
       const response = await updateHours(event.details.id, values);
       await createEvent({
         type: event.givenKey ? 'key_received' : 'key_given',
-        roomDataId: response.data.id,
+        roomReservationId: response.data.id,
       });
 
       this.$notify({
@@ -195,7 +218,7 @@ export default {
 
       await createEvent({
         type: 'res_deleted',
-        roomDataId: event.id,
+        roomReservationId: event.id,
       });
 
       this.$notify({

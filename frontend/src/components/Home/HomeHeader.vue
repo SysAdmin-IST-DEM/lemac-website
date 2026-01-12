@@ -151,8 +151,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import { apiLogin } from '@/api/auth.api.js';
+import { mapState, mapActions } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
+import { apiLogin } from '@/api/auth.api';
 export default {
   name: 'HomeHeader',
   props: {
@@ -165,7 +166,7 @@ export default {
     drawer: false,
   }),
   computed: {
-    ...mapGetters('user', ['getId']),
+    ...mapState(useUserStore, ['getId']),
   },
   mounted() {
     const fenixCode = this.$route.query.code;
@@ -199,7 +200,7 @@ export default {
       }
       this.$router.push('login');
     },
-    ...mapActions('user', ['loginUser', 'logoutUser'])
+    ...mapActions(useUserStore, ['loginUser', 'logoutUser'])
   }
 };
 </script>

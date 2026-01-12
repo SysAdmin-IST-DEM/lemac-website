@@ -8,13 +8,7 @@
       <p class="mb-0 text-xl">
         Please login in order to request a software:
       </p>
-      <v-btn
-        color="primary"
-        size="small"
-        @click="loginFenix"
-      >
-        Authenticate
-      </v-btn>
+      <AuthenticateButton @authenticated="onAuthenticated" />
     </v-row>
     <HomeSoftware
       v-if="userComputed"
@@ -25,19 +19,19 @@
 
 <script>
 import HomeHeader from '@/components/Home/HomeHeader.vue';
-import { getFenixInfo } from '@/api/auth.api.js';
 import HomeSoftware from '@/components/Home/HomeSoftware.vue';
+import AuthenticateButton from '@/components/Home/AuthenticateButton.vue';
 
 export default {
-  name: 'Home',
+  name: 'Software',
   components: {
+    AuthenticateButton,
     HomeHeader,
     HomeSoftware,
   },
   data: () => ({
     loading: false,
     loadingOut: false,
-    personKey: 0,
     userData: null,
   }),
   computed: {
@@ -45,37 +39,10 @@ export default {
       return this.userData;
     },
   },
-  mounted() {
-    const fenixCode = this.$route.query.code;
-    if (fenixCode) this.getFenixInfo(fenixCode);
-  },
   methods: {
-    loginFenix() {
-      window.location = `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_SOFTWARE_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL_SOFTWARE}`;
+    onAuthenticated(data) {
+      this.userData = data;
     },
-    async getFenixInfo(code) {
-      this.loading = true;
-      try {
-        const { data } = await getFenixInfo(code);
-
-        if (JSON.stringify(data) == '{}') {
-          window.location = `${import.meta.env.VITE_FENIX_REDIRECT_URL_SOFTWARE}`;
-          return;
-        }
-
-        this.userData = data;
-        this.personKey++;
-      } catch (e) {
-        console.log(e);
-        this.$notify({
-          type: 'error',
-          title: 'Unauthorized user',
-          text: "You don't have permission to access this ",
-          duration: -1,
-        });
-      }
-      this.loading = false;
-    }
   },
 };
 </script>

@@ -14,8 +14,8 @@
         {{ (states.find(v => v.value === item.state)).text }}
       </v-chip>
     </template>
-    <template #[`item.last_modified`]="{ item }">
-      {{ getTimeDiff(item.last_modified) }}
+    <template #[`item.lastModified`]="{ item }">
+      {{ getTimeDiff(item.lastModified) }}
     </template>
   </DashboardTable>
 </template>
@@ -48,12 +48,12 @@ export default {
     headers: [
       { title: 'User', key: 'name' },
       { title: 'Workstation', key: 'workstation' },
-      { title: 'IST Id', key: 'ist_id' },
+      { title: 'IST Id', key: 'istId' },
       { title: 'Email', key: 'email', filterable: false },
       { title: 'Course', key: 'course' },
       { title: 'State', key: 'state' },
-      { title: 'Mifare ID', key: 'mifare_id', sortable: false, filterable: false },
-      { title: 'Time since last action', key: 'last_modified', sortable: false, filterable: false },
+      { title: 'Mifare ID', key: 'mifareId', sortable: false, filterable: false },
+      { title: 'Time since last action', key: 'lastModified', sortable: false, filterable: false },
     ],
     states: [
       { text: 'Online', value: "online", color: 'blue' },

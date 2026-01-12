@@ -6,13 +6,14 @@
 
 <script>
 import ScheduleCalendar from '@/components/Dashboard/Schedule/ScheduleCalendar.vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 
 export default {
   name: 'Rooms',
   components: { ScheduleCalendar },
   computed: {
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   methods: {
     goHome() {

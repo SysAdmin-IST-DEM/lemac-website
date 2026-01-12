@@ -64,17 +64,18 @@
 </template>
 
 <script>
-import { getUsers } from '@/api/user.api.js';
+import { getUsers } from '@/api/user.api';
 import {
   createHours,
   getHours,
   deleteHours,
   getOffDays,
-} from '@/api/schedule.api.js';
-import moment from 'moment';
-import { mapGetters } from 'vuex';
+} from '@/api/schedule.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import LemacCalendar from '@/components/LemacCalendar/LemacCalendar.vue';
 import ScheduleFooter from '@/components/Dashboard/Schedule/ScheduleFooter.vue';
+import { DateTime } from 'luxon';
 
 export default {
   components: { ScheduleFooter, LemacCalendar },
@@ -87,9 +88,9 @@ export default {
   }),
   computed: {
     offDaysDates() {
-      return this.offDays.map((val) => moment(val.date).format("YYYY-MM-DD"));
+      return this.offDays.map((val) => DateTime.fromISO(val.date).toFormat("yyyy-MM-dd"));
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.users = (await getUsers()).data;
@@ -105,16 +106,16 @@ export default {
         return {
           id: val.id,
           title: 'Unknown',
-          start: moment(val.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-          end: moment(val.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+          start: DateTime.fromISO(val.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"), // TODO toDate()??
+          end: DateTime.fromISO(val.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
           details: val
         };
 
       return {
         id: val.id,
         title: user.name,
-        start: moment(val.entry).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
-        end: moment(val.exit).utcOffset("+0000").format("YYYY-MM-DD HH:mm"),
+        start: DateTime.fromISO(val.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"), // TODO toDate()??
+        end: DateTime.fromISO(val.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
         backgroundColor: user.color,
         details: val
       };
@@ -140,8 +141,8 @@ export default {
 
       const response = (await createHours({
         userId: this.currentUser.id,
-        entry: moment(event.start).format('YYYY-MM-DDTHH:mm'),
-        exit: moment(event.end).format('YYYY-MM-DDTHH:mm')
+        entry: DateTime.fromJSDate(event.start).toUTC().toISO(),
+        exit: DateTime.fromJSDate(event.end).toUTC().toISO()
       })).data
       resolve({
         ...event,

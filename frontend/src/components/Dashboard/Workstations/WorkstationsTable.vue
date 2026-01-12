@@ -161,8 +161,9 @@
 </template>
 
 <script>
-import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api.js';
-import { mapGetters } from 'vuex';
+import { createWorkstation, deleteWorkstation, updateWorkstation } from '@/api/workstations.api';
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user.js';
 import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
 
 export default {
@@ -193,14 +194,14 @@ export default {
       { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
     ],
     types: [
-      { title: 'Active', value: 'active' },
-      { title: 'Disabled', value: 'disabled' },
-      { title: 'Remote', value: 'remote' },
+      { title: 'Active', value: 'ACTIVE' },
+      { title: 'Disabled', value: 'DISABLED' },
+      { title: 'Remote', value: 'REMOTE' },
     ],
     typeColors: {
-      active: 'green',
-      disabled: 'error',
-      remote: 'blue',
+      ACTIVE: 'green',
+      DISABLED: 'error',
+      REMOTE: 'blue',
     },
     expanded_dialog: null,
     expanded_dialog_item: null,
@@ -213,7 +214,7 @@ export default {
           { key: 'name', label: 'Name', required: true },
         ],
         [
-          { key: 'capacity', label: 'Capacity', required: true, props: { type: 'number' } },
+          { key: 'capacity', type: 'number', label: 'Capacity', required: true },
           { key: 'type', type: 'select', label: 'Type', required: true, props: { items: this.types } },
         ],
       ];
@@ -229,7 +230,7 @@ export default {
         }
       },
     },
-    ...mapGetters('user', ['getPermission']),
+    ...mapState(useUserStore, ['getPermission']),
   },
   mounted() {
     this.workstations = [...this.passedData];
@@ -247,6 +248,7 @@ export default {
       return Object.assign({}, item);
     },
     async editItem(item, values) {
+      console.log(values)
       if(item) {
         const response = await updateWorkstation(
           item.id,
