@@ -7,7 +7,7 @@
       :fields="editFields"
       :on-initialization="onInitialization"
       save-color="success"
-      :should-disable-cancel="true"
+      :should-disable-save="true"
       cancel-color="success"
       cancel-text="Skip"
       :cancel-action="() => { $router.push('dashboard') }"
@@ -55,7 +55,7 @@ export default {
         ],
         [
           { key: 'entryNumber', type: 'number', label: 'Entry Ticket', labelIcon: 'mdi-ticket-confirmation', required: true },
-          { key: 'exitNumber', type: 'number', label: 'Exit Ticket', labelIcon: 'mdi-ticket-confirmation', required: true },
+          { key: 'exitNumber', type: 'number', label: 'Exit Ticket', labelIcon: 'mdi-ticket-confirmation', required: false },
         ],
         [
           { key: 'safeAmount', type: 'number', label: 'Money in Safe', labelIcon: 'mdi-safe-square-outline', required: true },

@@ -26,28 +26,28 @@ export type AllowedComponent =
 
 type TimePickerCase = {
   type?: "time"
-  modelValue: string | null
+  modelValue: string | null | undefined
   rules?: ((v: DynamicModelValue | undefined) => boolean)[]
   props?: Partial<PropsOf<typeof VTimePicker>>
 }
 
 type DatePickerCase = {
   type?: "date"
-  modelValue: DateTime | DateTime[] | null
+  modelValue: DateTime | DateTime[] | null | undefined
   rules?: ((v: DynamicModelValue | undefined) => boolean)[]
   props?: Partial<PropsOf<typeof VDatePicker>>
 }
 
 type TextFieldCase = {
   type?: "text"
-  modelValue: string | null
+  modelValue: string | null | undefined
   rules?: ((v: DynamicModelValue | undefined) => boolean)[]
   props?: Partial<PropsOf<typeof VTextField>>
 }
 
 type AutoCompleteCase = {
   type?: "autocomplete"
-  modelValue: string | string[] | null
+  modelValue: string | string[] | null | undefined
   rules?: ((v: DynamicModelValue | undefined) => boolean)[]
   props?: Partial<PropsOf<typeof VAutocomplete>>
 }
@@ -68,14 +68,14 @@ type TextAreaCase = {
 
 type SelectCase = {
   type: "select"
-  modelValue: string | string[] | null
+  modelValue: string | string[] | null | undefined
   rules?: ((v: DynamicModelValue | undefined) => boolean)[]
   props?: Partial<PropsOf<typeof VSelect>>
 }
 
 type NumberInputCase = {
   type: "number"
-  modelValue: number | null
+  modelValue: number | null | undefined
   rules?: ((v: DynamicModelValue | undefined) => boolean)[]
   props?: Partial<PropsOf<typeof VNumberInput>>
 }

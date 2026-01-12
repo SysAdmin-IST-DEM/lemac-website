@@ -68,7 +68,7 @@
         <v-btn
           :color="saveColor"
           variant="text"
-          :disabled="cancelDisabled"
+          :disabled="saveDisabled"
           @click="confirm"
         >
           {{ saveText }}
@@ -108,7 +108,7 @@ const props = withDefaults(
     fields: EditField[][],
     onInitialization?: (item: EditItem) => EditItem,
     maxWidth?: string | number,
-    shouldDisableCancel?: boolean
+    shouldDisableSave?: boolean
     cancelText?: string,
     cancelColor?: string,
     cancelAction?: () => void,
@@ -119,7 +119,7 @@ const props = withDefaults(
   {
     onInitialization: () => {return {} as EditItem},
     maxWidth: '550px',
-    shouldDisableCancel: false,
+    shouldDisableSave: false,
     cancelText: 'Cancel',
     cancelColor: 'primary',
     cancelAction: undefined,
@@ -155,15 +155,15 @@ const handleCancel = () => {
   }
 }
 
-const cancelDisabled = computed(() => {
-  if(props.shouldDisableCancel) {
+const saveDisabled = computed(() => {
+  if(props.shouldDisableSave) {
     for(const row of props.fields) {
       for (const field of row) {
         if(field.required && (values.value[field.key] == null || values.value[field.key] === '')) {
           return true;
         }
         for(const rule of field.rules ?? []) {
-          if (rule(values.value[field.key]) !== true) {
+          if (!rule(values.value[field.key])) {
             return true;
           }
         }
@@ -229,4 +229,6 @@ watch(() => props.modelValue,
     }
   }
 )
+
+defineExpose({ values });
 </script>
