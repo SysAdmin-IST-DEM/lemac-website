@@ -239,7 +239,7 @@ export default {
       this.$notify({
         type: 'success',
         title: 'Submission Successful',
-        text: `Your printing task (ID: ${task.id}) has been submitted successfully!`,
+        text: `Your printing task (ID: ${task.id}) has been submitted successfully! Please check your email for further instructions.`,
       });
     },
     fillForm(data: { name: string; username: string; institutionalEmail: string }) {
