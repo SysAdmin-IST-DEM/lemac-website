@@ -1617,6 +1617,7 @@ __metadata:
   dependencies:
     prisma: "npm:^7.2.0"
     prisma-zod-generator: "npm:^2.1.2"
+    typescript: "npm:^5.9.3"
     zod: "npm:^4.1.12"
   languageName: unknown
   linkType: soft

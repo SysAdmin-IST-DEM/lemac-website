@@ -23,6 +23,6 @@
   },
   "devDependencies": {
     "prisma-zod-generator": "^2.1.2",
-    "tsc": "^2.0.4"
+    "typescript": "^5.9.3"
   }
 }
