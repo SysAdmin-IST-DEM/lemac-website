@@ -44,7 +44,7 @@ export async function sendSubmissionCustomerEmail(to: string, task: PrintTaskWit
           A follow up message will be sent to you soon, please wait further instructions.
           
                 Task Name: ${task.name}
-                First Name: ${task.studentName}
+                Student Name: ${task.studentName}
                 IST ID: ${task.studentId}
                 Unit of file: ${task.unit}
                 Material: ${task.material.name}
@@ -100,14 +100,14 @@ export async function sendSubmissionStaffEmail(task: PrintTaskWithMaterial): Pro
           Submission details:
           
                 Task Name: ${task.name}
-                First Name: ${task.studentName}
+                Student Name: ${task.studentName}
                 IST ID: ${task.studentId}
                 Unit of file: ${task.unit}
                 Material: ${task.material.name}
                 Price (€): ${task.price}
                 Extra-Notes: ${task.observations}
           
-          Claim this submission via the LEMAC Staff Dashboard, or by clicking <a href="http://lemac.tecnico.ulisboa.pt/staff/printing-tasks">here</a>.
+          Claim this submission via the LEMAC Staff Dashboard, or by going to http://lemac.tecnico.ulisboa.pt/staff/printing-tasks.
           
           Thank you,
           LEMAC
