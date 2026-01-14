@@ -132,7 +132,6 @@ export default {
       };
     },
     async editEvent(event, values) {
-      console.log(typeof values.date)
       values.entry = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.entry;
       values.exit = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.exit;
 
@@ -156,7 +155,6 @@ export default {
           text: `You have updated entry ${response.data.id}`,
         });
       } else {
-        console.log(values)
         const response = await createHours(values);
         await createEvent({
           type: RoomEventType.RES_CREATED,
@@ -183,8 +181,6 @@ export default {
       }
     },
     async giveKey(event) {
-      console.log(event)
-      console.log(event.details.istId, typeof event.details.istId)
       const values = {
         entry: event.details.entry,
         exit: event.details.exit,
@@ -193,7 +189,6 @@ export default {
         name: event.details.user.name,
         givenKey: !event.givenKey,
       }
-      console.log(values);
 
       event.givenKey = !event.givenKey;
       event.customColor = this.$refs.calendar.colors[event.details.room] + (event.givenKey ? ' darken-4' : '');
@@ -202,7 +197,7 @@ export default {
 
       const response = await updateHours(event.details.id, values);
       await createEvent({
-        type: event.givenKey ? 'key_received' : 'key_given',
+        type: event.givenKey ? RoomEventType.KEY_RECEIVED : RoomEventType.KEY_GIVEN,
         roomReservationId: response.data.id,
       });
 
