@@ -3,7 +3,7 @@
     title="Materials"
     :headers="headers"
     :items="materials"
-    new-button="New Material"
+    :new-button="getPermission === 1 ? 'New Material' : undefined"
     :edit-initialization="editInitialization"
     :edit-fields="editFields"
     :loading="loading"
@@ -24,6 +24,8 @@ import {
 } from '@/api/printingMaterials.api.ts';
 import type { EditField } from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import type { PrintMaterial } from '@lemac/data-model/browser';
+import { mapState } from 'pinia';
+import { useUserStore } from '@/stores/user.ts';
 
 export default {
   name: 'PrintingMaterials',
@@ -38,7 +40,7 @@ export default {
       { title: 'Name', key: 'name' },
       { title: 'Price Multiplier', key: 'priceMultiplier' },
       { title: 'Description', key: 'description' },
-      { title: 'Actions', key: 'actions', sortable: false, filterable: false },
+      { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
     ],
     editFields: [
       [
@@ -56,6 +58,9 @@ export default {
     materials: [],
     loading: true,
   }),
+  computed: {
+    ...mapState(useUserStore, ['getPermission']),
+  },
   async mounted() {
     this.materials = (await getPrintingMaterials()).data;
     this.loading = false;
