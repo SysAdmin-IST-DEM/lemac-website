@@ -96,6 +96,7 @@ import { createEvent } from '@/api/room_events.api';
 import RoomCalendar from '@/components/RoomCalendar.vue';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import { DateTime } from 'luxon';
+import { RoomEventType } from '@lemac/data-model/browser';
 
 export default {
   components: { DashboardEditDialog, RoomCalendar },
@@ -139,7 +140,7 @@ export default {
         values.givenKey = event.givenKey;
         const response = await updateHours(event.details.id, values);
         await createEvent({
-          type: 'res_updated',
+          type: RoomEventType.RES_UPDATED,
           roomReservationId: response.data.id,
         });
 
@@ -158,7 +159,7 @@ export default {
         console.log(values)
         const response = await createHours(values);
         await createEvent({
-          type: 'res_created',
+          type: RoomEventType.RES_CREATED,
           roomReservationId: response.data.id,
         });
 
@@ -217,7 +218,7 @@ export default {
       this.$refs.calendar.$refs.lemacCalendar.closeEvent();
 
       await createEvent({
-        type: 'res_deleted',
+        type: RoomEventType.RES_DELETED,
         roomReservationId: event.id,
       });
 
