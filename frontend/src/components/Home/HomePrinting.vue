@@ -1,6 +1,9 @@
 <template>
   <v-card class="px-4 mx-auto">
-    <v-form @submit.prevent>
+    <v-form
+      ref="form"
+      @submit.prevent
+    >
       <h1 class="w-full text-4xl font-medium text-center m-6!">3D Printing submission form:</h1>
 
       <v-row>
@@ -19,6 +22,7 @@
         <v-text-field
           v-model="values.studentName"
           label="Full Name"
+          :rules="[requiredRule]"
           required
           prepend-icon="mdi-account"
           variant="underlined"
@@ -30,7 +34,7 @@
         <v-text-field
           v-model="values.studentId"
           label="IST-ID"
-          :rules="[(v: string) => (/^ist[12]\d{5,6}$/.test(v) ? true : '')]"
+          :rules="[(v: string) => (/^ist[12]\d{5,6}$/.test(v) ? true : 'Invalid format for IST-ID'), requiredRule]"
           required
           prepend-icon="mdi-id-card"
           variant="underlined"
@@ -40,6 +44,7 @@
         <v-text-field
           v-model="values.email"
           label="Técnico Webmail"
+          :rules="[requiredRule]"
           required
           prepend-icon="mdi-at"
           variant="underlined"
@@ -52,6 +57,7 @@
           v-model="values.unit"
           :items="units"
           label="Unit of file"
+          :rules="[requiredRule]"
           required
           prepend-icon="mdi-map-marker-distance"
           variant="underlined"
@@ -61,6 +67,7 @@
         <v-file-input
           v-model="modelFile"
           label="Model STL"
+          :rules="[requiredRule]"
           required
           prepend-icon="mdi-paperclip"
           variant="underlined"
@@ -73,6 +80,7 @@
           item-title="name"
           item-value="id"
           label="Material"
+          :rules="[requiredRule]"
           required
           prepend-icon="mdi-palette-swatch"
           variant="underlined"
@@ -84,7 +92,6 @@
         <v-textarea
           v-model="values.observations"
           label="Additional Notes"
-          required
           prepend-icon="mdi-text"
           variant="outlined"
           class="m-1!"
@@ -110,7 +117,7 @@
             type="submit"
             class="mb-6"
             color="primary"
-            @click="submitDialog = true"
+            @click="trySubmit"
           >
             Submit
           </v-btn>
@@ -165,6 +172,7 @@ export default {
     volume: number;
     boundingBoxSize: THREE.Vector3;
     submitDialog: boolean;
+    requiredRule: (v: unknown) => string | boolean;
   } {
     return {
       values: initialData,
@@ -174,12 +182,13 @@ export default {
       volume: 0,
       boundingBoxSize: new THREE.Vector3(0, 0, 0),
       submitDialog: false,
+      requiredRule: (v: unknown) => (!!v || v === 0) || 'Required',
     };
   },
   computed: {
     selectedMaterial() {
       return this.materials.find((material) => material.id === this.values.materialId);
-    },
+    }
   },
   watch: {
     async modelFile() {
@@ -215,7 +224,6 @@ export default {
         return;
       }
       const { rawVolume, boundingBoxSize } = await this.calculateVolume(this.modelFile);
-      console.log('RV:', rawVolume);
       this.boundingBoxSize = new THREE.Vector3(
         this.convertDistance(boundingBoxSize.x, this.values.unit, Unit.CENTIMETERS),
         this.convertDistance(boundingBoxSize.y, this.values.unit, Unit.CENTIMETERS),
@@ -223,13 +231,17 @@ export default {
       );
       this.volume = this.convertVolume(rawVolume, this.values.unit, Unit.CENTIMETERS);
       this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
-    },
+    }
   },
   async mounted() {
-    this.materials = (await getPrintingMaterials()).data;
+    this.materials = (await getPrintingMaterials()).data.filter(m => m.active);
     initialData.materialId = this.materials[0]?.id || 0;
   },
   methods: {
+    async trySubmit() {
+      const { valid } = await (this.$refs.form as any).validate();
+      if(valid) this.submitDialog = true;
+    },
     async submit() {
       const task = (await addPrintTask(this.modelFile!, this.values)).data;
       this.submitDialog = false;
