@@ -6,10 +6,19 @@
     :new-button="getPermission === 1 ? 'New Material' : undefined"
     :edit-initialization="editInitialization"
     :edit-fields="editFields"
-    :loading="loading"
     @edit="editItem"
     @delete="deleteItem"
-  />
+  >
+    <template #[`item.active`]="{ item }">
+      <v-chip
+        :color="(states.find((v) => v.value === item.active) || {}).color"
+        variant="elevated"
+        class="capitalized"
+      >
+        {{ (states.find((v) => v.value === item.active) || {}).title }}
+      </v-chip>
+    </template>
+  </DashboardTable>
 </template>
 
 <script lang="ts">
@@ -32,38 +41,43 @@ export default {
   components: { DashboardTable },
   data: (): {
     headers: TableHeader[];
-    editFields: EditField[][];
     materials: PrintMaterial[];
-    loading: boolean;
+    states: { title: string, value: boolean, color: string }[];
   } => ({
     headers: [
       { title: 'Name', key: 'name' },
       { title: 'Price Multiplier', key: 'priceMultiplier' },
-      { title: 'Description', key: 'description' },
+      { title: 'State', key: 'active', filterable: false },
+      { title: 'Short Description', key: 'description' },
       { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
     ],
-    editFields: [
-      [
-        { label: 'Name', key: 'name', type: 'text', required: true },
-        {
-          label: 'Price Multiplier',
-          key: 'priceMultiplier',
-          type: 'number',
-          required: true,
-          props: { precision: 5 },
-        },
-      ],
-      [{ label: 'Description', key: 'description', type: 'textarea' }],
-    ],
     materials: [],
-    loading: true,
+    states: [
+      { title: 'Active', value: true, color: 'success' },
+      { title: 'Inactive', value: false, color: 'error' },
+    ]
   }),
   computed: {
+    editFields(): EditField[][] {
+      return [
+        [
+          { label: 'Name', key: 'name', type: 'text', required: true },
+          {
+            label: 'Price Multiplier',
+            key: 'priceMultiplier',
+            type: 'number',
+            required: true,
+            props: { precision: 5 },
+          },
+        ],
+        [{ key: 'active', type: 'select', required: true, props: { items: this.states }}],
+        [{ label: 'Description', key: 'description', type: 'textarea' }],
+      ];
+    },
     ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
     this.materials = (await getPrintingMaterials()).data;
-    this.loading = false;
   },
   methods: {
     editInitialization(item: PrintMaterial) {

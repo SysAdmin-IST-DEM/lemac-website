@@ -102,7 +102,11 @@
           </v-list-item>
         </v-list>
 
-        <v-file-upload density="compact" variant="compact" />
+        <v-file-upload
+          density="compact"
+          variant="compact"
+          disabled
+        />
       </v-col>
     </template>
 
