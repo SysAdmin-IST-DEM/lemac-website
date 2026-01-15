@@ -72,8 +72,9 @@
     :item="selectedTask"
     :fields="detailsFields"
     :on-initialization="onDetailsInit"
-    @edit="editTask"
+    :readonly="selectedTask?.status === PrintTaskStatus.WAITING"
     max-width="1500px"
+    @edit="editTask"
   >
     <template #prepend-title>
       <div />
@@ -103,6 +104,14 @@
 
         <v-file-upload density="compact" variant="compact" />
       </v-col>
+    </template>
+
+    <template
+      v-if="selectedTask?.status === PrintTaskStatus.WAITING"
+      #footer
+    >
+      <v-spacer />
+      <span class="text-red-400">You can only edit this task if it is assigned to a monitor.</span>
     </template>
   </DashboardEditDialog>
 </template>
@@ -207,7 +216,7 @@ export default {
             type: 'select',
             label: 'Status',
             props: {
-              items: Object.values(PrintTaskStatus),
+              items: Object.values(PrintTaskStatus).filter((s => s !== PrintTaskStatus.WAITING)),
             },
           },
         ],

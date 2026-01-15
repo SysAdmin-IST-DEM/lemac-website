@@ -84,7 +84,8 @@ type Common = {
   wrapper?: 'menu' | 'dialog' | '',
   label?: string,
   labelIcon?: IconValue,
-  required?: boolean
+  required?: boolean,
+  readonly?: boolean
 }
 
 export type DynamicFieldProps =

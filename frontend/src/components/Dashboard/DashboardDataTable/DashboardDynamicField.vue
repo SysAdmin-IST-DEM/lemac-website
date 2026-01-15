@@ -12,7 +12,7 @@
     <template #activator="{ props: activatorProps }">
       <v-text-field
         v-model="formattedInternalValue"
-        v-bind="activatorProps"
+        v-bind="readonly ? {} : activatorProps"
         :label="label"
         :prepend-icon="labelIcon"
         variant="underlined"
@@ -61,6 +61,7 @@
     :variant="(props.props as any).variant ? (props.props as any).variant : 'underlined'"
     :required="required"
     :rules="validationRules"
+    :readonly="readonly"
   />
 </template>
 
@@ -91,6 +92,7 @@ const props = withDefaults(
     label: '',
     labelIcon: '',
     required: false,
+    readonly: false,
     rules: () => [],
     props: () => ({}),
   }

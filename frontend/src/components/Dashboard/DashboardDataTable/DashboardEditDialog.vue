@@ -46,6 +46,7 @@
                       :label-icon="field.labelIcon"
                       :required="field.required"
                       :rules="field.rules"
+                      :readonly="readonly"
                     />
                   </v-col>
                 </v-row>
@@ -57,6 +58,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
+        <slot name="footer"></slot>
         <v-spacer />
         <v-btn
           :color="cancelColor"
@@ -115,6 +117,7 @@ const props = withDefaults(
     saveText?: string,
     saveColor?: string,
     onSaveError?: (e: unknown) => void,
+    readonly?: boolean
   }>(),
   {
     onInitialization: () => {return {} as EditItem},
@@ -125,7 +128,8 @@ const props = withDefaults(
     cancelAction: undefined,
     saveText: 'Save',
     saveColor: 'primary',
-    onSaveError: undefined
+    onSaveError: undefined,
+    readonly: false
   }
 );
 
