@@ -1,6 +1,6 @@
 {
   "name": "lemac-backend",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Hs project for lemac meant to control and keep track of the lab's usage",
   "type": "module",
   "scripts": {
