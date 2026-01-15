@@ -71,8 +71,8 @@ export default {
       { title: 'User', value: false, color: 'blue' },
     ],
     states: [
-      { title: 'Active', value: true, color: 'error' },
-      { title: 'Inactive', value: false, color: 'success' },
+      { title: 'Active', value: true, color: 'success' },
+      { title: 'Inactive', value: false, color: 'error' },
     ],
   }),
   computed: {
