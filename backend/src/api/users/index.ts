@@ -1,5 +1,7 @@
 import * as controller from './controller.js';
 import type { Request, Response } from 'express';
+import type { RequestWithBody } from '../../middleware/parseBody.js';
+import type { EditUserBody } from '@lemac/data-model';
 
 export async function addUser(req: Request, res: Response) {
   //verifies if the user exists to make sure its authorized to do the operation
@@ -36,7 +38,7 @@ export async function getUsers(req: Request, res: Response) {
   }
 }
 
-export async function updateUser(req: Request, res: Response) {
+export async function updateUser(req: RequestWithBody<typeof EditUserBody>, res: Response) {
   const id = parseInt(req.params.id as string);
   if (req.body && req.body.istId && req.body.istId.match(/^ist\d+$/) && req.body.name) {
     const data = await controller.updateUser(id, req.body);

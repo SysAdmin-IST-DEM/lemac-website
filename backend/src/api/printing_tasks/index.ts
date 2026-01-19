@@ -5,7 +5,6 @@ import { type AddPrintTaskBody, EditPrintTaskBody } from '@lemac/data-model';
 import { bucket, minio } from '../../services/minio.js';
 import path from 'path';
 import {
-  sendEmail,
   sendStatusChangedCustomerEmail,
   sendSubmissionCustomerEmail,
   sendSubmissionStaffEmail,

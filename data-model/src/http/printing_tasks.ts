@@ -1,16 +1,17 @@
 import { z } from "zod";
 import {
-  PrintTaskCreateInputObjectZodSchema,
+  PrintTaskUncheckedCreateInputObjectZodSchema,
 } from '../generated/zod-prisma/schemas/index.js';
 
-export const AddPrintTaskBody = PrintTaskCreateInputObjectZodSchema.omit({
+// Add Print Task
+
+export const AddPrintTaskBody = PrintTaskUncheckedCreateInputObjectZodSchema.omit({
+  id: true,
   modelFiles: true,
   status: true,
   createdAt: true,
-  material: true,
   price: true,
   name: true,
-  assigned: true
 }).extend({
   materialId: z.coerce.number(),
   price: z.coerce.number()
@@ -18,16 +19,12 @@ export const AddPrintTaskBody = PrintTaskCreateInputObjectZodSchema.omit({
 
 export type AddPrintTaskBody = z.infer<typeof AddPrintTaskBody>;
 
-// Edit Print Material
+// Edit Print Task
 
-export const EditPrintTaskBody = PrintTaskCreateInputObjectZodSchema.partial().omit({
+export const EditPrintTaskBody = PrintTaskUncheckedCreateInputObjectZodSchema.partial().omit({
+  id: true,
   modelFiles: true,
   createdAt: true,
-  material: true,
-  assigned: true
-}).extend({
-  materialId: z.number().optional(),
-  assignedId: z.number().nullable().optional()
 });
 
 export type EditPrintTaskBody = z.infer<typeof EditPrintTaskBody>;
