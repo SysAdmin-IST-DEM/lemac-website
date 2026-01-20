@@ -134,10 +134,16 @@ export default {
       this.drawer = true;
     },
   },
-  mounted() {
+  async mounted() {
     const printingRoute = this.routes.find(route => route.link === '/dashboard/printing');
     if (printingRoute) {
-      this.updateNotifications(printingRoute);
+      const count = await this.updateNotifications(printingRoute);
+      this.$notify({
+        type: 'info',
+        title: 'Printing Notifications',
+        text: `You have ${count} pending print tasks.`,
+        mode: 'html'
+      });
       setInterval(this.updateNotifications, 60000, printingRoute);
     }
   },
@@ -149,15 +155,10 @@ export default {
         task.status !== PrintTaskStatus.CANCELLED &&
         (task.status === PrintTaskStatus.WAITING || task.assignedId === this.getId)).length;
       if(count != route.notifications) {
-        this.$notify({
-          type: 'info',
-          title: 'Printing Notifications',
-          text: `You have ${count} pending print tasks.`,
-          mode: 'html'
-        });
         route.notifications = count;
       }
       console.log("Updated with " + route.notifications + " printing notifications.");
+      return count;
     },
     onLogout: function () {
       localStorage.removeItem('token');
