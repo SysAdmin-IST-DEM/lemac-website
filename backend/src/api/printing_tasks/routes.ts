@@ -11,7 +11,7 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024, },
   fileFilter: (req, file, cb) => {
-    const allowedExt = [".stl", ".obj", ".3mf"];
+    const allowedExt = [".stl"];
     const ext = path.extname(file.originalname).toLowerCase();
     if (!allowedExt.includes(ext)) return cb(new Error("Only 3D model files are allowed"));
     cb(null, true);

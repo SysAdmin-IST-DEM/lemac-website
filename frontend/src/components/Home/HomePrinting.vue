@@ -68,6 +68,7 @@
           v-model="modelFile"
           label="Model STL"
           :rules="[requiredRule]"
+          accept=".stl"
           required
           prepend-icon="mdi-paperclip"
           variant="underlined"
