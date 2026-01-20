@@ -115,7 +115,7 @@ export default {
           text: '3D Printing',
           icon: 'mdi-printer-3d',
           link: '/dashboard/printing',
-          notifications: 0
+          notifications: undefined
         },
       ],
     };
@@ -143,10 +143,9 @@ export default {
           type: 'info',
           title: 'Printing Notifications',
           text: `You have ${count} pending print tasks.`,
-          mode: 'html'
         });
       }
-      setInterval(this.updateNotifications, 60000, printingRoute);
+      setInterval(this.updateNotifications, 10000, printingRoute);
     }
   },
   methods: {
@@ -156,9 +155,14 @@ export default {
         task.status !== PrintTaskStatus.DELIVERED &&
         task.status !== PrintTaskStatus.CANCELLED &&
         (task.status === PrintTaskStatus.WAITING || task.assignedId === this.getId)).length;
-      if(count != route.notifications) {
-        route.notifications = count;
+      if(route.notifications !== undefined && count > route.notifications) {
+        this.$notify({
+          type: 'info',
+          title: 'Printing Notifications',
+          text: `There are new print tasks pending your attention.`,
+        });
       }
+      route.notifications = count;
       console.log("Updated with " + route.notifications + " printing notifications.");
       return count;
     },
