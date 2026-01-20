@@ -282,6 +282,13 @@ export default {
             props: { precision: 2 },
           },
         ],
+        [
+          {
+            key: 'observations',
+            type: 'textarea',
+            label: 'Observations'
+          }
+        ]
       ];
     },
     ...mapState(useUserStore, ['getId', 'getPermission']),
