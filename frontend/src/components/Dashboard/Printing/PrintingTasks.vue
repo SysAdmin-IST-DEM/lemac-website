@@ -171,7 +171,7 @@ export default {
       rawItems: [],
       showFilter: 'New and Assigned',
       statusDictionary: {
-        WAITING: ['Waiting', 'yellow'],
+        WAITING: ['Waiting', 'warning'],
         PENDING: ['Pending', 'blue'],
         IN_QUEUE: ['In Queue', 'orange'],
         PRINTING: ['Printing', 'purple'],
