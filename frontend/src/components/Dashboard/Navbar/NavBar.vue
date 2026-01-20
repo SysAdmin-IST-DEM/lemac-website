@@ -138,12 +138,14 @@ export default {
     const printingRoute = this.routes.find(route => route.link === '/dashboard/printing');
     if (printingRoute) {
       const count = await this.updateNotifications(printingRoute);
-      this.$notify({
-        type: 'info',
-        title: 'Printing Notifications',
-        text: `You have ${count} pending print tasks.`,
-        mode: 'html'
-      });
+      if(count > 0) {
+        this.$notify({
+          type: 'info',
+          title: 'Printing Notifications',
+          text: `You have ${count} pending print tasks.`,
+          mode: 'html'
+        });
+      }
       setInterval(this.updateNotifications, 60000, printingRoute);
     }
   },
