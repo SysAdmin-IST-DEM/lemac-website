@@ -4,7 +4,7 @@ import type { Request, Response } from 'express';
 export async function createEvent(req: Request, res: Response) {
   if (req.body && req.body.type && req.body.roomReservationId) {
     const data = await controller.createEvent(
-      req.body.type.toUpperCase(), // TODO: temporary fix for prisma issue
+      req.body.type,
       req.user!.id,
       req.body.roomReservationId
     );
@@ -32,7 +32,7 @@ export async function editEvent(req: Request, res: Response) {
   const id = parseInt(req.params.id as string);
   if (req.body && req.body.type && req.body.roomReservationId) {
     const data = await controller.editEvent(
-      req.body.type.toUpperCase(), // TODO: temporary fix for prisma issue
+      req.body.type,
       id,
       req.body.roomReservationId,
       req.body.observations

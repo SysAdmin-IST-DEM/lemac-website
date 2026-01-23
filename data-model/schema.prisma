@@ -34,9 +34,9 @@ model User {
 }
 
 enum WorkstationStatus {
-  ACTIVE   @map("active")
-  DISABLED @map("disabled")
-  REMOTE   @map("remote")
+  ACTIVE
+  DISABLED
+  REMOTE
 }
 
 model Workstation {
@@ -67,9 +67,9 @@ model Entry {
 }
 
 enum LemacUserState {
-  ONLINE   @map("online")
-  IN_BREAK @map("in_break")
-  OFFLINE  @map("offline")
+  ONLINE
+  IN_BREAK
+  OFFLINE
 
   @@map("lemac_users_state")
 }
@@ -144,11 +144,11 @@ model Publication {
 }
 
 enum RoomEventType {
-  RES_CREATED  @map("res_created")
-  RES_UPDATED  @map("res_updated")
-  RES_DELETED  @map("res_deleted")
-  KEY_GIVEN    @map("key_given")
-  KEY_RECEIVED @map("key_received")
+  RES_CREATED
+  RES_UPDATED
+  RES_DELETED
+  KEY_GIVEN
+  KEY_RECEIVED
 }
 
 model RoomEvent {
