@@ -1,8 +1,5 @@
 import * as controller from './controller.js';
 import type { Request, Response } from 'express';
-import { WorkstationStatus } from '@lemac/data-model';
-
-const types = [WorkstationStatus.ACTIVE, WorkstationStatus.DISABLED, WorkstationStatus.REMOTE];
 
 export async function addWorkstation(req: Request, res: Response) {
   //if the request body has proper structure inserts it db
@@ -10,7 +7,7 @@ export async function addWorkstation(req: Request, res: Response) {
     req.body &&
     req.body.name &&
     !!req.body.capacity &&
-    types.find((x) => x === req.body.type)
+    req.body.type
   ) {
     const data = await controller.addWorkstation(req.body);
     if (data === 'ER_DUP_ENTRY') {
@@ -54,7 +51,7 @@ export async function updateWorkstation(req: Request, res: Response) {
   if (
     req.body &&
     req.body.name &&
-    types.find((x) => x === req.body.type) &&
+    req.body.type &&
     req.body.softwares &&
     req.body.problems
   ) {
