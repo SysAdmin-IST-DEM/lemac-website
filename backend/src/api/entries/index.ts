@@ -12,7 +12,6 @@ export async function addEntry(req: Request, res: Response) {
     (await workstationsController.checkWorkstation(req.body.workstationId))
   ) {
     const data = await controller.addEntry(req.body.istId, req.body.workstationId);
-    await workstationsController.changeOccupation(req.body.workstationId, 1);
 
     res.json({
       ...data,
