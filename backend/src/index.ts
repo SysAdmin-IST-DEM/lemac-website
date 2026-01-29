@@ -68,7 +68,7 @@ api.init(app, wsServer);
 await ensureBucket();
 
 /* Start Server */
-const server = app.listen(port, "0.0.0.0", () => {
+const server = app.listen(port, () => {
   console.log(`lemac-backend listening on http://localhost:${port}`);
 });
 

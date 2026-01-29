@@ -131,12 +131,3 @@ export default defineComponent({
     </v-row>
   </v-container>
 </template>
-
-<style scoped>
-.hero {
-  background-image: url("@/assets/lemac.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-</style>
