@@ -54,16 +54,14 @@
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-start w-full px-8 py-4">
-      <div class="mr-2 text-lg font-semibold lg:text-4xl">
-        Avisos:
-      </div>
-      <div class="flex flex-col items-center justify-start h-full grow">
+    <div class="text-center mx-auto mt-2 max-w-200">
+      <div class="">
         <div
           v-for="pub in publications"
+          :key="pub.id"
           class="text-sm whitespace-pre-wrap lg:text-lg"
         >
-          <b>{{ pub.title }}</b> : {{ pub.text }}
+          <b>{{ pub.title }}</b>: {{ pub.text }}
         </div>
       </div>
     </div>

@@ -10,7 +10,8 @@
       numeradas ajudam na organização e gestão de reservas, garantindo maior facilidade para que os
       estudantes encontrem um lugar adequado às suas necessidades. Além disso, a presença de
       monitores facilita a supervisão e o apoio, tornando o espaço eficiente para quem precisa de um
-      ambiente propício ao estudo.
+      ambiente propício ao estudo.<br />
+      Pode entrar em contacto connosco enviando um mail para <a href="mailto:monitores.lemac@dem.tecnico.ulisboa.pt">monitores.lemac@dem.tecnico.ulisboa.pt</a>.
     </p>
 
     <h2 style="font-size: 1.5em; font-weight: bold; margin-top: 2em">
@@ -36,9 +37,11 @@
       Serviços de Impressão 3D
     </h3>
     <p style="margin-top: 1em; font-size: 1em">
-      O Lemac disponibiliza serviços de impressão 3D. Para mais informações, é favor enviar e-mail
-      para:
-      <a href="mailto:monitores.lemac@dem.tecnico.ulisboa.pt">monitores.lemac@dem.tecnico.ulisboa.pt</a>
+      O Lemac disponibiliza serviços de impressão 3D. Para efetuar o pedido basta aceder à página
+      <RouterLink to="/printing">3D Printing</RouterLink> e preencher todos os dados necessários.
+      Apenas ficheiros STL são suportados. Após submeter o pedido, um monitor irá realizar a tarefa.
+      Quando o objeto estiver pronto para levantamento, o sistema informará através do
+      email fornecido.
     </p>
 
     <p style="font-size: 2em; font-weight: bold; text-align: center; margin-top: 2em">
