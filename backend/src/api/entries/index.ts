@@ -3,13 +3,6 @@ import * as workstationsController from '../workstations/controller.js';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
 
-async function reduceOccupation(entryId: number) {
-  const entry = await controller.getEntry(entryId);
-  if (entry && entry.active) {
-    await workstationsController.changeOccupation(entry.workstationId, -1);
-  }
-}
-
 export async function addEntry(req: Request, res: Response) {
   if (
     req.body &&
@@ -68,7 +61,6 @@ export async function updateEntry(req: Request, res: Response) {
     });
     return;
   } else if (req.body && req.body.active == 0) {
-    await reduceOccupation(id);
     const data = await controller.closeEntry(id);
     if (!data) {
       res.sendStatus(404);
@@ -119,24 +111,6 @@ export async function getEntries(req: Request, res: Response) {
       res.json({entries: response, total});
     }
   } else {
-    res.sendStatus(400);
-  }
-}
-
-export async function deleteEntry(req: Request, res: Response) {
-  try {
-    if(!req.params.id) {
-      res.sendStatus(400);
-      return;
-    }
-    const id = parseInt(req.params.id);
-    await reduceOccupation(id);
-    if (await controller.deleteEntry(id)) {
-      res.sendStatus(204);
-    } else {
-      res.sendStatus(404);
-    }
-  } catch (e) {
     res.sendStatus(400);
   }
 }

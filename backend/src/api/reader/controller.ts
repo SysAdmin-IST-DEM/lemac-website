@@ -1,0 +1,48 @@
+import { prisma } from '../../index.js';
+import type { Entry, Student } from '@lemac/data-model';
+
+export enum OnScanCardResultCode {
+  STUDENT_NOT_FOUND = "STUDENT_NOT_FOUND",
+  NO_ACTIVE_ENTRY = "NO_ACTIVE_ENTRY",
+  ACTIVE_ENTRY_FOUND = "ACTIVE_ENTRY_FOUND"
+}
+
+export async function getActiveEntry(mifareNumber: string): Promise<{
+  ok: boolean;
+  code: OnScanCardResultCode;
+  student?: Student,
+  entry?: Entry
+}> {
+  return prisma.$transaction(async (tx) => {
+    const student = await tx.student.findUnique({
+      where: { mifareNumber }
+    });
+
+    if (!student) {
+      return {
+        ok: false,
+        code: OnScanCardResultCode.STUDENT_NOT_FOUND
+      };
+    }
+
+    const activeEntry = await tx.entry.findFirst({
+      where: { istId: student.istId, active: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!activeEntry) {
+      return {
+        ok: true,
+        code: OnScanCardResultCode.NO_ACTIVE_ENTRY,
+        student,
+      };
+    }
+
+    return {
+      ok: true,
+      code: OnScanCardResultCode.ACTIVE_ENTRY_FOUND,
+      entry: activeEntry,
+      student,
+    };
+  });
+}

@@ -33,6 +33,19 @@ model User {
   @@map("users")
 }
 
+model Student {
+  id           Int      @id @default(autoincrement())
+  istId        String   @unique() @map("ist_id") @db.VarChar(12)
+  name         String   @db.VarChar(255)
+  email        String   @db.Text
+  mifareNumber String   @unique @map("mifare_number") @db.VarChar(32)
+  courseId     String   @map("course_id") @db.VarChar(16)
+  lastRenewed  DateTime @default(now()) @map("last_renewed") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+
+  @@map("students")
+}
+
 enum WorkstationStatus {
   ACTIVE
   DISABLED
@@ -64,28 +77,6 @@ model Entry {
 
   @@index([workstationId])
   @@map("entries")
-}
-
-enum LemacUserState {
-  ONLINE
-  IN_BREAK
-  OFFLINE
-
-  @@map("lemac_users_state")
-}
-
-/// LemacUser model representing a student in lemac. Currently obsolete and probably will be removed soon.
-model LemacUser {
-  id           Int            @id @default(autoincrement())
-  mifareId     String         @map("mifare_id") @db.VarChar(64)
-  name         String         @db.VarChar(64)
-  istId        String         @map("ist_id")
-  email        String         @db.Text
-  course       String         @db.VarChar(64)
-  state        LemacUserState
-  lastModified DateTime       @default(now()) @map("last_modified") @db.Timestamp(0)
-
-  @@map("lemac_users")
 }
 
 model LogHour {
