@@ -2,13 +2,16 @@ import { prisma } from '../../index.js';
 import { Prisma } from '@lemac/data-model';
 
 export async function addEntry(istId: string, workstationId: number) {
-  return prisma.entry.create({
-    data: {
-      istId, workstationId
-    },
-    include: {
-      workstation: true
-    }
+  return prisma.$transaction(async (tx) => {
+    await tx.workstation.update({
+      where: { id: workstationId },
+      data: { occupation: { increment: 1 } },
+    });
+
+    return tx.entry.create({
+      data: { istId, workstationId },
+      include: { workstation: true },
+    });
   });
 }
 
