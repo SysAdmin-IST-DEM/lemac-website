@@ -1,11 +1,11 @@
 <template>
   <DashboardTable
-    title="Users"
+    title="Monitors"
     :headers="headers"
-    :items="users"
+    :items="monitors"
     search
     :sort-by="[{ key: 'name'}]"
-    :new-button="getPermission === 1 ? 'New User' : undefined"
+    :new-button="getPermission === 1 ? 'New Monitor' : undefined"
     :edit-initialization="editInitialization"
     :edit-fields="editFields"
     @edit="editItem"
@@ -58,7 +58,7 @@ export default {
     },
   },
   data: () => ({
-    users: [],
+    monitors: [],
     headers: [
       { title: 'Member', key: 'name' },
       { title: 'IST Id', key: 'istId' },
@@ -91,7 +91,7 @@ export default {
     ...mapState(useUserStore, ['getPermission']),
   },
   mounted() {
-    this.users = this.members;
+    this.monitors = this.members;
   },
   methods: {
     editInitialization(item) {
@@ -100,7 +100,7 @@ export default {
     async editItem(item, values) {
       if (item) {
         const response = await updateUser(item.id, values);
-        this.users.splice(this.users.indexOf(item), 1, response.data);
+        this.monitors.splice(this.monitors.indexOf(item), 1, response.data);
         this.$notify({
           type: 'success',
           title: 'User updated',
@@ -108,7 +108,7 @@ export default {
         });
       } else {
         const response = await createUser(values);
-        this.users.push(response.data);
+        this.monitors.push(response.data);
         this.$notify({
           type: 'success',
           title: 'User created',
@@ -118,7 +118,7 @@ export default {
     },
     async deleteItem(item) {
       await deleteUser(item.id);
-      const deleted = this.users.splice(this.users.indexOf(item), 1);
+      const deleted = this.monitors.splice(this.monitors.indexOf(item), 1);
       this.$notify({
         type: 'success',
         title: 'User deleted',

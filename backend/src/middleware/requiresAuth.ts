@@ -1,7 +1,12 @@
 import type { RequestHandler } from 'express';
 
+// Role Levels:
+// 0 - Regular User
+// 1 - Admin
+
 export function requiresAuth(minRole = 0): RequestHandler {
   return (req, res, next) => {
+
     if (!req.user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }

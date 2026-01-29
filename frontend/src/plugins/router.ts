@@ -18,6 +18,7 @@ import RequestPrinting from '@/pages/Home/RequestPrinting.vue';
 import Printing from '@/pages/Dashboard/Printing.vue';
 
 import type { RouteRecordRaw } from 'vue-router';
+import StudentRegistration from '@/pages/Home/StudentRegistration.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -49,6 +50,12 @@ const routes: RouteRecordRaw[] = [
     name: 'software',
     component: Software,
     meta: { title: 'Reservations', noAuth: true },
+  },
+  {
+    path: '/student-registration',
+    name: 'student-registration',
+    component: StudentRegistration,
+    meta: { title: 'Student Registration', noAuth: true },
   },
   {
     path: '/login',

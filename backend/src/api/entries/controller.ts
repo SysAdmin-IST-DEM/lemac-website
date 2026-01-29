@@ -41,7 +41,14 @@ export async function closeEntry(entryId: number) {
       },
       data: {
         active: false,
-        closedAt: new Date()
+        closedAt: new Date(),
+        workstation: {
+          update: {
+            occupation: {
+              decrement: 1
+            }
+          }
+        }
       },
       include: {
         workstation: true
@@ -63,13 +70,6 @@ export async function getEntries(active = false) {
   } else {
     return prisma.entry.findMany({ include: { workstation: true } });
   }
-}
-
-export async function deleteEntry(entryId: number) {
-  const { count } = await prisma.entry.deleteMany({
-    where: { id: entryId }
-  });
-  return count !== 0;
 }
 
 export async function getEntry(entryId: number) {
