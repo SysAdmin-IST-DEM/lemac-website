@@ -46,27 +46,22 @@ export async function loginFenix(code: string): Promise<string> {
 }
 
 export async function returnIstId(access_token: string): Promise<string> {
-  console.log("HMM?")
   const { data: person } = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
   });
 
-  console.log("PERSON", person);
   return person.username;
 }
 
 export async function returnIstData(access_token: string) {
-  console.log("HMM2?")
   try {
     const result = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person`, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
     });
-
-    console.error("DATA", result.data);
 
     return result.data;
   } catch (e) {
