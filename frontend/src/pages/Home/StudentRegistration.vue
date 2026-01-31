@@ -16,7 +16,7 @@
     <v-row>
       <v-col>
         <div class="mx-auto text-center mt-3">
-          <v-btn color="secondary" :href="studentLink"> Start Now </v-btn>
+          <v-btn color="primary" :href="studentLink"> Start Now </v-btn>
         </div>
       </v-col>
     </v-row>
@@ -28,19 +28,19 @@
         <v-list>
           <v-list-item>
             <template #prepend>
-              <v-chip color="secondary" variant="elevated"> 1 </v-chip>
+              <v-chip color="primary" variant="elevated"> 1 </v-chip>
             </template>
             <div class="ml-2">Make sure you are registered in the FénixEdu system.</div>
           </v-list-item>
           <v-list-item>
             <template #prepend>
-              <v-chip color="secondary" variant="elevated"> 2 </v-chip>
+              <v-chip color="primary" variant="elevated"> 2 </v-chip>
             </template>
             <div class="ml-2">Click the Start Now button and login with your IST-ID.</div>
           </v-list-item>
           <v-list-item>
             <template #prepend>
-              <v-chip color="secondary" variant="elevated"> 3 </v-chip>
+              <v-chip color="primary" variant="elevated"> 3 </v-chip>
             </template>
             <div class="ml-2">
               You are now registered! This process must be repeated at the start of every school
@@ -49,7 +49,7 @@
           </v-list-item>
           <v-list-item>
             <template #prepend>
-              <v-chip color="secondary" variant="elevated"> 4 </v-chip>
+              <v-chip color="primary" variant="elevated"> 4 </v-chip>
             </template>
             <div class="ml-2">
               Check the registration by using the card reader in the LEMAC laboratory room entrance.
@@ -57,7 +57,7 @@
           </v-list-item>
           <v-list-item>
             <template #prepend>
-              <v-chip color="secondary" variant="elevated"> 5 </v-chip>
+              <v-chip color="primary" variant="elevated"> 5 </v-chip>
             </template>
             <div class="ml-2">
               If you have any issues you can contact the LEMAC support at
