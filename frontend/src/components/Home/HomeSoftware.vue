@@ -54,15 +54,14 @@ export default {
         return '';
       }
 
-      const role = data.roles.find((val) => {
-        return val.registrations;
-      });
+      const role = data.roles[Object.keys(data.roles).find((val) => {
+        return data.roles[val].registrations;
+      })];
 
-      return role.registrations[0]?.name;
+      return role.registrations[0]?.degree.name["pt-PT"];
     },
 
     isDEMStudent(name) {
-      if(this.personData.username === 'ist1113807') return true;
       return (
         name.includes('Aeroespacial') ||
         name.includes('Mecânica') ||
@@ -72,7 +71,7 @@ export default {
         name.includes('Energia') ||
         name.includes('Biomédica') ||
         name.includes('Investigação')
-      );
+      ) || this.personData.username === 'ist1113807';
     },
   },
 };

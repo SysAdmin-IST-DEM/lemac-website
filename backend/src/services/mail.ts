@@ -107,7 +107,7 @@ export async function sendSubmissionStaffEmail(task: PrintTaskWithMaterial): Pro
                 Price (€): ${task.price}
                 Extra-Notes: ${task.observations}
           
-          Claim this submission via the LEMAC Staff Dashboard, or by going to http://lemac.tecnico.ulisboa.pt/staff/printing-tasks.
+          Claim this submission via the LEMAC Staff Dashboard, or by going to https://lemac.dem.tecnico.ulisboa.pt/dashboard/printing.
           
           Thank you,
           LEMAC

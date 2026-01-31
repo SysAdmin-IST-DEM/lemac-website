@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
-import { WebSocketServer } from 'ws';
 
 import { errorHandler } from './middleware/requestHandler.js';
 import { verifyMiddleware } from './middleware/verifier.js';
@@ -45,36 +44,13 @@ app.use(cors(corsOptions));
 app.use(errorHandler);
 app.use(verifyMiddleware);
 
-/* Setup WebSocket Server */
-const wsServer = new WebSocketServer({ noServer: true });
-
-wsServer.on('connection', (socket) => {
-  socket.on('message', (message) => {
-    if (message.toString() === 'ping') {
-      socket.send('pong');
-      return;
-    }
-
-    console.log(message.toString());
-  });
-  socket.on('close', (e) => console.log(e.toString()));
-  socket.on('error', (e) => console.error(e.toString()));
-});
-
 /* Initialize API routes */
-api.init(app, wsServer);
+api.init(app);
 
 /* Start MINIO service */
 await ensureBucket();
 
 /* Start Server */
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`lemac-backend listening on http://localhost:${port}`);
-});
-
-/* Handle WebSocket Upgrades */
-server.on('upgrade', (request, socket, head) => {
-  wsServer.handleUpgrade(request, socket, head, (socket) => {
-    wsServer.emit('connection', socket, request);
-  });
 });

@@ -1,4 +1,3 @@
-import type { WebSocketServer } from 'ws';
 import type { Express } from 'express';
 
 import auth from './auth/routes.js';
@@ -13,9 +12,10 @@ import reader from './reader/routes.js';
 import roomhours from './rooms/routes.js';
 import roomevents from './room_events/routes.js';
 import schedule from './schedule/routes.js';
+import students from './students/routes.js';
 
 export default {  /*export all routes into the main express file*/
-  init: (app: Express, ws_server: WebSocketServer) => {
+  init: (app: Express) => {
     auth.init(app);
     users.init(app);
     workstations.init(app);
@@ -28,5 +28,6 @@ export default {  /*export all routes into the main express file*/
     roomhours.init(app);
     roomevents.init(app);
     schedule.init(app);
+    students.init(app);
   },
 };

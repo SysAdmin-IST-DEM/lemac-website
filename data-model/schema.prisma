@@ -39,7 +39,6 @@ model Student {
   name         String   @db.VarChar(255)
   email        String   @db.Text
   mifareNumber String   @unique @map("mifare_number") @db.VarChar(32)
-  courseId     String   @map("course_id") @db.VarChar(16)
   lastRenewed  DateTime @default(now()) @map("last_renewed") @db.Date
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
 
