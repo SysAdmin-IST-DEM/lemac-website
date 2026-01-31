@@ -27,8 +27,13 @@ export async function getActiveEntry(mifareNumber: string): Promise<{
       };
     }
 
-    const requiresRenewal = DateTime.fromJSDate(student.lastRenewed) < DateTime.fromObject(
-      { year: DateTime.now().year, month: 9, day: 1 });
+    const now = DateTime.now();
+    const schoolYearStart = DateTime.fromObject({
+      year: now.month >= 9 ? now.year : now.year - 1,
+      month: 9,
+      day: 1,
+    }).startOf("day");
+    const requiresRenewal = DateTime.fromJSDate(student.lastRenewed) < schoolYearStart;
 
     if(requiresRenewal) {
       return {
