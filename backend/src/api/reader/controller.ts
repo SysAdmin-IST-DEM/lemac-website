@@ -1,8 +1,10 @@
 import { prisma } from '../../index.js';
 import type { Entry, Student } from '@lemac/data-model';
+import { DateTime } from 'luxon';
 
 export enum OnScanCardResultCode {
   STUDENT_NOT_FOUND = "STUDENT_NOT_FOUND",
+  STUDENT_REQUIRES_RENEWAL = "STUDENT_REQUIRES_RENEWAL",
   NO_ACTIVE_ENTRY = "NO_ACTIVE_ENTRY",
   ACTIVE_ENTRY_FOUND = "ACTIVE_ENTRY_FOUND"
 }
@@ -23,6 +25,16 @@ export async function getActiveEntry(mifareNumber: string): Promise<{
         ok: false,
         code: OnScanCardResultCode.STUDENT_NOT_FOUND
       };
+    }
+
+    const requiresRenewal = DateTime.fromJSDate(student.lastRenewed) < DateTime.fromObject(
+      { year: DateTime.now().year, month: 9, day: 1 });
+
+    if(requiresRenewal) {
+      return {
+        ok: false,
+        code: OnScanCardResultCode.STUDENT_REQUIRES_RENEWAL
+      }
     }
 
     const activeEntry = await tx.entry.findFirst({
