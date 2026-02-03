@@ -64,6 +64,7 @@ export async function createStudentOrNull(access_token: string) {
       Authorization: `Bearer ${access_token}`,
     },
   });
+  console.log(card);
 
   return {
     id: -1,
