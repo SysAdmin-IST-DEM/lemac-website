@@ -1,5 +1,10 @@
 <template>
-  <LemacCalendar ref="lemacCalendar" :events="events" :filter="filter" @change="updateRange">
+  <LemacCalendar
+    ref="lemacCalendar"
+    :events="events"
+    :filter="filter"
+    @change="updateRange"
+  >
     <template #dropdowns>
       <slot name="extra-dropdowns" />
 

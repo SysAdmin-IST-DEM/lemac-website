@@ -8,6 +8,7 @@
     :events-on-month-view="true"
     :time-from="480"
     :time-to="timeTo"
+    style="height: auto"
     @click:date="viewDay"
     @event-click="showEvent"
     @ready="onReady"
