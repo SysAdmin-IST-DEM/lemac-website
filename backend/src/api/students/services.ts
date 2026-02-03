@@ -64,13 +64,12 @@ export async function createStudentOrNull(access_token: string) {
       Authorization: `Bearer ${access_token}`,
     },
   });
-  console.log(card);
 
   return {
     id: -1,
     istId: person.username,
     name: person.name,
     email: person.email,
-    mifareNumber: card.mifareNumber
+    mifareNumber: card[0].mifareNumber
   }
 }

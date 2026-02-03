@@ -21,7 +21,6 @@ export async function fenixCallback(req: Request, res: Response) {
       res.redirect(process.env.URL + '/student-registration?error=not_dem');
       return;
     }
-    console.log("WOW", data);
 
     const student = await upsertStudent(data.istId, data.name, data.email, data.mifareNumber);
 
