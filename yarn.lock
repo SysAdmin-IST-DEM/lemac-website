@@ -4225,6 +4225,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chartjs-adapter-luxon@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "chartjs-adapter-luxon@npm:1.3.1"
+  peerDependencies:
+    chart.js: ">=3.0.0"
+    luxon: ">=1.0.0"
+  checksum: 10c0/73f8767629aadbc5d32825c4d27304136138b3ee3b2e8bdbe1cb8cf9401d14c3ec96be909ac784d7c4d4171f3309d7687308f4a787919e7b0b86b4ab0a21468e
+  languageName: node
+  linkType: hard
+
 "chevrotain@npm:^10.5.0":
   version: 10.5.0
   resolution: "chevrotain@npm:10.5.0"
@@ -6161,6 +6171,7 @@ __metadata:
     "@vue/tsconfig": "npm:^0.8.1"
     axios: "npm:^1.9.0"
     chart.js: "npm:^4.4.7"
+    chartjs-adapter-luxon: "npm:^1.3.1"
     eslint: "npm:^9.39.1"
     eslint-plugin-vue: "npm:^10.5.1"
     eslint-plugin-vuetify: "npm:^2.5.3"
