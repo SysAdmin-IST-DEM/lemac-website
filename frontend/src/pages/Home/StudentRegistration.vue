@@ -22,7 +22,7 @@
     </v-row>
 
     <v-row class="mt-10">
-      <v-col>
+      <v-col cols="12" md="6">
         <h3><b>How to register?</b></h3>
 
         <v-list>
@@ -69,7 +69,7 @@
         </v-list>
       </v-col>
 
-      <v-col>
+      <v-col cols="12" md="6">
         <h3><b>Why is this needed?</b></h3>
         <br />
         <p>
