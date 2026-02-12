@@ -8,6 +8,12 @@ export function parseBody<T extends ZodRawShape>(schema: ZodObject<T>) {
     if (!result.success) {
       // Format Zod errors nicely
       const errors = z.treeifyError(result.error);
+
+      console.log({
+        message: 'Invalid request body',
+        errors,
+      });
+
       return res.status(400).json({
         message: 'Invalid request body',
         errors,
