@@ -11,7 +11,7 @@ export function parseBody<T extends ZodRawShape>(schema: ZodObject<T>) {
 
       console.log({
         message: 'Invalid request body',
-        errors,
+        errors: JSON.stringify(errors),
       });
 
       return res.status(400).json({
