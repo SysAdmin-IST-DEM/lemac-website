@@ -70,6 +70,6 @@ export async function createStudentOrNull(access_token: string) {
     istId: person.username,
     name: person.name,
     email: person.email,
-    mifareNumber: card[0].mifareNumber
+    mifareNumber: Number(card[0].mifareNumber)
   }
 }
