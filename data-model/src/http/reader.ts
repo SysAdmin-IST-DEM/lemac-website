@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const GetActiveEntryBody = z.object({
-  mifareNumber: z.coerce.bigint()
+  mifareNumber: z.number()
 });
 
 export const  AddEntryBody = z.object({

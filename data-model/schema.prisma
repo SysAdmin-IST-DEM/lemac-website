@@ -38,7 +38,7 @@ model Student {
   istId        String   @unique() @map("ist_id") @db.VarChar(12)
   name         String   @db.VarChar(255)
   email        String   @db.Text
-  mifareNumber BigInt   @unique @map("mifare_number")
+  mifareNumber Int      @unique @map("mifare_number")
   lastRenewed  DateTime @default(now()) @map("last_renewed") @db.Date
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
 
