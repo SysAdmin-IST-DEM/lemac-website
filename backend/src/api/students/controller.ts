@@ -1,7 +1,7 @@
 import { prisma } from '../../index.js';
 
 export async function upsertStudent(istId: string, name: string, email: string,
-                                       mifareNumber: number) {
+                                       mifareNumber: bigint) {
   return prisma.student.upsert({
     where: { istId },
     create: {

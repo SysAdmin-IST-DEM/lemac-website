@@ -11,6 +11,11 @@ import { PrismaClient } from '@lemac/data-model'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { ensureBucket } from './services/minio.js';
 
+/* Convert BigInt to String in JSON */
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 /* Setup Database Client */
 if(!process.env.DB_HOST || !process.env.DB_USERNAME || !process.env.DB_PASSWORD || !process.env.DB_NAME) {
   throw new Error("Database environment variables are not properly set.");
