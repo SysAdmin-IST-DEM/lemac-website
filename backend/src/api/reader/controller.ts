@@ -9,7 +9,7 @@ export enum OnScanCardResultCode {
   ACTIVE_ENTRY_FOUND = "ACTIVE_ENTRY_FOUND"
 }
 
-export async function getActiveEntry(mifareNumber: number): Promise<{
+export async function getActiveEntry(mifareNumber: bigint): Promise<{
   ok: boolean;
   code: OnScanCardResultCode;
   student?: Student,
