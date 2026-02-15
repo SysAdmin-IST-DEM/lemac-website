@@ -93,6 +93,8 @@ export default {
     ...mapState(useUserStore, ['getPermission']),
   },
   async mounted() {
+    this.$loading.show();
+
     this.users = (await getUsers()).data;
     const inactiveUsers = this.users.filter((user) => !user.active);
     this.users = this.users.filter((user) => user.active);
@@ -123,6 +125,8 @@ export default {
     this.events = events;
 
     this.offDays = (await getOffDays()).data;
+
+    this.$loading.hide();
   },
   methods: {
     showDelete({ e, event }) {
