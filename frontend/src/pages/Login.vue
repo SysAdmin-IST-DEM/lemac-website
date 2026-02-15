@@ -104,6 +104,12 @@ export default {
   },
   async mounted() {
     const lastEntry = (await getLastEntry()).data;
+
+    if(lastEntry.userId === this.getId && DateTime.now().toMillis() >= DateTime.fromISO(lastEntry.entry).toMillis()) {
+      await this.$router.push('/dashboard');
+      return;
+    }
+
     const defaultEntry =  {
       entryNumber: lastEntry.exitNumber,
       safeAmount: lastEntry.safeAmount
@@ -111,7 +117,6 @@ export default {
 
     const closestHour = (await getClosestEvent(this.getId)).data;
     if (closestHour) {
-      console.log("CLOSEST", closestHour)
       defaultEntry.entryHours = DateTime.fromISO(closestHour.entry).toFormat('HH:mm');
       defaultEntry.exitHours = DateTime.fromISO(closestHour.exit).toFormat('HH:mm');
     }
