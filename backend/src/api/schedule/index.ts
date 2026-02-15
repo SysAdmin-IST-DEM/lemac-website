@@ -28,6 +28,14 @@ export async function getEvents(req: Request, res: Response) {
   }
 }
 
+export async function getClosestEvent(req: Request, res: Response) {
+  const userId = Number(req.params.id);
+  const data = await controller.getClosestEvent(userId);
+
+  res.json(data);
+  return;
+}
+
 export async function editEvent(req: Request, res: Response) {
   const id = parseInt(req.params.id as string);
 

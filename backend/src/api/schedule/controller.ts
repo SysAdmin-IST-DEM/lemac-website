@@ -21,6 +21,23 @@ export async function getEvents() {
   });
 }
 
+export async function getClosestEvent(userId: number) {
+  const now = DateTime.now();
+  const start = now.minus({ minutes: 45 });
+  const end = now.plus({ minutes: 45 });
+
+  return prisma.monitorSchedule.findFirst({
+    where: {
+      userId,
+      entry: {
+        gte: start.toJSDate(),
+        lt: end.toJSDate()
+      }
+    },
+    include: { user: true }
+  });
+}
+
 export async function editEvent(entry: string, exit: string, userId: number, id: number) {
   try {
     return await prisma.monitorSchedule.update({

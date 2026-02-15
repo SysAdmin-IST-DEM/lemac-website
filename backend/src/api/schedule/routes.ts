@@ -11,13 +11,14 @@ import {
   setOffDay,
   deleteOffDay,
   editUserTarget,
-  deleteTarget,
+  deleteTarget, getClosestEvent,
 } from './index.js';
 import { requiresAuth } from '../../middleware/requiresAuth.js';
 
 export default {
   init: (app: Express) => {
     app.get('/api/schedule', requiresAuth(), getEvents);
+    app.get('/api/schedule/closest/:id', requiresAuth(), getClosestEvent);
     app.post('/api/schedule', requiresAuth(), createEvent);
     app.put('/api/schedule/:id', requiresAuth(), editEvent);
     app.delete('/api/schedule/:id', requiresAuth(), deleteEvents);

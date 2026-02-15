@@ -3,14 +3,14 @@
     <DashboardEditDialog
       ref="editDialog"
       v-model="showEditDialog"
-      :item="lastEntry"
+      :item="defaultEntry"
       :fields="editFields"
       :on-initialization="onInitialization"
       save-color="success"
       :should-disable-save="true"
       cancel-color="success"
       cancel-text="Skip"
-      :cancel-action="() => { $router.push('dashboard') }"
+      :cancel-action="() => { confirmationDialog = true }"
       :on-save-error="() => { $router.push('/') }"
       @edit="saveHours"
     >
@@ -29,12 +29,45 @@
       </template>
     </DashboardEditDialog>
   </v-container>
+
+  <v-dialog
+    v-model="confirmationDialog"
+    max-width="500px"
+  >
+    <v-card>
+      <v-card-title>
+        Are you sure?
+      </v-card-title>
+
+      <v-card-text>
+        Entry hours and exit hours fields are automatically filled, if you are working just hit Save.
+      </v-card-text>
+
+      <v-card-actions>
+        <v-btn
+          color="#A9A9A9"
+          @click="$router.push('dashboard')"
+        >
+          Skip
+        </v-btn>
+        <v-btn
+          color="success"
+          @click="confirmationDialog = false"
+        >
+          Return
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 import { createHours, getLastEntry } from '@/api/hours.api';
 import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
 import { DateTime } from 'luxon';
+import { mapState } from 'pinia';
+import { useUserStore } from '@/stores/user.ts';
+import { getClosestEvent } from '@/api/schedule.api.ts';
 export default {
   name: 'LoginPage',
   components: {
@@ -62,18 +95,36 @@ export default {
         ],
       ],
       showEditDialog: false,
-      lastEntry: null
+      confirmationDialog: false,
+      defaultEntry: null
     };
   },
+  computed: {
+    ...mapState(useUserStore, ['getId']),
+  },
   async mounted() {
-    this.lastEntry = (await getLastEntry()).data;
+    const lastEntry = (await getLastEntry()).data;
+    const defaultEntry =  {
+      entryNumber: lastEntry.exitNumber,
+      safeAmount: lastEntry.safeAmount
+    }
+
+    const closestHour = (await getClosestEvent(this.getId)).data;
+    if (closestHour) {
+      console.log("CLOSEST", closestHour)
+      defaultEntry.entryHours = DateTime.fromISO(closestHour.entry).toFormat('HH:mm');
+      defaultEntry.exitHours = DateTime.fromISO(closestHour.exit).toFormat('HH:mm');
+    }
+
+    this.defaultEntry = defaultEntry;
     this.showEditDialog = true;
   },
   methods: {
     onInitialization(event) {
-      console.log(event);
       return {
-        entryNumber: event.exitNumber,
+        entryHours: event.entryHours,
+        exitHours: event.exitHours,
+        entryNumber: event.entryNumber,
         safeAmount: event.safeAmount
       }
     },

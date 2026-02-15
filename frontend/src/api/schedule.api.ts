@@ -1,4 +1,5 @@
 import httpClient from './httpClient.api';
+import type { MonitorSchedule } from '@lemac/data-model/browser';
 const ENDPOINT = '/schedule';
 
 export const getHours = (month: number, year: number) =>
@@ -8,6 +9,9 @@ export const getHours = (month: number, year: number) =>
       year,
     },
   });
+
+export const getClosestEvent = (userId: number) =>
+  httpClient.get<MonitorSchedule>(`${ENDPOINT}/closest/${userId}`);
 
 export const createHours = (data: never) => httpClient.post(ENDPOINT, data);
 export const deleteHours = (id: number) => httpClient.delete(`${ENDPOINT}/${id}`);
