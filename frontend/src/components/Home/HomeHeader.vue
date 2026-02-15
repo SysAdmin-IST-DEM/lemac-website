@@ -42,6 +42,15 @@
           3DPrinting
         </h2>
       </router-link>
+      <router-link to="/student-registration" class="text-decoration-none">
+        <h2
+          class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3 px-3
+           border-1 border-solid rounded-xl"
+          style="border-color: rgb(var(--v-theme-primary));"
+        >
+          Student Registration
+        </h2>
+      </router-link>
     </div>
 
     <v-spacer />
