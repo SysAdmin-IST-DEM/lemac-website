@@ -23,28 +23,28 @@
         inset
       />
       <router-link to="/about" class="text-decoration-none">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        <h2 class="text-black hover:text-[#009de0]! transition-colors duration-150 mx-3">
           About
         </h2>
       </router-link>
       <router-link to="/reservations" class="text-decoration-none">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        <h2 class="text-black hover:text-[#009de0]! transition-colors duration-150 mx-3">
           Reservations
         </h2>
       </router-link>
       <router-link to="/software" class="text-decoration-none">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        <h2 class="text-black hover:text-[#009de0]! transition-colors duration-150 mx-3">
           Software DEM
         </h2>
       </router-link>
       <router-link to="/printing" class="text-decoration-none">
-        <h2 class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3">
+        <h2 class="text-black hover:text-[#009de0]! transition-colors duration-150 mx-3">
           3DPrinting
         </h2>
       </router-link>
       <router-link to="/student-registration" class="text-decoration-none">
         <h2
-          class="text-black hover:text-[#009de0] transition-colors duration-150 mx-3 px-3
+          class="text-black hover:text-[#009de0]! transition-colors duration-150 mx-3 px-3
            border-1 border-solid rounded-xl"
           style="border-color: rgb(var(--v-theme-primary));"
         >
