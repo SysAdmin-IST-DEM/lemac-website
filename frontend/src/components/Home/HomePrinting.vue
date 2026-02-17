@@ -157,7 +157,7 @@ const initialData: AddPrintTaskBody = {
   studentName: '',
   studentId: '',
   email: '',
-  unit: Unit.CENTIMETERS,
+  unit: Unit.MILIMETERS,
   price: 0,
   materialId: 0,
 };
