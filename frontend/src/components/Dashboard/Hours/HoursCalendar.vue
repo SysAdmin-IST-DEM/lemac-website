@@ -51,9 +51,9 @@ export default {
 
       if (!this.requested.includes('' + (start.getMonth() + 1) + start.getFullYear())) {
         await this.pushEvents(start.getMonth() + 1, start.getFullYear());
-        this.requested.push('' + start.getMonth() + start.getFullYear());
+        this.requested.push('' + (start.getMonth() + 1) + start.getFullYear());
       }
-      if (!this.requested.includes('' + end.getMonth() + end.getFullYear())) {
+      if (!this.requested.includes('' + (end.getMonth() + 1) + end.getFullYear())) {
         await this.pushEvents(end.getMonth() + 1, end.getFullYear());
         this.requested.push('' + (end.getMonth() + 1) + end.getFullYear());
       }
