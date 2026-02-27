@@ -49,7 +49,7 @@ const routes: RouteRecordRaw[] = [
     path: '/software',
     name: 'software',
     component: Software,
-    meta: { title: 'Reservations', noAuth: true },
+    meta: { title: 'Software', noAuth: true },
   },
   {
     path: '/student-registration',
