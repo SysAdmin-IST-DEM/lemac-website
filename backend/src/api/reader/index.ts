@@ -6,6 +6,7 @@ import { AddEntryBody, GetActiveEntryBody } from '@lemac/data-model';
 
 export async function getActiveEntry(req: RequestWithBody<typeof GetActiveEntryBody>, res: Response) {
   const data = await controller.getActiveEntry(req.body.mifareNumber);
+  console.log("Active entry with mifareNumber: " + req.body.mifareNumber);
   res.json(data);
 }
 
