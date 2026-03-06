@@ -46,7 +46,7 @@ export function isDEM(personData: unknown): boolean {
     }
   }
 
-  if(personData.username === 'ist1113807' || personData.username === 'ist1106672') return true;
+  if(personData.username === 'ist1113807' || personData.username === 'ist1117921') return true;
   return false;
 }
 
