@@ -1,10 +1,7 @@
 import axios from 'axios';
+import type { paths } from '../../types/fenix.js';
 
 const FENIX_BASE_URL = process.env.FENIX_BASE_URL || 'https://fenix.tecnico.ulisboa.pt/';
-
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null;
-}
 
 export async function getAccessTokenCard(code: string): Promise<string> {
   const { data: response } = await axios.post(
@@ -19,45 +16,68 @@ export async function getAccessTokenCard(code: string): Promise<string> {
   return response.access_token;
 }
 
-export function isDEM(personData: unknown): boolean {
-  if(!isRecord(personData) || !isRecord(personData.roles)) return false;
-
-  for(const roleKey in personData.roles) {
-    const role = personData.roles[roleKey];
-    if (!isRecord(role)) continue;
-
-    if(role.registrations) {
-      if(!Array.isArray(role.registrations)) continue;
-      for(const registration of role.registrations) {
-        const name = registration.degree.name["pt-PT"];
-        if(name.includes('Aeroespacial') ||
-          name.includes('Mecânica') ||
-          name.includes('Naval') ||
-          name.includes('Materiais') ||
-          name.includes('Ambiente') ||
-          name.includes('Energia') ||
-          name.includes('Biomédica') ||
-          name.includes('Investigação')) return true;
-      }
-    }
-
-    if(isRecord(role.department) && role.department.acronym === 'DEM') {
-      return true;
-    }
-  }
-
-  if(personData.username === 'ist1113807' || personData.username === 'ist1117921') return true;
-  return false;
-}
-
-export async function createStudentOrNull(access_token: string) {
-  const { data: person } = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person`, {
+async function getPersonData(access_token: string) {
+  return (await axios.get<
+    paths["/person"]["get"]["responses"]["200"]["content"]["application/json"]
+  >(`${FENIX_BASE_URL}tecnico-api/v2/person`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
-  });
+  })).data;
+}
 
-  if (!isDEM(person)) return null;
+async function getAttending(access_token: string) {
+  return (await axios.get<
+    paths["/student/attending"]["get"]["responses"]["200"]["content"]["application/json"]
+  >(`${FENIX_BASE_URL}tecnico-api/v2/student/attending`, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })).data;
+}
+
+async function getDepartmentCourses(department: string) {
+  return (await axios.get<
+    paths["/departments/{department}/execution-courses"]["get"]["responses"]["200"]["content"]["application/json"]
+  >(`${FENIX_BASE_URL}tecnico-api/v2/departments/${department}/execution-courses`)).data;
+}
+
+export async function getPersonIfDEM(access_token: string):
+  Promise<paths["/person"]["get"]["responses"]["200"]["content"]["application/json"] | null> {
+  const person = await getPersonData(access_token);
+
+  if(person.roles.teacher) {
+    return person.roles.teacher.department.acronym === "DEM" ? person : null;
+  }
+
+  const employeeRole =
+    person.roles.employee ??
+    person.roles.researcher ??
+    person.roles.grantOwner;
+  if(employeeRole && employeeRole.workingPlace) {
+    for(const place of employeeRole.workingPlace) {
+      if(place.acronym === "DEM") return person;
+    }
+  }
+
+  if (person.roles.student) {
+    const coursesIds = (await getDepartmentCourses("811748818948")).map(c => c.id);
+    const enrollments = await getAttending(access_token);
+
+    for(const enrollment of enrollments) {
+      if(enrollment.state !== "NOT_ENROLLED") {
+        if(coursesIds.includes(enrollment.course.id)) return person;
+      }
+    }
+  }
+
+  return null;
+}
+
+export async function createStudentOrNull(access_token: string) {
+  const person = await getPersonIfDEM(access_token);
+
+  if(!person) return null;
 
   const { data: card } = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person/cards`, {
     headers: {
