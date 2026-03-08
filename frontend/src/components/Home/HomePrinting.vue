@@ -215,7 +215,7 @@ export default {
         this.values.price = 0;
         return;
       }
-      this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
+      this.values.price = Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
     },
     async 'values.unit'() {
       if (!this.modelFile) {
@@ -231,7 +231,7 @@ export default {
         this.convertDistance(boundingBoxSize.z, this.values.unit, Unit.CENTIMETERS)
       );
       this.volume = this.convertVolume(rawVolume, this.values.unit, Unit.CENTIMETERS);
-      this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
+      this.values.price = Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
     }
   },
   async mounted() {
