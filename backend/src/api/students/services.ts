@@ -85,7 +85,7 @@ export async function createStudentOrNull(access_token: string) {
     },
   });
 
-  console.log(`CARDS OF PERSON ${person.name}: ${card}`);
+  console.log(`CARDS OF PERSON ${person.name}: ${JSON.stringify(card)}`);
 
   return {
     id: -1,
