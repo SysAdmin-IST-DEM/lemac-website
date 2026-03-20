@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-start justify-start w-full">
     <h2 class="m-6 text-4xl font-semibold">
-      SOLIDEDGE 2024 Update
+      SOLIDEDGE 2025 Update
     </h2>
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
