@@ -27,7 +27,6 @@ export async function addHours(hours: {entry: string, exit: string}, userId: num
 }
 
 export async function getHours(month: number, year: number) {
-  console.log(month, year);
   if (month === -1) {
     return prisma.logHour.findMany({
       include: {

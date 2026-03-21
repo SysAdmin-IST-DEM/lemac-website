@@ -144,7 +144,7 @@ export default {
       }
 
       const response = (await createHours({
-        userId: this.currentUser.id,
+        userId: event.userId ? event.userId : this.currentUser.id,
         entry: DateTime.fromJSDate(event.start).toUTC().toISO(),
         exit: DateTime.fromJSDate(event.end).toUTC().toISO()
       })).data

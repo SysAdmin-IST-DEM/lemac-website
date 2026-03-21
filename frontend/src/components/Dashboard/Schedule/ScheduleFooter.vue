@@ -23,6 +23,14 @@
     Edit Off Days
   </v-btn>
 
+  <v-btn
+    v-if="getPermission === 1"
+    color="secondary"
+    @click="recurringDialog = true"
+  >
+    Recurring Schedule
+  </v-btn>
+
   <span class="inline-block grow text-center">
     <span style="text-align: center; margin: auto">{{
       currentUser ? currentUser.name : 'Unknown'
@@ -119,6 +127,98 @@
       @update:model-value="updateOffDays"
     />
   </v-dialog>
+
+  <v-dialog
+    v-model="recurringDialog"
+    max-width="800px"
+  >
+    <v-card>
+      <v-card-title>Add Recurring Schedule</v-card-title>
+      <v-card-subtitle>
+        Allows the creation of recurring schedule. Recurring Schedule are events that happen at the same time in the
+        specified weekday for the specified date range.
+      </v-card-subtitle>
+      <v-card-text>
+        <v-container>
+          <v-form ref="recurringForm">
+            <v-col>
+              <v-row>
+                <DashboardDynamicField
+                  v-model="recurringEvent.user"
+                  type="select"
+                  label="User"
+                  label-icon="mdi-account"
+                  :props="{ items: schedule.users.map(u => ({value: u.id, title: u.name})) }"
+                  :required="true"
+                />
+                <DashboardDynamicField
+                  v-model="recurringEvent.weekday"
+                  type="select"
+                  label="Weekday"
+                  label-icon="mdi-weather-sunny"
+                  :props="{ items: weekdays }"
+                  :required="true"
+                />
+              </v-row>
+              <v-row>
+                <DashboardDynamicField
+                  v-model="recurringEvent.startDate"
+                  type="date"
+                  label="Start Date"
+                  label-icon="mdi-clipboard-text-clock"
+                  wrapper="menu"
+                  :required="true"
+                />
+                <DashboardDynamicField
+                  v-model="recurringEvent.endDate"
+                  type="date"
+                  label="End Date"
+                  label-icon="mdi-clipboard-text-clock"
+                  wrapper="menu"
+                  :required="true"
+                />
+              </v-row>
+              <v-row>
+                <DashboardDynamicField
+                  v-model="recurringEvent.start"
+                  type="time"
+                  label="Start Time"
+                  label-icon="mdi-clock"
+                  wrapper="menu"
+                  :required="true"
+                />
+                <DashboardDynamicField
+                  v-model="recurringEvent.end"
+                  type="time"
+                  label="End Time"
+                  label-icon="mdi-clock"
+                  wrapper="menu"
+                  :required="true"
+                />
+              </v-row>
+            </v-col>
+          </v-form>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          color="secondary"
+          variant="elevated"
+          @click="recurringEvent = {}; recurringDialog = false;"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          color="secondary"
+          variant="elevated"
+          :loading="recurringLoading"
+          @click="addRecurringEvents"
+        >
+          Add Events
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -133,10 +233,11 @@ import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardT
 import { mapState } from 'pinia'
 import { useUserStore } from '@/stores/user.js';
 import { DateTime } from 'luxon';
+import DashboardDynamicField from '@/components/Dashboard/DashboardDataTable/DashboardDynamicField.vue';
 
 export default {
   name: 'ScheduleFooter',
-  components: { DashboardTable },
+  components: { DashboardDynamicField, DashboardTable },
   props: {
     schedule: {
       type: Object,
@@ -155,6 +256,9 @@ export default {
   data: () => ({
     targetsDialog: false,
     offDaysDialog: false,
+    recurringDialog: false,
+    recurringEvent: {  },
+    recurringLoading: false,
     userTargets: [],
     datesOffDays: [],
     offDaysDisabled: false,
@@ -167,6 +271,15 @@ export default {
         { key: 'targetHours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
       ],
     ],
+    weekdays: [
+      { value: 1, title: "Monday" },
+      { value: 2, title: "Tuesday" },
+      { value: 3, title: "Wednesday" },
+      { value: 4, title: "Thursday" },
+      { value: 5, title: "Friday" },
+      { value: 6, title: "Saturday" },
+      { value: 7, title: "Sunday" },
+    ]
   }),
   computed: {
     DateTime() {
@@ -309,6 +422,37 @@ export default {
       this.$emit('update-off-days');
       this.offDaysDisabled = false;
     },
+    async addRecurringEvents() {
+      this.$loading.show();
+      this.recurringLoading = true;
+      const { valid } = await this.$refs.recurringForm.validate();
+      if(!valid) return;
+      for(let date = this.recurringEvent.startDate; date.toMillis() <= this.recurringEvent.endDate.toMillis();
+          date = date.plus({ days: 1 })) {
+        if(date.weekday === this.recurringEvent.weekday) {
+          const startHours = this.recurringEvent.start.split(":")[0]
+          const startMinutes = this.recurringEvent.start.split(":")[1]
+          const endHours = this.recurringEvent.end.split(":")[0]
+          const endMinutes = this.recurringEvent.start.split(":")[1]
+          const start = date.set({hour: startHours, minute: startMinutes})
+          const end = date.set({hour: endHours, minute: endMinutes})
+          this.schedule.createEvent({event: {
+            userId: this.recurringEvent.user,
+            start: start.toUTC().toJSDate(),
+            end: end.toUTC().toJSDate(),
+          }, resolve: (event) => {
+              this.schedule.events.push(event);
+          }})
+        }
+      }
+      this.$loading.hide();
+      this.recurringLoading = false;
+      this.recurringEvent.start = null;
+      this.recurringEvent.end = null;
+      this.recurringEvent.user = null;
+      this.recurringEvent.weekday = null;
+      this.recurringDialog = false;
+    }
   },
 };
 </script>
