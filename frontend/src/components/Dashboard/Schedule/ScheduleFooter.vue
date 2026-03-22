@@ -135,8 +135,8 @@
     <v-card>
       <v-card-title>Add Recurring Schedule</v-card-title>
       <v-card-subtitle>
-        Allows the creation of recurring schedule. Recurring Schedule are events that happen at the same time in the
-        specified weekday for the specified date range.
+        Allows the creation of recurring schedule. Events that happen at the same time in the
+        specified date range.
       </v-card-subtitle>
       <v-card-text>
         <v-container>
