@@ -162,7 +162,7 @@
     color="warning"
     icon="$warning"
   >
-    Starting <b>March 15, 2026</b>, all students are required to register in LEMAC’s entry system to access
+    All students may now be required to register in LEMAC’s entry system to access
     the room. Please <RouterLink to="/student-registration">complete your registration</RouterLink>.
   </v-alert>
 </template>
