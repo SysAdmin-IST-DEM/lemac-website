@@ -95,7 +95,7 @@
     max-width="500"
   >
     <v-card>
-      <v-card-title>{{ error ? "Registration Error" : ($route.query.renewed ? "Renewal Successful" : "Registration Successful") }}</v-card-title>
+      <v-card-title>{{ error ? "Registration Error" : ($route.query.renewed === 'true' ? "Renewal Successful" : "Registration Successful") }}</v-card-title>
       <v-card-text v-if="student">
         Thank you for your registration in the Automatic Room Entrance system.<br>
         <br>
