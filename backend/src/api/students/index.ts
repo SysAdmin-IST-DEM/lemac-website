@@ -24,9 +24,19 @@ export async function fenixCallback(req: Request, res: Response) {
 
     const student = await upsertStudent(data.istId, data.name, data.email, data.mifareNumber);
 
-    res.redirect(process.env.URL + `/student-registration?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}`);
+    res.redirect(process.env.URL + `/student-registration?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}&renewed=${isToday(student.createdAt)}`);
   } catch (e) {
     console.error(e);
     res.redirect(process.env.URL + '/student-registration?error=unknown');
   }
+}
+
+function isToday(date: Date) {
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
 }

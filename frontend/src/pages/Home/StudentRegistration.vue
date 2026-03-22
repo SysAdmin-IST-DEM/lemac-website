@@ -95,7 +95,7 @@
     max-width="500"
   >
     <v-card>
-      <v-card-title>{{ error ? "Registration Error" : "Registration Successful" }}</v-card-title>
+      <v-card-title>{{ error ? "Registration Error" : ($route.query.renewed ? "Renewal Successful" : "Registration Successful") }}</v-card-title>
       <v-card-text v-if="student">
         Thank you for your registration in the Automatic Room Entrance system.<br>
         <br>
@@ -159,7 +159,7 @@ export default defineComponent({
     return {
       studentLink: `${import.meta.env.VITE_FENIX_BASE_URL}oauth/userdialog?client_id=${import.meta.env.VITE_FENIX_CLIENT_STUDENT_ID}&redirect_uri=${import.meta.env.VITE_FENIX_REDIRECT_URL_STUDENT}`,
       error: null,
-      student: null
+      student: null,
     };
   },
   computed: {
