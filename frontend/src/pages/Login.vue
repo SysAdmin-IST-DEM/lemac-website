@@ -8,6 +8,7 @@
       :on-initialization="onInitialization"
       save-color="success"
       :should-disable-save="true"
+      persistent
       cancel-color="success"
       cancel-text="Skip"
       :cancel-action="() => { confirmationDialog = true }"
@@ -105,7 +106,8 @@ export default {
   async mounted() {
     const lastEntry = (await getLastEntry()).data;
 
-    if(lastEntry.userId === this.getId && DateTime.now().toMillis() >= DateTime.fromISO(lastEntry.entry).toMillis()) {
+    if(lastEntry.userId === this.getId && DateTime.now().toMillis() >= DateTime.fromISO(lastEntry.entry).toMillis()
+      && DateTime.fromISO(lastEntry.entry).hasSame(DateTime.now(), 'day')) {
       await this.$router.push('/dashboard');
       return;
     }

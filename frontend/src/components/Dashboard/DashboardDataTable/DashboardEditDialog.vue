@@ -2,6 +2,7 @@
   <v-dialog
     v-model="isOpen"
     :max-width="maxWidth"
+    :persistent="persistent"
   >
     <v-card>
       <v-card-title class="text-h5">
@@ -118,6 +119,7 @@ const props = withDefaults(
     saveColor?: string,
     onSaveError?: (e: unknown) => void,
     readonly?: boolean
+    persistent?: boolean
   }>(),
   {
     onInitialization: () => {return {} as EditItem},
@@ -129,7 +131,8 @@ const props = withDefaults(
     saveText: 'Save',
     saveColor: 'primary',
     onSaveError: undefined,
-    readonly: false
+    readonly: false,
+    persistent: false
   }
 );
 
