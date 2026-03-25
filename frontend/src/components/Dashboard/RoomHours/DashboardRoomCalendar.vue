@@ -125,7 +125,7 @@ export default {
       return {
         entry: DateTime.fromJSDate(event.start).toFormat("HH:mm"),
         exit: DateTime.fromJSDate(event.end).toFormat("HH:mm"),
-        date: DateTime.fromJSDate(event.start).toUTC().startOf('day'),
+        date: DateTime.fromJSDate(event.start).startOf('day'),
         istId: event.details.istId,
         name: event.details.name,
         room: event.details.room
@@ -144,8 +144,8 @@ export default {
         });
 
         event.title = `Reservation of ${response.data.name}`;
-        event.start = DateTime.fromISO(response.data.entry).toUTC().toFormat("yyyy-MM-dd HH:mm");
-        event.end = DateTime.fromISO(response.data.exit).toUTC().toFormat("yyyy-MM-dd HH:mm");
+        event.start = DateTime.fromISO(response.data.entry).toFormat("yyyy-MM-dd HH:mm");
+        event.end = DateTime.fromISO(response.data.exit).toFormat("yyyy-MM-dd HH:mm");
         event.customColor = this.$refs.calendar.colors[response.data.room] + (event.givenKey ? ' darken-4' : '');
         event.class = "bg-" + this.$refs.calendar.colors[response.data.room] + (event.givenKey ? '-darken-4' : '');
         event.details = response.data
@@ -166,8 +166,8 @@ export default {
         this.$refs.calendar.events.push({
           id: event.id,
           title: event.title,
-          start: DateTime.fromISO(event.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"),
-          end: DateTime.fromISO(event.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+          start: DateTime.fromISO(event.entry).toFormat("yyyy-MM-dd HH:mm"),
+          end: DateTime.fromISO(event.exit).toFormat("yyyy-MM-dd HH:mm"),
           customColor: this.$refs.calendar.colors[event.room],
           class: 'bg-' + this.$refs.calendar.colors[event.room],
           givenKey: false,

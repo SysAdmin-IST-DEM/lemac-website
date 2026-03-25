@@ -135,9 +135,9 @@ export default {
     },
     async saveHours(event, values) {
       const [hEntry, mEntry] = values.entryHours.split(':').map(Number);
-      values.entry = DateTime.now().set({hour: hEntry, minute: mEntry, second: 0, millisecond: 0}).toUTC().toISO();
+      values.entry = DateTime.now().set({hour: hEntry, minute: mEntry, second: 0, millisecond: 0}).toISO();
       const [hExit, mExit] = values.exitHours.split(':').map(Number);
-      values.exit = DateTime.now().set({hour: hExit, minute: mExit, second: 0, millisecond: 0}).toUTC().toISO();
+      values.exit = DateTime.now().set({hour: hExit, minute: mExit, second: 0, millisecond: 0}).toISO();
       delete values.entryHours;
       delete values.exitHours;
 

@@ -53,8 +53,8 @@ export default {
       this.totalItems = response.data.total;
 
       for (const value of data) {
-        const entry = DateTime.fromISO(value.createdAt).toUTC();
-        let exit = DateTime.fromISO(value.createdAt).toUTC();
+        const entry = DateTime.fromISO(value.createdAt);
+        let exit = DateTime.fromISO(value.createdAt);
 
         if (value.closedAt) {
           const times = value.closedAt.split(':');

@@ -108,16 +108,16 @@ export default {
         return {
           id: val.id,
           title: 'Unknown',
-          start: DateTime.fromISO(val.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"), // TODO toDate()??
-          end: DateTime.fromISO(val.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+          start: DateTime.fromISO(val.entry).toFormat("yyyy-MM-dd HH:mm"), // TODO toDate()??
+          end: DateTime.fromISO(val.exit).toFormat("yyyy-MM-dd HH:mm"),
           details: val
         };
 
       return {
         id: val.id,
         title: user.name,
-        start: DateTime.fromISO(val.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"), // TODO toDate()??
-        end: DateTime.fromISO(val.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+        start: DateTime.fromISO(val.entry).toFormat("yyyy-MM-dd HH:mm"), // TODO toDate()??
+        end: DateTime.fromISO(val.exit).toFormat("yyyy-MM-dd HH:mm"),
         backgroundColor: user.color,
         details: val
       };
@@ -145,8 +145,8 @@ export default {
 
       const response = (await createHours({
         userId: event.userId ? event.userId : this.currentUser.id,
-        entry: DateTime.fromJSDate(event.start).toUTC().toISO(),
-        exit: DateTime.fromJSDate(event.end).toUTC().toISO()
+        entry: DateTime.fromJSDate(event.start).toISO(),
+        exit: DateTime.fromJSDate(event.end).toISO()
       })).data
       resolve({
         ...event,

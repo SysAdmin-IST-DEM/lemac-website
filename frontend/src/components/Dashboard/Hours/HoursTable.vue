@@ -141,9 +141,9 @@ export default {
     async editItem(item, values) {
       const dateEntry = values.entryDate ? DateTime.fromISO(values.entryDate) : DateTime.now();
       const [hEntry, mEntry] = values.entry.split(':').map(Number);
-      values.entry = dateEntry.set({hour: hEntry, minute: mEntry}).toUTC().toISO();
+      values.entry = dateEntry.set({hour: hEntry, minute: mEntry}).toISO();
       const [hExit, mExit] = values.exit.split(':').map(Number);
-      values.exit = dateEntry.set({hour: hExit, minute: mExit}).toUTC().toISO();
+      values.exit = dateEntry.set({hour: hExit, minute: mExit}).toISO();
 
       values.userId = values.userId ?? this.users.find((user) => user.current).id;
       console.log(values)

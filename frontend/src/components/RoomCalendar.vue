@@ -111,8 +111,8 @@ export default {
           this.events.push({
             id: event.id,
             title: event.title,
-            start: DateTime.fromISO(event.entry).toUTC().toFormat("yyyy-MM-dd HH:mm"),
-            end: DateTime.fromISO(event.exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+            start: DateTime.fromISO(event.entry).toFormat("yyyy-MM-dd HH:mm"),
+            end: DateTime.fromISO(event.exit).toFormat("yyyy-MM-dd HH:mm"),
             customColor: this.colors[event.room] + (event.givenKey ? ' darken-4' : ''),
             class: "bg-" + this.colors[event.room] + (event.givenKey ? '-darken-4' : ''),
             givenKey: event.givenKey,

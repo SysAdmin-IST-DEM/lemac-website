@@ -7,13 +7,13 @@
             <p>
               Entry:
               {{
-                DateTime.fromISO(event.details.entry).toUTC().toFormat("yyyy-MM-dd HH:mm")
+                DateTime.fromISO(event.details.entry).toFormat("yyyy-MM-dd HH:mm")
               }}
             </p>
             <p>
               Exit:
               {{
-                DateTime.fromISO(event.details.exit).toUTC().toFormat("yyyy-MM-dd HH:mm")
+                DateTime.fromISO(event.details.exit).toFormat("yyyy-MM-dd HH:mm")
               }}
             </p>
             <p>
@@ -66,8 +66,8 @@ export default {
         this.events.push({
           id: this.events.length,
           title: allHours[i].user.name,
-          start: DateTime.fromISO(allHours[i].entry).toUTC().toFormat("yyyy-MM-dd HH:mm"),
-          end: DateTime.fromISO(allHours[i].exit).toUTC().toFormat("yyyy-MM-dd HH:mm"),
+          start: DateTime.fromISO(allHours[i].entry).toFormat("yyyy-MM-dd HH:mm"),
+          end: DateTime.fromISO(allHours[i].exit).toFormat("yyyy-MM-dd HH:mm"),
           customColor: color,
           class: 'bg-' + color,
           details: allHours[i],

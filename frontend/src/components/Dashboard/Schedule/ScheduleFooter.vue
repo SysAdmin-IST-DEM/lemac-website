@@ -404,8 +404,8 @@ export default {
       console.log(removedDates)
 
       for (const date of addedDates) {
-        console.log(date.toUTC().startOf('day').toISO())
-        await setOffDays({ date: date.toUTC().startOf('day').toISO() });
+        console.log(date.startOf('day').toISO())
+        await setOffDays({ date: date.startOf('day').toISO() });
       }
 
       for (const date of removedDates) {
@@ -438,8 +438,8 @@ export default {
           const end = date.set({hour: endHours, minute: endMinutes})
           this.schedule.createEvent({event: {
             userId: this.recurringEvent.user,
-            start: start.toUTC().toJSDate(),
-            end: end.toUTC().toJSDate(),
+            start: start.toJSDate(),
+            end: end.toJSDate(),
           }, resolve: (event) => {
               this.schedule.events.push(event);
           }})
