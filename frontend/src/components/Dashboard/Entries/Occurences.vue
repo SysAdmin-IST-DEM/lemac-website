@@ -43,7 +43,6 @@ export default {
       data: [],
       totalItems: 0,
       tableLoading: true,
-      dates: [],
       itemsPerPage: 10
     };
   },
@@ -53,8 +52,6 @@ export default {
       this.tableLoading = true;
       this.$loading.show();
       this.data = [];
-
-      if (new Date(this.dates[0]) > new Date(this.dates[1])) this.dates.reverse();
 
       const response = await getEntriesWithPage(0, page, itemsPerPage, sortBy);
       const data = response.data.entries;

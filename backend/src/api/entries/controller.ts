@@ -63,15 +63,31 @@ export async function closeEntry(entryId: number) {
   }
 }
 
-export async function getEntries(active = false) {
+export async function getEntries(active = false, orderBy?: Prisma.EntryOrderByWithRelationInput[], page: number = 0, itemsPerPage?: number) {
   // if not active then all entries will be shown (there is no extra query), if active only active entries will be shown
   if(active) {
-    return prisma.entry.findMany({
-      where: { active: true },
-      include: { workstation: true }
-    });
+    return Promise.all([
+      prisma.entry.findMany({
+        where: { active: true },
+        include: { workstation: true },
+        orderBy,
+        skip: itemsPerPage ? (page - 1) * itemsPerPage : undefined,
+        take: itemsPerPage
+      }),
+      prisma.entry.count({
+        where: { active: true },
+      })
+    ]);
   } else {
-    return prisma.entry.findMany({ include: { workstation: true } });
+    return Promise.all([
+      prisma.entry.findMany({
+        include: { workstation: true },
+        orderBy,
+        skip: itemsPerPage ? (page - 1) * itemsPerPage : undefined,
+        take: itemsPerPage
+      }),
+      prisma.entry.count()
+    ]);
   }
 }
 

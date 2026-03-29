@@ -2,7 +2,7 @@ import * as controller from './controller.js';
 import * as workstationsController from '../workstations/controller.js';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
-import type { Entry, Workstation } from '@lemac/data-model';
+import type { Entry } from '@lemac/data-model';
 
 export async function addEntry(req: Request, res: Response) {
   if (
@@ -78,57 +78,30 @@ export async function updateEntry(req: Request, res: Response) {
 }
 
 export async function getEntries(req: Request, res: Response) {
-  const page = req.query.page ? parseInt(req.query.page as string) : null;
-  const itemsPerPage = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage as string) : null;
-  const sortBy = req.query.sortBy ? JSON.parse(req.query.sortBy as string) : null;
+  const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+  const itemsPerPage = req.query.itemsPerPage ? parseInt(req.query.itemsPerPage as string) : undefined;
+  const sortBy = req.query.sortBy ? JSON.parse(req.query.sortBy as string) : undefined;
   const active = req.query.active ? parseInt(req.query.active as string) === 1 : false;
-  const data = await controller.getEntries(active);
-  if (data.length === 0) {
-    //no entries in db
-    res.json([]);
-  } else if (data.length > 0) {
-    const total = data.length;
 
-    const response = data.map((val: any) => {
+  let orderBy = undefined;
+  if(sortBy) {
+    orderBy = sortBy.map((s: { key: string, order: 'asc' | 'desc' }) => ({
+      [s.key === 'date' ? 'createdAt' : s.key]: s.order
+    }));
+  }
+
+  console.log("QUERY:", req.query)
+  const [data, total] = await controller.getEntries(active, orderBy, page, itemsPerPage);
+
+  if(data.length === 0) {
+    res.json([]);
+  } else {
+    const response = data.map((val: Entry) => {
       return {
         ...val,
         closedAt: val.closedAt ? DateTime.fromJSDate(val.closedAt).toFormat("HH:mm:ss") : val.closedAt
       };
     });
-
-    if(page && itemsPerPage) {
-      // Pagination
-      const start = (page - 1) * itemsPerPage
-      const end = start + itemsPerPage
-
-      if (sortBy && sortBy.length > 0) {
-        response.sort((a: Entry, b: Entry) => {
-          for (const sortItem of sortBy) {
-            const { key, order } = sortItem;
-            const factor = order === 'desc' ? -1 : 1;
-
-            let actualKey = key;
-            if(actualKey === 'date') actualKey = 'createdAt';
-
-            const aValue = a[actualKey as keyof Entry];
-            const bValue = b[actualKey as keyof Entry];
-
-            if(aValue === null) return -1 * factor;
-            if(bValue === null) return 1 * factor;
-
-            if (aValue < bValue) return -1 * factor;
-            if (aValue > bValue) return 1 * factor;
-          }
-
-          return 0;
-        });
-      }
-
-      res.json({entries: response.slice(start, end), total});
-    } else {
-      res.json({entries: response, total});
-    }
-  } else {
-    res.sendStatus(400);
+    res.json({ entries: response, total });
   }
 }
