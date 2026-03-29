@@ -64,12 +64,18 @@ model Workstation {
   @@map("workstations")
 }
 
+enum EntrySource {
+  CARD
+  MANUAL
+}
+
 model Entry {
   id            Int         @id @default(autoincrement())
   workstationId Int         @map("workstation_id")
   istId         String      @map("ist_id") @db.VarChar(12)
   createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
   closedAt      DateTime?   @map("closed_at") @db.Time(0)
+  source        EntrySource @default(MANUAL)
   active        Boolean     @default(true)
   observations  String?     @default("") @db.Text
   workstation   Workstation @relation(fields: [workstationId], references: [id], onUpdate: Restrict)

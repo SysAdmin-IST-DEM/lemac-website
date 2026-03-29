@@ -134,6 +134,15 @@
             </v-list-item-title>
             <v-list-item-subtitle>
               <v-icon
+                v-if="entry.source === EntrySource.CARD"
+                title="Created by card scanner"
+                start
+                end
+                size="small"
+              >
+                mdi-smart-card
+              </v-icon>
+              <v-icon
                 start
                 end
                 size="small"
@@ -378,6 +387,7 @@
 <script>
 import { getEntries, updateEntry, addEntry } from '@/api/entries.api';
 import { getWorkstations } from '@/api/workstations.api';
+import { EntrySource } from '@lemac/data-model/browser';
 
 export default {
   data() {
@@ -403,6 +413,9 @@ export default {
     };
   },
   computed: {
+    EntrySource() {
+      return EntrySource
+    },
     formTitle() {
       return this.editedItem === -1 ||
         (this.entries[this.editedIndex]?.observations ?? '').length === 0

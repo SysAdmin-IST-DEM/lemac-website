@@ -1,7 +1,7 @@
 import { prisma } from '../../index.js';
-import { Prisma } from '@lemac/data-model';
+import { type EntrySource, Prisma } from '@lemac/data-model';
 
-export async function addEntry(istId: string, workstationId: number) {
+export async function addEntry(istId: string, workstationId: number, source?: EntrySource) {
   return prisma.$transaction(async (tx) => {
     await tx.workstation.update({
       where: { id: workstationId },
@@ -9,7 +9,7 @@ export async function addEntry(istId: string, workstationId: number) {
     });
 
     return tx.entry.create({
-      data: { istId, workstationId },
+      data: { istId, workstationId, source },
       include: { workstation: true },
     });
   });

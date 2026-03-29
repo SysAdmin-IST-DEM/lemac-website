@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `entries` ADD COLUMN `source` ENUM('CARD', 'MANUAL') NOT NULL DEFAULT 'MANUAL';
