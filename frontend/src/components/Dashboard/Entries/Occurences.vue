@@ -7,9 +7,16 @@
     :items="data"
     :items-length="totalItems"
     :loading="tableLoading"
+    :sort-by="[{ key: 'date', order: 'desc' }]"
     class="elevation-1"
     @update:options="update"
-  />
+  >
+    <template #[`item.source`]="{ item }">
+      <v-icon>
+        {{ item.source === 'CARD' ? 'mdi-smart-card' : 'mdi-monitor-account' }}
+      </v-icon>
+    </template>
+  </DashboardTable>
 </template>
 
 <script>
@@ -25,10 +32,11 @@ export default {
     return {
       tableType: markRaw(VDataTableServer),
       headers: [
+        { title: 'Source', key: 'source' },
         { title: 'Date', key: 'date' },
         { title: 'Entry hour', key: 'entry', sortable: false },
-        { title: 'Student number', key: 'stuId' },
-        { title: 'Computer', key: 'computer' },
+        { title: 'Student number', key: 'istId' },
+        { title: 'Computer', key: 'computer', sortable: false },
         { title: 'Exit hour', key: 'exit', sortable: false },
         { title: 'Time spent', key: 'spent', sortable: false },
       ],
@@ -67,10 +75,11 @@ export default {
           {
             date: entry.toFormat('dd/MM/yyyy'),
             entry: entry.toFormat('HH:mm:ss'),
-            stuId: value.istId,
+            istId: value.istId,
             computer: value.workstation.name,
             exit: value.closedAt ? exit.toFormat('HH:mm:ss') : '-',
             spent: value.closedAt ? exit.diff(entry).toFormat('hh:mm:ss') : '-',
+            source: value.source
           },
         ];
       }

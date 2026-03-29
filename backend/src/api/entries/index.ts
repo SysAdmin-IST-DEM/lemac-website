@@ -2,6 +2,7 @@ import * as controller from './controller.js';
 import * as workstationsController from '../workstations/controller.js';
 import type { Request, Response } from 'express';
 import { DateTime } from 'luxon';
+import type { Entry, Workstation } from '@lemac/data-model';
 
 export async function addEntry(req: Request, res: Response) {
   if (
@@ -101,8 +102,26 @@ export async function getEntries(req: Request, res: Response) {
       const end = start + itemsPerPage
 
       if (sortBy && sortBy.length > 0) {
-        // Sorting
-        //TODO: fix sorting
+        response.sort((a: Entry, b: Entry) => {
+          for (const sortItem of sortBy) {
+            const { key, order } = sortItem;
+            const factor = order === 'desc' ? -1 : 1;
+
+            let actualKey = key;
+            if(actualKey === 'date') actualKey = 'createdAt';
+
+            const aValue = a[actualKey as keyof Entry];
+            const bValue = b[actualKey as keyof Entry];
+
+            if(aValue === null) return -1 * factor;
+            if(bValue === null) return 1 * factor;
+
+            if (aValue < bValue) return -1 * factor;
+            if (aValue > bValue) return 1 * factor;
+          }
+
+          return 0;
+        });
       }
 
       res.json({entries: response.slice(start, end), total});
