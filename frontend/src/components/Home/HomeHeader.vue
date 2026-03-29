@@ -162,7 +162,7 @@
     color="warning"
     icon="$warning"
   >
-    All students may now be required to register in LEMAC’s entry system to access
+    All students are now required to register in LEMAC’s entrance system to access
     the room. Please <RouterLink to="/student-registration">complete your registration</RouterLink>.
   </v-alert>
 </template>
