@@ -134,13 +134,12 @@
             </v-list-item-title>
             <v-list-item-subtitle>
               <v-icon
-                v-if="entry.source === EntrySource.CARD"
-                title="Created by card scanner"
+                :title="entry.source === 'CARD' ? 'Created by card scanner' : 'Created by monitor'"
                 start
                 end
                 size="small"
               >
-                mdi-smart-card
+                {{ entry.source === 'CARD' ? 'mdi-smart-card' : 'mdi-monitor-account' }}
               </v-icon>
               <v-icon
                 start
