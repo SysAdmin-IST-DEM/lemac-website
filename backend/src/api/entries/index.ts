@@ -90,7 +90,6 @@ export async function getEntries(req: Request, res: Response) {
     }));
   }
 
-  console.log("QUERY:", req.query)
   const [data, total] = await controller.getEntries(active, orderBy, page, itemsPerPage);
 
   if(data.length === 0) {
