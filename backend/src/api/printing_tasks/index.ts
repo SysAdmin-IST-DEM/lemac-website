@@ -36,7 +36,7 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
     req.body.email,
     req.body.unit,
     req.body.materialId,
-    req.body.price,
+    Math.round(req.body.price * 100) / 100,
     req.body.observations
   );
 
