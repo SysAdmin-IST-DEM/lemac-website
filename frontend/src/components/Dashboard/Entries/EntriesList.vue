@@ -37,7 +37,7 @@
             class="mb-2 mr-4"
             v-bind="props"
           >
-            New Registration
+            New Entrance
           </v-btn>
         </template>
         <v-card>
@@ -46,7 +46,7 @@
             @submit.prevent="save"
           >
             <v-card-title>
-              <span class="text-h5"> New Registration </span>
+              <span class="text-h5"> New Entrance </span>
             </v-card-title>
             <v-card-text>
               <v-row>
