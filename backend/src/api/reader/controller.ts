@@ -16,16 +16,21 @@ export async function getActiveEntry(mifareNumber: bigint): Promise<{
   entry?: Entry
 }> {
   return prisma.$transaction(async (tx) => {
-    const student = await tx.student.findUnique({
-      where: { mifareNumber }
+    const studentCard = await tx.studentCard.findUnique({
+      where: { mifareNumber },
+      include: {
+        student: true
+      }
     });
 
-    if (!student) {
+    if (!studentCard) {
       return {
         ok: false,
         code: OnScanCardResultCode.STUDENT_NOT_FOUND
       };
     }
+
+    const student = studentCard.student;
 
     const now = DateTime.now();
     const schoolYearStart = DateTime.fromObject({

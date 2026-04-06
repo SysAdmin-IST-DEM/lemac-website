@@ -2,19 +2,31 @@ import { prisma } from '../../index.js';
 
 export async function upsertStudent(istId: string, name: string, email: string,
                                        mifareNumber: bigint) {
-  return prisma.student.upsert({
+  const student = await prisma.student.upsert({
     where: { istId },
     create: {
       istId,
       name,
       email,
-      mifareNumber
     },
     update: {
       name,
       email,
-      mifareNumber,
       lastRenewed: new Date()
     }
   });
+
+  await prisma.studentCard.upsert({
+    where: { mifareNumber },
+    create: {
+      mifareNumber,
+      studentId: student.id
+    },
+    update: {
+      studentId: student.id,
+      lastModified: new Date()
+    }
+  })
+
+  return student;
 }

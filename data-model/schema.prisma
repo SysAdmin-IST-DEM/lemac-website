@@ -34,15 +34,27 @@ model User {
 }
 
 model Student {
-  id           Int      @id @default(autoincrement())
-  istId        String   @unique() @map("ist_id") @db.VarChar(12)
-  name         String   @db.VarChar(255)
-  email        String   @db.Text
-  mifareNumber BigInt   @unique @map("mifare_number")
-  lastRenewed  DateTime @default(now()) @map("last_renewed") @db.Date
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  id           Int           @id @default(autoincrement())
+  istId        String        @unique() @map("ist_id") @db.VarChar(12)
+  name         String        @db.VarChar(255)
+  email        String        @db.Text
+  lastRenewed  DateTime      @default(now()) @map("last_renewed") @db.Date
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+  studentCards StudentCard[]
 
   @@map("students")
+}
+
+model StudentCard {
+  id           Int      @id @default(autoincrement())
+  studentId    Int      @map("student_id")
+  mifareNumber BigInt   @unique @map("mifare_number")
+  lastModified DateTime @default(now()) @map("last_updated") @db.Timestamp(0)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  student      Student  @relation(fields: [studentId], references: [id], onUpdate: Restrict)
+
+  @@index([studentId])
+  @@map("student_cards")
 }
 
 enum WorkstationStatus {
