@@ -63,7 +63,13 @@ const cardScanned = ref<bigint | null>(null);
 let socket: Socket;
 
 onMounted(() => {
-  socket = io(import.meta.env.VITE_BASE_URL_WS || 'http://localhost:5000');
+  const token = localStorage.getItem('token');
+
+  socket = io(import.meta.env.VITE_BASE_URL_WS || 'http://localhost:5000', {
+    auth: {
+      token: token
+    }
+  });
 
   socket.on('card-scanned', (data) => {
     socket.emit('stop-assigning');

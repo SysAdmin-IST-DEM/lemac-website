@@ -1,6 +1,8 @@
 import type { Server as HTTPServer } from 'node:http';
 import { Server as SocketIOServer } from 'socket.io';
 import type { CorsOptions } from 'cors';
+import jwt, { type JwtPayload, type VerifyErrors } from 'jsonwebtoken';
+import { isJwtUser } from '../middleware/verifier.js';
 
 let io: SocketIOServer;
 const pendingAssignments = new Map<string, string>();
@@ -8,6 +10,23 @@ const pendingAssignments = new Map<string, string>();
 export const initCardAssignerSocket = (server: HTTPServer, corsOptions: CorsOptions)=> {
   io = new SocketIOServer(server, {
     cors: corsOptions
+  });
+
+  io.use((socket, next) => {
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+      console.log("MISSING")
+      return next(new Error('Authentication error: Token missing'));
+    }
+
+    jwt.verify(token!, process.env.JWT_SECRET!, (err: VerifyErrors | null, user: string | JwtPayload | undefined) => {
+      if (!err && isJwtUser(user) && user.active) {
+        return next();
+      }
+      console.log("INVALID");
+      return next(new Error('Authentication error: Token invalid'));
+    });
   });
 
   io.on('connection', (socket) => {
