@@ -9,6 +9,7 @@ const pendingAssignments = new Map<string, string>();
 
 export const initCardAssignerSocket = (server: HTTPServer, corsOptions: CorsOptions)=> {
   io = new SocketIOServer(server, {
+    path: "/api",
     cors: corsOptions
   });
 
@@ -16,7 +17,7 @@ export const initCardAssignerSocket = (server: HTTPServer, corsOptions: CorsOpti
     const token = socket.handshake.auth.token;
 
     if (!token) {
-      console.log("MISSING")
+      console.error("Card Websocket. Authentication error: Token missing")
       return next(new Error('Authentication error: Token missing'));
     }
 
@@ -24,7 +25,7 @@ export const initCardAssignerSocket = (server: HTTPServer, corsOptions: CorsOpti
       if (!err && isJwtUser(user) && user.active) {
         return next();
       }
-      console.log("INVALID");
+      console.error("Card Websocket. Authentication error: Token invalid");
       return next(new Error('Authentication error: Token invalid'));
     });
   });

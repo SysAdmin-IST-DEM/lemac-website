@@ -71,6 +71,8 @@ onMounted(() => {
     }
   });
 
+  console.log("Socket started", socket)
+
   socket.on('card-scanned', (data) => {
     socket.emit('stop-assigning');
     cardScanned.value = data.mifareNumber;
