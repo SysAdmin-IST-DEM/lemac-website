@@ -91,9 +91,14 @@ export default {
           link: '/dashboard/schedule',
         },
         {
-          text: 'User Management',
+          text: "Student Management",
+          icon: 'mdi-smart-card',
+          link: '/dashboard/students'
+        },
+        {
+          text: 'Monitors Accounts',
           icon: 'mdi-account-multiple',
-          link: '/dashboard/users',
+          link: '/dashboard/monitors',
         },
         {
           text: 'Workstations',

@@ -3,8 +3,18 @@ import * as entryController from '../entries/controller.js';
 import type { RequestWithBody } from '../../middleware/parseBody.js';
 import type { Request, Response } from 'express';
 import { AddEntryBody, EntrySource, GetActiveEntryBody } from '@lemac/data-model';
+import { emitCardScanned } from '../../services/cardAssignerSocket.js';
+import { OnScanCardResultCode } from './controller.js';
 
 export async function getActiveEntry(req: RequestWithBody<typeof GetActiveEntryBody>, res: Response) {
+  if(emitCardScanned(req.body.mifareNumber)) {
+    res.json({
+      ok: true,
+      code: OnScanCardResultCode.CARD_ASSIGNING,
+    });
+    return;
+  }
+  
   const data = await controller.getActiveEntry(req.body.mifareNumber);
   console.log("Active entry with mifareNumber: " + req.body.mifareNumber);
   res.json(data);

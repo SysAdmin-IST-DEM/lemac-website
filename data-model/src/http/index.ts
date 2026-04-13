@@ -2,6 +2,7 @@ export * from './printing_tasks.js'
 export * from './printing_materials.js'
 export * from './users.js'
 export * from './reader.js'
+export * from './student.js'
 
 // Delete Value
 

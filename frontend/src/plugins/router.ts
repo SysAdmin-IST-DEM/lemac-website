@@ -5,7 +5,7 @@ import Login from '@/pages/Login.vue';
 import NotFoundPage from '@/pages/404.vue';
 import Dashboard from '@/pages/Dashboard/Dashboard.vue';
 import NavBar from '@/components/Dashboard/Navbar/NavBar.vue';
-import Users from '@/pages/Dashboard/Users.vue';
+import Monitors from '@/pages/Dashboard/Monitors.vue';
 import Hours from '@/pages/Dashboard/Hours.vue';
 import Workstations from '@/pages/Dashboard/Workstations.vue';
 import Publications from '@/pages/Dashboard/Publications.vue';
@@ -19,6 +19,7 @@ import Printing from '@/pages/Dashboard/Printing.vue';
 
 import type { RouteRecordRaw } from 'vue-router';
 import StudentRegistration from '@/pages/Home/StudentRegistration.vue';
+import Students from '@/pages/Dashboard/Students.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -74,10 +75,10 @@ const routes: RouteRecordRaw[] = [
         meta: { title: 'Dashboard' },
       },
       {
-        path: 'users',
-        name: 'dashboard-users',
-        component: Users,
-        meta: { title: 'User Management' },
+        path: 'monitors',
+        name: 'dashboard-monitors',
+        component: Monitors,
+        meta: { title: 'Monitors Accounts' },
       },
       {
         path: 'hours',
@@ -108,6 +109,12 @@ const routes: RouteRecordRaw[] = [
         name: 'dashboard-schedule',
         component: Schedule,
         meta: { title: 'Monitor Schedule' },
+      },
+      {
+        path: 'students',
+        name: 'dashboard-students',
+        component: Students,
+        meta: { title: 'Student Management' },
       },
       {
         path: 'printing',
