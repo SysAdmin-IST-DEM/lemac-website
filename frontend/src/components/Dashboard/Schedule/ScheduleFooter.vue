@@ -433,7 +433,7 @@ export default {
           const startHours = this.recurringEvent.start.split(":")[0]
           const startMinutes = this.recurringEvent.start.split(":")[1]
           const endHours = this.recurringEvent.end.split(":")[0]
-          const endMinutes = this.recurringEvent.start.split(":")[1]
+          const endMinutes = this.recurringEvent.end.split(":")[1]
           const start = date.set({hour: startHours, minute: startMinutes})
           const end = date.set({hour: endHours, minute: endMinutes})
           this.schedule.createEvent({event: {

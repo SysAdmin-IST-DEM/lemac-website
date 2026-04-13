@@ -148,7 +148,7 @@ export default {
         entry: DateTime.fromJSDate(event.start).toISO(),
         exit: DateTime.fromJSDate(event.end).toISO()
       })).data
-      resolve({
+      const newEvent = {
         ...event,
         id: response.id,
         title: this.currentUser.name ?? 'Unknown User',
@@ -157,7 +157,9 @@ export default {
           id: response.id,
           userId: this.currentUser.id
         }
-      });
+      };
+      resolve(newEvent);
+      this.events = [...this.events, newEvent];
       this.$notify({
         type: 'success',
         title: 'Entry created',
@@ -166,6 +168,7 @@ export default {
     },
     async deleteEvent(event) {
       await deleteHours(event.id);
+      this.events = this.events.filter(e => e.id !== event.id);
       this.$notify({
         type: 'success',
         title: 'Entry deleted',
