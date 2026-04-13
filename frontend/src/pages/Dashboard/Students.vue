@@ -7,38 +7,40 @@
     grow
   >
     <v-tab value="1">
-      Monitors
+      Assign
+    </v-tab>
+    <v-tab value="2">
+      Students (WIP)
     </v-tab>
   </v-tabs>
 
   <v-tabs-window v-model="tab">
     <v-tabs-window-item value="1">
       <v-container
-        v-if="monitors"
-        class="mt-6"
+        v-if="students"
+        class="mt-6 bg-white"
       >
-        <MonitorTable :members="monitors" />
+        <CardAssigner :students="students" />
       </v-container>
     </v-tabs-window-item>
   </v-tabs-window>
 </template>
 
 <script>
-import MonitorTable from '@/components/Dashboard/Users/MonitorTable.vue';
-import { getUsers } from '@/api/user.api';
+import CardAssigner from '@/components/Dashboard/Students/CardAssigner.vue';
+import { getStudents } from '@/api/students.api.ts';
 
 export default {
-  name: 'UserPage',
-  components: { MonitorTable },
+  name: 'StudentsPage',
+  components: { CardAssigner },
   data: () => ({
     tab: null,
-    monitors: null,
+    students: null,
   }),
   async mounted() {
     this.$loading.show();
-    this.monitors = (await getUsers()).data;
-
+    this.students = (await getStudents()).data;
     this.$loading.hide();
-  },
+  }
 };
 </script>

@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 export const AssignStudentCardBody = z.object({
-  id: z.number().positive()
+  studentId: z.number().positive(),
+  mifareNumber: z.coerce.bigint()
 })
 
 export type AssignStudentCardBody = z.infer<typeof AssignStudentCardBody>;

@@ -101,7 +101,16 @@
         <br>
         <b>Registered Student:</b> {{ student }}<br>
         <br>
-        You can now use your student card to access the LEMAC laboratory room.<br>
+        <div v-if="$route.query.mifare === 'true'">
+          You can now use your student card to access the LEMAC laboratory room.<br>
+        </div>
+        <div v-else>
+          <b class="text-error">Action required:</b><br>
+          Your student card is not yet registered in FénixEdu due to an error validating your card. To finish the process:<br>
+          1. Go to the LEMAC room.<br>
+          2. Locate the Monitor on duty near the entrance.<br>
+          3. Ask to have your card manually assigned to your profile.<br>
+        </div>
         <br>
         If you encounter any issues, please contact support at
         <a href="mailto:monitores.lemac@dem.tecnico.ulisboa.pt">monitores.lemac@dem.tecnico.ulisboa.pt</a>.

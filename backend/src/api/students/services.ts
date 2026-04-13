@@ -87,13 +87,13 @@ export async function createStudentOrNull(access_token: string) {
     },
   });
 
-  console.log(`CARDS OF PERSON ${person.name}: ${JSON.stringify(card)}`);
+  if(card) console.log(`CARDS OF PERSON ${person.name}: ${JSON.stringify(card)}`);
 
   return {
     id: -1,
     istId: person.username,
     name: person.name,
     email: person.email,
-    mifareNumber: BigInt(card[0].mifareNumber)
+    mifareNumber: card && card.length > 0 && card[0].mifareNumber ? BigInt(card[0].mifareNumber) : null
   }
 }

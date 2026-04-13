@@ -10,6 +10,8 @@ import api from './api/index.js';
 import { PrismaClient } from '@lemac/data-model'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { ensureBucket } from './services/minio.js';
+import * as http from 'node:http';
+import { initCardAssignerSocket } from './services/cardAssignerSocket.js';
 
 /* Convert BigInt to String in JSON */
 (BigInt.prototype as any).toJSON = function () {
@@ -55,7 +57,12 @@ api.init(app);
 /* Start MINIO service */
 await ensureBucket();
 
+const server = http.createServer(app);
+
+/* Init Card Assigner Websocket */
+initCardAssignerSocket(server, corsOptions);
+
 /* Start Server */
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`lemac-backend listening on http://localhost:${port}`);
 });
