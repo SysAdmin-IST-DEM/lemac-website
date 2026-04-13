@@ -9,7 +9,7 @@ const pendingAssignments = new Map<string, string>();
 
 export const initCardAssignerSocket = (server: HTTPServer, corsOptions: CorsOptions)=> {
   io = new SocketIOServer(server, {
-    path: "/api",
+    path: "/api/socket.io",
     cors: corsOptions
   });
 
