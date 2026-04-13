@@ -52,6 +52,7 @@ import type { Student } from '@lemac/data-model/browser';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { io, Socket } from 'socket.io-client';
 import { assignStudentCard } from '@/api/students.api.ts';
+import { notify } from '@kyvg/vue3-notification';
 
 defineProps<{
   students: Student[]
@@ -98,6 +99,11 @@ const confirmLoading = ref(false);
 async function confirm() {
   confirmLoading.value = true;
   await assignStudentCard(selectedStudent.value!, cardScanned.value!);
+  notify({
+    type: 'success',
+    title: 'Card assigned',
+    text: `You have now assigned a card to student`,
+  });
   confirmLoading.value = false;
   cancel();
 }
