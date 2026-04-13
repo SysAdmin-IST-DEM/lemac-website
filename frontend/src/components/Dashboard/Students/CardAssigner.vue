@@ -66,6 +66,7 @@ onMounted(() => {
   const token = localStorage.getItem('token');
 
   socket = io(import.meta.env.VITE_BASE_URL_WS || 'http://localhost:5000', {
+    path: "/api/socket.io",
     auth: {
       token: token
     }
