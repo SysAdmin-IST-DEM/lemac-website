@@ -14,6 +14,7 @@
         label="Search Student"
         :items="students.map(s => ({title: `${s.name} (${s.istId})`, value: s.id}))"
         :disabled="currentState !== 'NO_STUDENT'"
+        variant="outlined"
         hide-details
       >
       </v-autocomplete>
@@ -21,17 +22,18 @@
     <v-col cols="1">
       <v-icon-btn
         icon="mdi-reload"
+        :disabled="currentState === 'NO_STUDENT'"
         @click="cancel"
       />
     </v-col>
   </v-row>
   <v-row justify="center">
     <v-col
-      class="border-1 border-solid h-40 d-flex align-center justify-center mb-4"
+      class="border-thin border-secondary h-40 d-flex align-center justify-center mb-4"
       :class="{
-        'border-gray-300': currentState === 'NO_STUDENT',
-        'border-gray-500': currentState === 'WAITING_CARD',
-        'border-gray-800': currentState === 'DESCRIPTION',
+        'border-opacity': currentState === 'NO_STUDENT',
+        'border-opacity-50': currentState === 'WAITING_CARD',
+        'border-opacity-100': currentState === 'DESCRIPTION',
         'text-gray-300': currentState === 'NO_STUDENT',
         'text-gray-500': currentState === 'WAITING_CARD',
         'text-gray-800': currentState === 'DESCRIPTION'
@@ -40,8 +42,70 @@
     >
       {{ statusMessages[currentState] }}
       <div v-if="currentState === 'DESCRIPTION'">
-        <v-icon-btn icon="mdi-check" :loading="confirmLoading" @click="confirm" />
-        <v-icon-btn icon="mdi-close" :disabled="confirmLoading" @click="cancel" />
+        <v-icon-btn icon="mdi-check" color="secondary" variant="text" :loading="confirmLoading" @click="confirm" />
+        <v-icon-btn icon="mdi-close" variant="text" :disabled="confirmLoading" @click="cancel" />
+      </div>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col>
+      <h3><b>How to assign a card?</b></h3>
+
+      <v-list>
+        <v-list-item>
+          <template #prepend>
+            <v-chip color="secondary" variant="elevated"> 1 </v-chip>
+          </template>
+          <div class="ml-2">
+            Select a student by clicking Search Student. You can type using the keyboard
+            for easily searching by name or IST-ID.
+          </div>
+        </v-list-item>
+        <v-list-item>
+          <template #prepend>
+            <v-chip color="secondary" variant="elevated"> 2 </v-chip>
+          </template>
+          <div class="ml-2">Ask for the student to scan the card he wants to assign.</div>
+        </v-list-item>
+        <v-list-item>
+          <template #prepend>
+            <v-chip color="secondary" variant="elevated"> 3 </v-chip>
+          </template>
+          <div class="ml-2">
+            Confirm by clicking the <v-icon>mdi-check</v-icon> button.
+          </div>
+        </v-list-item>
+        <v-list-item>
+          <template #prepend>
+            <v-chip color="secondary" variant="elevated"> 4 </v-chip>
+          </template>
+          <div class="ml-2">
+            Student can now scan that card to register entry/exit automatically.
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-col>
+    <v-col>
+      <h3><b>Supported Cards</b></h3>
+
+      <v-list>
+        <v-list-item>
+          <template #prepend>
+            <v-chip color="secondary" variant="elevated" />
+          </template>
+          <div class="ml-2">Técnico Satander Card</div>
+        </v-list-item>
+        <v-list-item>
+          <template #prepend>
+            <v-chip color="secondary" variant="elevated" />
+          </template>
+          <div class="ml-2">ULisboa Card</div>
+        </v-list-item>
+      </v-list>
+
+      <div class="ml-2">
+        While other cards may function, compatibility is not guaranteed. To verify support,
+        simply have the student scan their card; if the system recognizes it, the card is compatible.
       </div>
     </v-col>
   </v-row>
@@ -102,7 +166,7 @@ async function confirm() {
   notify({
     type: 'success',
     title: 'Card assigned',
-    text: `You have now assigned a card to student`,
+    text: `Card assigned to student (ID: ${selectedStudent.value})`,
   });
   confirmLoading.value = false;
   cancel();
