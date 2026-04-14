@@ -12,7 +12,7 @@
       <v-autocomplete
         v-model="selectedStudent"
         label="Search Student"
-        :items="students.map(s => ({title: `${s.name} (${s.istId})`, value: s.id}))"
+        :items="students.map(s => ({ title: `${s.name} (${s.istId})`, value: s.id })).sort((a, b) => a.title.localeCompare(b.title))"
         :disabled="currentState !== 'NO_STUDENT'"
         variant="outlined"
         hide-details
