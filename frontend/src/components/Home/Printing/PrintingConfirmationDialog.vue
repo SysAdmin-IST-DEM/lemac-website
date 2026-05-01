@@ -1,5 +1,9 @@
 <template>
-  <v-dialog :model-value="modelValue" max-width="500">
+  <v-dialog
+    :model-value="modelValue"
+    max-width="500"
+    persistent
+  >
     <v-card>
       <v-card-title>Confirmation Step</v-card-title>
       <v-card-text>
