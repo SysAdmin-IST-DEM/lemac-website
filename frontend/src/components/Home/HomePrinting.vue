@@ -67,7 +67,7 @@
         <v-file-input
           v-model="modelFile"
           label="Model STL"
-          :rules="[requiredRule]"
+          :rules="[requiredRule, sizeLimitRule]"
           accept=".stl"
           required
           prepend-icon="mdi-paperclip"
@@ -174,6 +174,7 @@ export default {
     boundingBoxSize: THREE.Vector3;
     submitDialog: boolean;
     requiredRule: (v: unknown) => string | boolean;
+    sizeLimitRule: (file: File) => string | boolean;
   } {
     return {
       values: initialData,
@@ -184,6 +185,7 @@ export default {
       boundingBoxSize: new THREE.Vector3(0, 0, 0),
       submitDialog: false,
       requiredRule: (v: unknown) => (!!v || v === 0) || 'Required',
+      sizeLimitRule: (file: File) => (!file || !(file.size > 50 * 1024 * 1024)) || 'File too large. (Limit 50MB).'
     };
   },
   computed: {
