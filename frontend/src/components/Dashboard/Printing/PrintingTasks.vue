@@ -15,7 +15,7 @@
       />
     </template>
 
-    <template #[`item.new`]="{ item }">
+    <template #[`item.task`]="{ item }">
       <DashboardSelect
         v-if="!item.assigned"
         color="secondary"
@@ -26,6 +26,7 @@
         css=""
         @update:model-value="(val: number) => assign(val, item)"
       />
+      <span v-else>#{{ item.id }}</span>
     </template>
 
     <template #[`item.status`]="{ item }">
@@ -159,7 +160,7 @@ export default {
   } {
     return {
       headers: [
-        { title: 'New', key: 'new', sortable: false },
+        { title: 'Task', key: 'task', sortable: false },
         { title: 'Name', key: 'name' },
         { title: 'Status', key: 'status' },
         { title: 'Material', key: 'material' },
