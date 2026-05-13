@@ -6,14 +6,13 @@ const transporter = nodemailer.createTransport({
   port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 465,
   secure: true,
   tls: {
-    // Disable if the server has a self-signed certificate
     rejectUnauthorized: false,
   },
 });
 
 export async function sendEmail(to: string, subject: string, text: string): Promise<boolean> {
   const mailOptions = {
-    from: "lemac-noreply@sysadm.dem.tecnico.ulisboa.pt",
+    from: "lemac-noreply@dem.tecnico.ulisboa.pt",
     to,
     subject,
     text
