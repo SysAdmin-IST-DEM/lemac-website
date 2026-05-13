@@ -298,8 +298,8 @@ export default {
       this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id).map((val) => {
         return {
           ...val,
-          dateStart: DateTime.fromISO(val.dateStart),
-          dateEnd: DateTime.fromISO(val.dateEnd)
+          dateStart: DateTime.fromISO(val.dateStart).startOf('day'),
+          dateEnd: DateTime.fromISO(val.dateEnd).endOf('day')
         }
       });
     },
