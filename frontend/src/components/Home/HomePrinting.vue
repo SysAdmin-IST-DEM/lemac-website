@@ -87,6 +87,16 @@
           variant="underlined"
           class="m-1!"
         />
+
+        <v-number-input
+          v-model="values.amount"
+          label="Quantity"
+          :rules="[requiredRule]"
+          :min="1"
+          required
+          prepend-icon="mdi-layers"
+          variant="underlined"
+        />
       </v-row>
 
       <v-row>
@@ -160,6 +170,7 @@ const initialData: AddPrintTaskBody = {
   unit: Unit.MILIMETERS,
   price: 0,
   materialId: 0,
+  amount: 1
 };
 
 export default {
@@ -208,7 +219,7 @@ export default {
         this.convertDistance(boundingBoxSize.z, this.values.unit, Unit.CENTIMETERS)
       );
       this.volume = this.convertVolume(rawVolume, this.values.unit, Unit.CENTIMETERS);
-      this.values.price = this.volume * (this.selectedMaterial?.priceMultiplier || 0);
+      this.values.price = (this.values.amount || 1) * Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
     },
     'values.materialId'() {
       if (!this.modelFile) {
@@ -217,7 +228,16 @@ export default {
         this.values.price = 0;
         return;
       }
-      this.values.price = Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
+      this.values.price = (this.values.amount || 1) * Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
+    },
+    'values.amount'() {
+      if (!this.modelFile) {
+        this.boundingBoxSize = new THREE.Vector3(0, 0, 0);
+        this.volume = 0;
+        this.values.price = 0;
+        return;
+      }
+      this.values.price = (this.values.amount || 1) * Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
     },
     async 'values.unit'() {
       if (!this.modelFile) {
@@ -233,7 +253,7 @@ export default {
         this.convertDistance(boundingBoxSize.z, this.values.unit, Unit.CENTIMETERS)
       );
       this.volume = this.convertVolume(rawVolume, this.values.unit, Unit.CENTIMETERS);
-      this.values.price = Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
+      this.values.price = (this.values.amount || 1) * Math.round((this.volume * (this.selectedMaterial?.priceMultiplier || 0)) * 100) / 100;
     }
   },
   async mounted() {

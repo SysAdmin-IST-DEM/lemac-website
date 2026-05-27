@@ -11,12 +11,18 @@
         <p>Full Name: {{ values.studentName }}</p>
         <p>IST ID: {{ values.studentId }}</p>
         <p>Técnico Webmail: {{ values.email }}</p>
+        <p>Quantity: {{ values.amount }}</p>
         <p>Model STL: {{ file ? file.name : '-' }}</p>
         <p>Unit of file: {{ values.unit }}</p>
         <p>Volume (cm³): {{ volume?.toFixed(2) ?? 0 }}</p>
         <p>Material: {{ materialTitle }}</p>
         <p class="font-bold">
           Price (€): {{ values.price?.toFixed(2) ?? 0 }}
+        </p>
+        <br>
+        <p>
+          After submitting, you will receive a confirmation email. We’ll also email you whenever your
+          order status updates. A "COMPLETED" email will be sent as soon as it is ready for collection.
         </p>
       </v-card-text>
       <v-card-actions>

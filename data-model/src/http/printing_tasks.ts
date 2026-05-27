@@ -14,7 +14,8 @@ export const AddPrintTaskBody = PrintTaskUncheckedCreateInputObjectZodSchema.omi
   name: true,
 }).extend({
   materialId: z.coerce.number(),
-  price: z.coerce.number()
+  price: z.coerce.number(),
+  amount: z.coerce.number(),
 });
 
 export type AddPrintTaskBody = z.infer<typeof AddPrintTaskBody>;

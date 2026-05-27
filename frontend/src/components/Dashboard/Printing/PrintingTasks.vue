@@ -29,6 +29,10 @@
       <span v-else>#{{ item.id }}</span>
     </template>
 
+    <template #[`item.name`]="{ item }">
+      {{ item.amount + ' x ' + item.name }}
+    </template>
+
     <template #[`item.status`]="{ item }">
       <v-chip
         :color="statusDictionary[item.status as PrintTaskStatus][1]"
@@ -161,7 +165,7 @@ export default {
     return {
       headers: [
         { title: 'Task', key: 'task', sortable: false },
-        { title: 'Name', key: 'name' },
+        { title: 'Quantity x Name', key: 'name' },
         { title: 'Status', key: 'status' },
         { title: 'Material', key: 'material' },
         { title: 'Customer', key: 'customer' },
