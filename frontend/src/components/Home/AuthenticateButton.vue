@@ -32,6 +32,10 @@ export default defineComponent({
         return;
       }
       this.getFenixInfo(fenixCode);
+      this.$router.replace({
+        path: this.$route.path,
+        query: {}
+      });
     }
   },
   methods: {
