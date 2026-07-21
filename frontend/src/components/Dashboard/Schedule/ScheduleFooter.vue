@@ -1,7 +1,7 @@
 <template>
   <v-btn
-    color="secondary"
     class="ml-3"
+    color="secondary"
     @click="downloadSchedule"
   >
     Download
@@ -34,8 +34,10 @@
   <span class="inline-block grow text-center">
     <span style="text-align: center; margin: auto">{{
       currentUser ? currentUser.name : 'Unknown'
-    }}</span
-    ><br />
+    }}</span>
+
+    <br>
+
     <span style="text-align: center; margin: auto">
       Target: {{ getTargetHours() }} - Current: {{ getWorkingHours() }}
     </span>
@@ -46,24 +48,25 @@
     <v-card width="500">
       <v-form>
         <v-card-title> {{ currentUser ? currentUser.name : 'Unknown' }} </v-card-title>
+
         <v-card-text class="divide-y">
           <DashboardTable
             ref="targetsTable"
+            :edit-fields="editTargetsFields"
+            :edit-initialization="editTargetsInitialization"
             :headers="[
               { title: 'Start', key: 'dateStart' },
               { title: 'End', key: 'dateEnd' },
               { title: 'Target Hours', key: 'targetHours' },
               { title: '', key: 'buttons' },
             ]"
-            :items="userTargets"
-            hide-header
             hide-default-footer
+            hide-header
+            :items="userTargets"
             :items-per-page="5"
-            :sort-by="[{ key: 'dateStart', order: 'desc'}]"
-            sort
             :page="targetsPage"
-            :edit-initialization="editTargetsInitialization"
-            :edit-fields="editTargetsFields"
+            sort
+            :sort-by="[{ key: 'dateStart', order: 'desc'}]"
             @edit="editTargetsSubmit"
           >
             <template #[`item.dateStart`]="{ item }">
@@ -79,11 +82,12 @@
                 color="secondary"
                 @click="$refs.targetsTable.openEditDialog(item)"
               >
-                  <v-icon>mdi-pencil</v-icon>
+                <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
           </DashboardTable>
         </v-card-text>
+
         <v-card-actions>
           <v-btn
             color="secondary"
@@ -101,6 +105,7 @@
             >
               {{ '<' }}
             </v-btn>
+
             <v-btn
               color="secondary"
               variant="elevated"
@@ -118,12 +123,12 @@
     <v-date-picker
       v-model="datesOffDays"
       color="secondary"
-      multiple
-      show-adjacent-months
+      :disabled="offDaysDisabled"
       hide-header
       :month="new Date().getMonth()"
+      multiple
+      show-adjacent-months
       :year="new Date().getFullYear()"
-      :disabled="offDaysDisabled"
       @update:model-value="updateOffDays"
     />
   </v-dialog>
@@ -134,10 +139,12 @@
   >
     <v-card>
       <v-card-title>Add Recurring Schedule</v-card-title>
+
       <v-card-subtitle>
         Allows the creation of recurring schedule. Events that happen at the same time in the
         specified date range.
       </v-card-subtitle>
+
       <v-card-text>
         <v-container>
           <v-form ref="recurringForm">
@@ -145,61 +152,67 @@
               <v-row>
                 <DashboardDynamicField
                   v-model="recurringEvent.user"
-                  type="select"
                   label="User"
                   label-icon="mdi-account"
                   :props="{ items: schedule.users.map(u => ({value: u.id, title: u.name})) }"
                   :required="true"
+                  type="select"
                 />
+
                 <DashboardDynamicField
                   v-model="recurringEvent.weekday"
-                  type="select"
                   label="Weekday"
                   label-icon="mdi-weather-sunny"
                   :props="{ items: weekdays }"
                   :required="true"
+                  type="select"
                 />
               </v-row>
+
               <v-row>
                 <DashboardDynamicField
                   v-model="recurringEvent.startDate"
-                  type="date"
                   label="Start Date"
                   label-icon="mdi-clipboard-text-clock"
-                  wrapper="menu"
                   :required="true"
+                  type="date"
+                  wrapper="menu"
                 />
+
                 <DashboardDynamicField
                   v-model="recurringEvent.endDate"
-                  type="date"
                   label="End Date"
                   label-icon="mdi-clipboard-text-clock"
-                  wrapper="menu"
                   :required="true"
+                  type="date"
+                  wrapper="menu"
                 />
               </v-row>
+
               <v-row>
                 <DashboardDynamicField
                   v-model="recurringEvent.start"
-                  type="time"
                   label="Start Time"
                   label-icon="mdi-clock"
-                  wrapper="menu"
                   :required="true"
+                  type="time"
+                  wrapper="menu"
                 />
+
                 <DashboardDynamicField
                   v-model="recurringEvent.end"
-                  type="time"
                   label="End Time"
                   label-icon="mdi-clock"
-                  wrapper="menu"
                   :required="true"
+                  type="time"
+                  wrapper="menu"
                 />
               </v-row>
             </v-col>
           </v-form>
         </v-container>
       </v-card-text>
+
       <v-card-actions>
         <v-btn
           color="secondary"
@@ -208,10 +221,11 @@
         >
           Cancel
         </v-btn>
+
         <v-btn
           color="secondary"
-          variant="elevated"
           :loading="recurringLoading"
+          variant="elevated"
           @click="addRecurringEvents"
         >
           Add Events
@@ -222,237 +236,237 @@
 </template>
 
 <script>
-import {
-  deleteOffDay,
-  editUserTarget,
-  getUserTargets,
-  setOffDays,
-  setUserTarget,
-} from '@/api/schedule.api';
-import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
-import { mapState } from 'pinia'
-import { useUserStore } from '@/stores/user.js';
-import { DateTime } from 'luxon';
-import DashboardDynamicField from '@/components/Dashboard/DashboardDataTable/DashboardDynamicField.vue';
+  import { DateTime } from 'luxon'
+  import { mapState } from 'pinia'
+  import {
+    deleteOffDay,
+    editUserTarget,
+    getUserTargets,
+    setOffDays,
+    setUserTarget,
+  } from '@/api/schedule.api'
+  import DashboardDynamicField from '@/components/Dashboard/DashboardDataTable/DashboardDynamicField.vue'
+  import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue'
+  import { useUserStore } from '@/stores/user.js'
 
-export default {
-  name: 'ScheduleFooter',
-  components: { DashboardDynamicField, DashboardTable },
-  props: {
-    schedule: {
-      type: Object,
-      required: true,
+  export default {
+    name: 'ScheduleFooter',
+    components: { DashboardDynamicField, DashboardTable },
+    props: {
+      schedule: {
+        type: Object,
+        required: true,
+      },
+      calendar: {
+        type: Object,
+        default: null,
+      },
+      currentUser: {
+        type: Object,
+        default: null,
+      },
     },
-    calendar: {
-      type: Object,
-      default: null,
-    },
-    currentUser: {
-      type: Object,
-      default: null,
-    },
-  },
-  emits: ['update-off-days'],
-  data: () => ({
-    targetsDialog: false,
-    offDaysDialog: false,
-    recurringDialog: false,
-    recurringEvent: {  },
-    recurringLoading: false,
-    userTargets: [],
-    datesOffDays: [],
-    offDaysDisabled: false,
-    targetsPage: 1,
-    editTargetsFields: [
-      [
-        { key: 'dates', label: 'Date Range', labelIcon: 'mdi-calendar', type: 'date', required: true, props: { multiple: 'range' } },
+    emits: ['update-off-days'],
+    data: () => ({
+      targetsDialog: false,
+      offDaysDialog: false,
+      recurringDialog: false,
+      recurringEvent: {},
+      recurringLoading: false,
+      userTargets: [],
+      datesOffDays: [],
+      offDaysDisabled: false,
+      targetsPage: 1,
+      editTargetsFields: [
+        [
+          { key: 'dates', label: 'Date Range', labelIcon: 'mdi-calendar', type: 'date', required: true, props: { multiple: 'range' } },
+        ],
+        [
+          { key: 'targetHours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
+        ],
       ],
-      [
-        { key: 'targetHours', label: 'Target Hours', labelIcon: 'mdi-clock', type: 'number', required: true, props: { min: 0 } },
+      weekdays: [
+        { value: 1, title: "Monday" },
+        { value: 2, title: "Tuesday" },
+        { value: 3, title: "Wednesday" },
+        { value: 4, title: "Thursday" },
+        { value: 5, title: "Friday" },
+        { value: 6, title: "Saturday" },
+        { value: 7, title: "Sunday" },
       ],
-    ],
-    weekdays: [
-      { value: 1, title: "Monday" },
-      { value: 2, title: "Tuesday" },
-      { value: 3, title: "Wednesday" },
-      { value: 4, title: "Thursday" },
-      { value: 5, title: "Friday" },
-      { value: 6, title: "Saturday" },
-      { value: 7, title: "Sunday" },
-    ]
-  }),
-  computed: {
-    DateTime() {
-      return DateTime
+    }),
+    computed: {
+      DateTime () {
+        return DateTime
+      },
+      offDays () {
+        return this.schedule.offDays || []
+      },
+      targetsPageCount () {
+        return Math.max(1, Math.ceil(this.userTargets.length / 5))
+      },
+      ...mapState(useUserStore, ['getPermission']),
     },
-    offDays() {
-      return this.schedule.offDays || [];
+    watch: {
+      async currentUser (user) {
+        this.userTargets = (await getUserTargets()).data.filter(val => val.userId === user.id).map(val => {
+          return {
+            ...val,
+            dateStart: DateTime.fromISO(val.dateStart).startOf('day'),
+            dateEnd: DateTime.fromISO(val.dateEnd).endOf('day'),
+          }
+        })
+      },
+      offDays (newValue) {
+        this.datesOffDays = newValue.map(val => DateTime.fromISO(val.date))
+      },
+      targetsPageCount () {
+        this.targetsPage = 1
+      },
     },
-    targetsPageCount() {
-      return Math.max(1, Math.ceil(this.userTargets.length / 5));
-    },
-    ...mapState(useUserStore, ['getPermission']),
-  },
-  watch: {
-    async currentUser(user) {
-      this.userTargets = (await getUserTargets()).data.filter((val) => val.userId === user.id).map((val) => {
+    methods: {
+      downloadSchedule () {
+        console.log('Download schedule for:', this.currentUser)
+      },
+      getCurrentTarget () {
+        if (!this.calendar) return null
+        const currentDate = DateTime.fromJSDate(this.calendar.getVueCal().view.start).plus({ days: 2 })
+        return this.userTargets.find(val => {
+          if (!this.calendar) return false
+          return currentDate >= val.dateStart && currentDate <= val.dateEnd
+        })
+      },
+      getTargetHours () {
+        const currentTarget = this.getCurrentTarget()
+        return currentTarget ? currentTarget.targetHours : '...'
+      },
+      getWorkingHours () {
+        const currentTarget = this.getCurrentTarget()
+
+        if (!currentTarget) return '...'
+
+        const currentEvents = this.calendar.events.filter(event => {
+          const test1 = event.details.userId === this.currentUser.id
+          const test2
+            = DateTime.fromJSDate(event.start) >= currentTarget.dateStart
+              && DateTime.fromJSDate(event.end) <= currentTarget.dateEnd
+
+          return test1 && test2
+        })
+
+        return currentEvents.reduce((accumulator, event) => {
+          const startTime = new Date(event.start).getTime() // Get start time in milliseconds
+          const endTime = new Date(event.end).getTime() // Get end time in milliseconds
+
+          const eventDuration = (endTime - startTime) / (1000 * 60 * 60) // Convert milliseconds to hours
+          return accumulator + eventDuration
+        }, 0)
+      },
+      editTargetsInitialization (item) {
+        const dates = []
+        let currentDate = item.dateStart
+        const dateEnd = item.dateEnd
+
+        while (currentDate <= dateEnd) {
+          dates.push(currentDate)
+          currentDate = currentDate.plus({ days: 1 })
+        }
+
+        console.log(dates)
+
         return {
-          ...val,
-          dateStart: DateTime.fromISO(val.dateStart).startOf('day'),
-          dateEnd: DateTime.fromISO(val.dateEnd).endOf('day')
+          dates,
+          targetHours: item.targetHours,
         }
-      });
-    },
-    offDays(newValue) {
-      this.datesOffDays = newValue.map((val) => DateTime.fromISO(val.date));
-    },
-    targetsPageCount() {
-      this.targetsPage = 1;
-    }
-  },
-  methods: {
-    downloadSchedule() {
-      console.log('Download schedule for:', this.currentUser);
-    },
-    getCurrentTarget() {
-      if (!this.calendar) return null;
-      const currentDate = DateTime.fromJSDate(this.calendar.getVueCal().view.start).plus({ days: 2 });
-      return this.userTargets.find((val) => {
-        if (!this.calendar) return false;
-        return currentDate >= val.dateStart && currentDate <= val.dateEnd;
-      });
-    },
-    getTargetHours() {
-      const currentTarget = this.getCurrentTarget();
-      return currentTarget ? currentTarget.targetHours : '...';
-    },
-    getWorkingHours() {
-      const currentTarget = this.getCurrentTarget();
+      },
+      async editTargetsSubmit (item, values) {
+        values = {
+          dateStart: values.dates[0].toISO(),
+          dateEnd: values.dates.at(-1).toISO(),
+          targetHours: values.targetHours,
+        }
+        console.log(values)
 
-      if (!currentTarget) return '...';
+        if (item) {
+          const response = await editUserTarget(item.id, values)
 
-      const currentEvents = this.calendar.events.filter((event) => {
-        const test1 = event.details.userId === this.currentUser.id;
-        const test2 =
-          DateTime.fromJSDate(event.start) >= currentTarget.dateStart &&
-          DateTime.fromJSDate(event.end) <= currentTarget.dateEnd;
+          this.userTargets.splice(this.userTargets.indexOf(item), 1, response.data)
+          this.$notify({
+            type: 'success',
+            title: 'Targets updated',
+            text: `You have updated targets for selected user`,
+          })
+        } else {
+          values.userId = this.currentUser.id
+          const response = await setUserTarget(values)
 
-        return test1 && test2;
-      });
+          this.userTargets.push(response.data)
+          this.$notify({
+            type: 'success',
+            title: 'Targets set',
+            text: `You have set targets for selected user`,
+          })
+        }
+      },
+      async updateOffDays () {
+        this.offDaysDisabled = true
+        const dates = this.datesOffDays
+        console.log(dates)
+        const addedDates = dates.filter(item => !this.schedule.offDaysDates.includes(item.toFormat('yyyy-MM-dd'))) // DateTime[]
+        const removedDates = this.schedule.offDaysDates.filter(item => !dates.map(val => val.toFormat('yyyy-MM-dd')).includes(item)) // yyyy-MM-dd[]
+        console.log(addedDates)
+        console.log(removedDates)
 
-      return currentEvents.reduce((accumulator, event) => {
-        const startTime = new Date(event.start).getTime(); // Get start time in milliseconds
-        const endTime = new Date(event.end).getTime(); // Get end time in milliseconds
+        for (const date of addedDates) {
+          console.log(date.startOf('day').toISO())
+          await setOffDays({ date: date.startOf('day').toISO() })
+        }
 
-        const eventDuration = (endTime - startTime) / (1000 * 60 * 60); // Convert milliseconds to hours
-        return accumulator + eventDuration;
-      }, 0);
-    },
-    editTargetsInitialization(item) {
-      const dates = [];
-      let currentDate = item.dateStart;
-      const dateEnd = item.dateEnd;
+        for (const date of removedDates) {
+          await deleteOffDay(
+            this.schedule.offDays.find(val => DateTime.fromISO(val.date).toFormat('yyyy-MM-dd') === date).id,
+          )
+        }
 
-      while (currentDate <= dateEnd) {
-        dates.push(currentDate);
-        currentDate = currentDate.plus({ days: 1 });
-      }
-
-      console.log(dates);
-
-      return {
-        dates,
-        targetHours: item.targetHours
-      }
-    },
-    async editTargetsSubmit(item, values) {
-      values = {
-        dateStart: values.dates[0].toISO(),
-        dateEnd: values.dates[values.dates.length - 1].toISO(),
-        targetHours: values.targetHours,
-      }
-      console.log(values);
-
-      if(item) {
-        const response = await editUserTarget(item.id, values);
-
-        this.userTargets.splice(this.userTargets.indexOf(item), 1, response.data);
         this.$notify({
           type: 'success',
-          title: 'Targets updated',
-          text: `You have updated targets for selected user`,
-        });
-      } else {
-        values.userId = this.currentUser.id;
-        const response = await setUserTarget(values);
-
-        this.userTargets.push(response.data);
-        this.$notify({
-          type: 'success',
-          title: 'Targets set',
-          text: `You have set targets for selected user`,
-        });
-      }
+          title: 'Entry updated',
+          text: `You have updated entries for offdays`,
+        })
+        this.$emit('update-off-days')
+        this.offDaysDisabled = false
+      },
+      async addRecurringEvents () {
+        this.$loading.show()
+        this.recurringLoading = true
+        const { valid } = await this.$refs.recurringForm.validate()
+        if (!valid) return
+        for (let date = this.recurringEvent.startDate; date.toMillis() <= this.recurringEvent.endDate.toMillis();
+             date = date.plus({ days: 1 })) {
+               if (date.weekday === this.recurringEvent.weekday) {
+                 const startHours = this.recurringEvent.start.split(":", 1)[0]
+                 const startMinutes = this.recurringEvent.start.split(":", 2)[1]
+                 const endHours = this.recurringEvent.end.split(":", 1)[0]
+                 const endMinutes = this.recurringEvent.end.split(":", 2)[1]
+                 const start = date.set({ hour: startHours, minute: startMinutes })
+                 const end = date.set({ hour: endHours, minute: endMinutes })
+                 this.schedule.createEvent({ event: {
+                   userId: this.recurringEvent.user,
+                   start: start.toJSDate(),
+                   end: end.toJSDate(),
+                 }, resolve: event => {
+                   this.schedule.events.push(event)
+                 } })
+               }
+             }
+        this.$loading.hide()
+        this.recurringLoading = false
+        this.recurringEvent.start = null
+        this.recurringEvent.end = null
+        this.recurringEvent.user = null
+        this.recurringEvent.weekday = null
+        this.recurringDialog = false
+      },
     },
-    async updateOffDays() {
-      this.offDaysDisabled = true;
-      const dates = this.datesOffDays;
-      console.log(dates)
-      const addedDates = dates.filter((item) => !this.schedule.offDaysDates.includes(item.toFormat('yyyy-MM-dd'))); // DateTime[]
-      const removedDates = this.schedule.offDaysDates.filter((item) => !dates.map(val => val.toFormat('yyyy-MM-dd')).includes(item)); // yyyy-MM-dd[]
-      console.log(addedDates);
-      console.log(removedDates)
-
-      for (const date of addedDates) {
-        console.log(date.startOf('day').toISO())
-        await setOffDays({ date: date.startOf('day').toISO() });
-      }
-
-      for (const date of removedDates) {
-        await deleteOffDay(
-          this.schedule.offDays.find((val) => DateTime.fromISO(val.date).toFormat('yyyy-MM-dd') === date).id
-        );
-      }
-
-      this.$notify({
-        type: 'success',
-        title: 'Entry updated',
-        text: `You have updated entries for offdays`,
-      });
-      this.$emit('update-off-days');
-      this.offDaysDisabled = false;
-    },
-    async addRecurringEvents() {
-      this.$loading.show();
-      this.recurringLoading = true;
-      const { valid } = await this.$refs.recurringForm.validate();
-      if(!valid) return;
-      for(let date = this.recurringEvent.startDate; date.toMillis() <= this.recurringEvent.endDate.toMillis();
-          date = date.plus({ days: 1 })) {
-        if(date.weekday === this.recurringEvent.weekday) {
-          const startHours = this.recurringEvent.start.split(":")[0]
-          const startMinutes = this.recurringEvent.start.split(":")[1]
-          const endHours = this.recurringEvent.end.split(":")[0]
-          const endMinutes = this.recurringEvent.end.split(":")[1]
-          const start = date.set({hour: startHours, minute: startMinutes})
-          const end = date.set({hour: endHours, minute: endMinutes})
-          this.schedule.createEvent({event: {
-            userId: this.recurringEvent.user,
-            start: start.toJSDate(),
-            end: end.toJSDate(),
-          }, resolve: (event) => {
-              this.schedule.events.push(event);
-          }})
-        }
-      }
-      this.$loading.hide();
-      this.recurringLoading = false;
-      this.recurringEvent.start = null;
-      this.recurringEvent.end = null;
-      this.recurringEvent.user = null;
-      this.recurringEvent.weekday = null;
-      this.recurringDialog = false;
-    }
-  },
-};
+  }
 </script>

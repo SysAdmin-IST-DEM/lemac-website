@@ -1,29 +1,28 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import Notifications from './plugins/notifications';
-import router from './plugins/router';
-import store from './plugins/store';
-import vuetify from './plugins/vuetify';
+import { createApp } from 'vue'
+import { useLoadingStore } from '@/stores/loading'
+import App from './App.vue'
+import Notifications from './plugins/notifications'
+import router from './plugins/router'
+import store from './plugins/store'
+import vuetify from './plugins/vuetify'
 import 'vue-cal/style'
-import './plugins/notifications';
-import './assets/tailwind.css';
-import { useLoadingStore } from '@/stores/loading';
+import './assets/tailwind.css'
 
-const app = createApp(App);
+const app = createApp(App)
 
-app.use(Notifications);
-app.use(router);
-app.use(store);
-app.use(vuetify);
+app.use(Notifications)
+app.use(router)
+app.use(store)
+app.use(vuetify)
 
-const loadingStore = useLoadingStore();
+const loadingStore = useLoadingStore()
 app.config.globalProperties.$loading = {
-  show: function () {
-    loadingStore.showLoadingBar();
+  show () {
+    loadingStore.showLoadingBar()
   },
-  hide: function () {
-    loadingStore.hideLoadingBar();
+  hide () {
+    loadingStore.hideLoadingBar()
   },
-};
+}
 
-app.mount('#app');
+app.mount('#app')

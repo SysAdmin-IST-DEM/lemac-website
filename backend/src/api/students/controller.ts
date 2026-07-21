@@ -19,17 +19,19 @@ export async function addStudentCard(studentId: number, mifareNumber: bigint) {
 }
 
 export async function upsertStudent(istId: string, name: string, email: string,
-                                       mifareNumber: bigint | null) {
+                                       isDEM: boolean, mifareNumber: bigint | null) {
   const student = await prisma.student.upsert({
     where: { istId },
     create: {
       istId,
       name,
       email,
+      isDEM
     },
     update: {
       name,
       email,
+      isDEM,
       lastRenewed: new Date()
     }
   });

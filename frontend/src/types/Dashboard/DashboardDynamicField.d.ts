@@ -1,4 +1,5 @@
-import {
+import type { DateTime } from 'luxon'
+import type {
   VAutocomplete,
   VDatePicker,
   VNumberInput,
@@ -7,22 +8,21 @@ import {
   VTextarea,
   VTextField,
   VTimePicker,
-} from 'vuetify/components';
-import type { DateTime } from 'luxon';
-import { IconValue } from 'vuetify/lib/composables/icons';
+} from 'vuetify/components'
+import type { IconValue } from 'vuetify/lib/composables/icons'
 
-type PropsOf<C> =
-  C extends new (...args: never[]) => { $props: infer P } ? P : never;
+type PropsOf<C>
+  = C extends new (...args: never[]) => { $props: infer P } ? P : never
 
-export type AllowedComponent =
-  | typeof VTimePicker
-  | typeof VDatePicker
-  | typeof VTextField
-  | typeof VAutocomplete
-  | typeof VSwitch
-  | typeof VTextarea
-  | typeof VSelect
-  | typeof VNumberInput;
+export type AllowedComponent
+  = | typeof VTimePicker
+    | typeof VDatePicker
+    | typeof VTextField
+    | typeof VAutocomplete
+    | typeof VSwitch
+    | typeof VTextarea
+    | typeof VSelect
+    | typeof VNumberInput
 
 type TimePickerCase = {
   type?: "time"
@@ -81,22 +81,25 @@ type NumberInputCase = {
 }
 
 type Common = {
-  wrapper?: 'menu' | 'dialog' | '',
-  label?: string,
-  labelIcon?: IconValue,
-  required?: boolean,
+  wrapper?: 'menu' | 'dialog' | ''
+  label?: string
+  labelIcon?: IconValue
+  required?: boolean
   readonly?: boolean
+  props?: {
+    readonly?: boolean
+  }
 }
 
-export type DynamicFieldProps =
-  (TimePickerCase |
-    DatePickerCase |
-    TextFieldCase |
-    AutoCompleteCase |
-    SwitchCase |
-    TextAreaCase |
-    SelectCase |
-    NumberInputCase
+export type DynamicFieldProps
+  = (TimePickerCase
+    | DatePickerCase
+    | TextFieldCase
+    | AutoCompleteCase
+    | SwitchCase
+    | TextAreaCase
+    | SelectCase
+    | NumberInputCase
     ) & Common
 
-export type DynamicModelValue = DynamicFieldProps['modelValue'];
+export type DynamicModelValue = DynamicFieldProps['modelValue']

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createStudentOrNull, getAccessTokenCard } from './services.js';
+import { getStudentDetails, getAccessTokenCard } from './services.js';
 import * as controller from './controller.js'
 import type { RequestWithBody } from '../../middleware/parseBody.js';
 import { AssignStudentCardBody } from '@lemac/data-model';
@@ -28,15 +28,10 @@ export async function fenixCallback(req: Request, res: Response) {
       return;
     }
 
-    const data = await createStudentOrNull(accessToken);
-    if(!data) {
-      res.redirect(process.env.URL + '/student-registration?error=not_dem');
-      return;
-    }
+    const data = await getStudentDetails(accessToken);
+    const student = await controller.upsertStudent(data.istId, data.name, data.email, data.isDEM, data.mifareNumber);
 
-    const student = await controller.upsertStudent(data.istId, data.name, data.email, data.mifareNumber);
-
-    res.redirect(process.env.URL + `/student-registration?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}&renewed=${!isToday(student.createdAt)}&mifare=${data.mifareNumber ? 'true' : 'false'}`);
+    res.redirect(process.env.URL + `/student-registration?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}&isDEM=${student.isDEM}&renewed=${!isToday(student.createdAt)}&mifare=${data.mifareNumber ? 'true' : 'false'}`);
   } catch (e) {
     console.error(e);
     res.redirect(process.env.URL + '/student-registration?error=unknown');

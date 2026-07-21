@@ -1,14 +1,15 @@
 <template>
   <v-tabs
     v-model="tab"
-    color="primary"
     bg-color="white"
-    slider-color="primary"
+    color="primary"
     grow
+    slider-color="primary"
   >
     <v-tab value="1">
       Calendar
     </v-tab>
+
     <v-tab value="2">
       Event Log
     </v-tab>
@@ -20,6 +21,7 @@
         <RoomCalenderVue />
       </v-container>
     </v-window-item>
+
     <v-window-item value="2">
       <v-container>
         <EventLog />
@@ -29,14 +31,14 @@
 </template>
 
 <script>
-import RoomCalenderVue from '@/components/Dashboard/RoomHours/DashboardRoomCalendar.vue';
-import EventLog from '@/components/Dashboard/RoomHours/EventLog.vue';
+  import RoomCalenderVue from '@/components/Dashboard/RoomHours/DashboardRoomCalendar.vue'
+  import EventLog from '@/components/Dashboard/RoomHours/EventLog.vue'
 
-export default {
-  name: 'Rooms',
-  components: { RoomCalenderVue, EventLog },
-  data: () => ({
-    tab: null,
-  }),
-};
+  export default {
+    name: 'Rooms',
+    components: { RoomCalenderVue, EventLog },
+    data: () => ({
+      tab: null,
+    }),
+  }
 </script>

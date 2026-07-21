@@ -11,42 +11,47 @@
         <v-card-title>
           <span class="text-h5"> Entrance </span>
         </v-card-title>
+
         <v-card-text>
           <v-text-field
             v-model="name"
-            :rules="[(v) => !!v || 'Name is required']"
             label="Name"
-            type="string"
             required
+            :rules="[(v) => !!v || 'Name is required']"
+            type="string"
             variant="filled"
           />
+
           <v-text-field
             v-model="ist_id"
-            :rules="[(v) => !!v || 'IST Id is required']"
             label="Id"
-            type="number"
             required
+            :rules="[(v) => !!v || 'IST Id is required']"
+            type="number"
             variant="filled"
           />
+
           <v-text-field
             v-model="email"
-            :rules="[(v) => !!v || 'Contact email is required']"
             label="Email"
-            type="email"
             required
+            :rules="[(v) => !!v || 'Contact email is required']"
+            type="email"
             variant="filled"
           />
+
           <v-autocomplete
             v-model="choosenCourse"
-            label="Course"
-            :items="possibleCourses"
             item-title="course"
             item-value="course"
-            :rules="[(v) => !!v || 'Course is required']"
+            :items="possibleCourses"
+            label="Course"
             required
+            :rules="[(v) => !!v || 'Course is required']"
             variant="filled"
           />
         </v-card-text>
+
         <v-card-actions>
           <v-btn
             color="primary"
@@ -55,6 +60,7 @@
           >
             Submit
           </v-btn>
+
           <v-btn
             color="primary"
             variant="text"
@@ -69,62 +75,60 @@
 </template>
 
 <script>
-import { createLemacUser } from '@/api/lemacUsers.api';
+  import { createLemacUser } from '@/api/lemacUsers.api'
 
-export default {
-  name: 'CreateUser',
-  props: {
-    close: Function,
-    entryStations: Array,
-    select: Function,
-    mifare_id: String,
-    entrySelected: Number,
-    entryModal: Boolean
-  },
-  emits: ['update:entryModal'],
-  data: () => ({
-    name: null,
-    ist_id: null,
-    email: null,
-    choosenCourse: null,
-    possibleCourses: [{course: "Engenharia Aeroespacial"}, {course: "Engenharia Mecânica"}, {course: "Engenharia Naval"}, {course: "Engenharia de Materiais"}, {course: "Engenharia Ambiente"}, {course: "Outro"}]
-  }),
-  computed: {
-    localEntryModal: {
-      get() {
-        return this.entryModal;
+  export default {
+    name: 'CreateUser',
+    props: {
+      close: Function,
+      entryStations: Array,
+      select: Function,
+      mifare_id: String,
+      entrySelected: Number,
+      entryModal: Boolean,
+    },
+    emits: ['update:entryModal'],
+    data: () => ({
+      name: null,
+      ist_id: null,
+      email: null,
+      choosenCourse: null,
+      possibleCourses: [{ course: "Engenharia Aeroespacial" }, { course: "Engenharia Mecânica" }, { course: "Engenharia Naval" }, { course: "Engenharia de Materiais" }, { course: "Engenharia Ambiente" }, { course: "Outro" }],
+    }),
+    computed: {
+      localEntryModal: {
+        get () {
+          return this.entryModal
+        },
+        set (value) {
+          this.$emit('update:entryModal', value)
+        },
       },
-      set(value) {
-        this.$emit('update:entryModal', value);
-      }
-    }
-  },
-  async mounted() {
-  },
-  methods: {
-    async save() {
-      if (!this.$refs.formAdd.validate()) return;
+    },
+    async mounted () {},
+    methods: {
+      async save () {
+        if (!this.$refs.formAdd.validate()) return
 
-      const userData = {
-        name: this.name,
-        ist_id: this.ist_id,
-        mifare_id: this.mifare_id,
-        email: this.email,
-        course: this.choosenCourse,
-      }
+        const userData = {
+          name: this.name,
+          ist_id: this.ist_id,
+          mifare_id: this.mifare_id,
+          email: this.email,
+          course: this.choosenCourse,
+        }
 
-      createLemacUser(userData);
+        createLemacUser(userData)
 
-      try {
-        this.close();
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.name = null;
-        this.ist_id = null;
-      }
-
-    }
+        try {
+          this.close()
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.name = null
+          this.ist_id = null
+        }
+      },
+    },
   }
-}
 </script>

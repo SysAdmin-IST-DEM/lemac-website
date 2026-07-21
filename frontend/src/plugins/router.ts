@@ -1,25 +1,24 @@
-import { getAuthToken } from '@/api/httpClient.api';
-import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/pages/Home/Home.vue';
-import Login from '@/pages/Login.vue';
-import NotFoundPage from '@/pages/404.vue';
-import Dashboard from '@/pages/Dashboard/Dashboard.vue';
-import NavBar from '@/components/Dashboard/Navbar/NavBar.vue';
-import Monitors from '@/pages/Dashboard/Monitors.vue';
-import Hours from '@/pages/Dashboard/Hours.vue';
-import Workstations from '@/pages/Dashboard/Workstations.vue';
-import Publications from '@/pages/Dashboard/Publications.vue';
-import Rooms from '@/pages/Dashboard/Rooms.vue';
-import Schedule from '@/pages/Dashboard/Schedule.vue';
-import About from '@/pages/Home/About.vue';
-import Reservations from '@/pages/Home/Reservations.vue';
-import Software from '@/pages/Home/Software.vue';
-import RequestPrinting from '@/pages/Home/RequestPrinting.vue';
-import Printing from '@/pages/Dashboard/Printing.vue';
-
-import type { RouteRecordRaw } from 'vue-router';
-import StudentRegistration from '@/pages/Home/StudentRegistration.vue';
-import Students from '@/pages/Dashboard/Students.vue';
+import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+import { getAuthToken } from '@/api/httpClient.api'
+import NavBar from '@/components/Dashboard/Navbar/NavBar.vue'
+import NotFoundPage from '@/pages/404.vue'
+import Dashboard from '@/pages/Dashboard/Dashboard.vue'
+import Hours from '@/pages/Dashboard/Hours.vue'
+import Monitors from '@/pages/Dashboard/Monitors.vue'
+import Printing from '@/pages/Dashboard/Printing.vue'
+import Publications from '@/pages/Dashboard/Publications.vue'
+import Rooms from '@/pages/Dashboard/Rooms.vue'
+import Schedule from '@/pages/Dashboard/Schedule.vue'
+import Students from '@/pages/Dashboard/Students.vue'
+import Workstations from '@/pages/Dashboard/Workstations.vue'
+import About from '@/pages/Home/About.vue'
+import Home from '@/pages/Home/Home.vue'
+import RequestPrinting from '@/pages/Home/RequestPrinting.vue'
+import Reservations from '@/pages/Home/Reservations.vue'
+import Software from '@/pages/Home/Software.vue'
+import StudentRegistration from '@/pages/Home/StudentRegistration.vue'
+import Login from '@/pages/Login.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -129,7 +128,7 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: () => {
           window.location.href = "https://drive.google.com/drive/folders/1KFYaJqnscGJ_YC5se43KJcyQQ56kYX2-?usp=drive_link"
           return false
-        }
+        },
       },
     ],
   },
@@ -139,31 +138,30 @@ const routes: RouteRecordRaw[] = [
     component: NotFoundPage,
     meta: { title: 'Page Not Found', noAuth: true },
   },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL || '/'),
   routes,
-});
+})
 
 router.beforeEach((to, _from, next) => {
   // Change the document title
   const nearestWithTitle = to.matched
     .slice()
     .reverse()
-    .find((r) => r.meta && r.meta.title);
-  if (nearestWithTitle) document.title = `${nearestWithTitle.meta.title} | LEMAC`;
-  else document.title = 'LEMAC';
+    .find(r => r.meta && r.meta.title)
+  document.title = nearestWithTitle ? `${nearestWithTitle.meta.title} | LEMAC` : 'LEMAC'
 
-  if (to.matched.some((record) => !record.meta.noAuth) && !getAuthToken()) {
+  if (to.matched.some(record => !record.meta.noAuth) && !getAuthToken()) {
     next({
       path: '/',
       query: { nextUrl: to.fullPath },
-    });
-    return;
+    })
+    return
   }
 
-  next();
-});
+  next()
+})
 
-export default router;
+export default router

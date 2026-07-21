@@ -1,30 +1,31 @@
 <template>
   <DashboardTable
-    title="Monitors"
+    :edit-fields="editFields"
+    :edit-initialization="editInitialization"
     :headers="headers"
     :items="monitors"
+    :new-button="getPermission === 1 ? 'New Monitor' : undefined"
     search
     :sort-by="[{ key: 'name'}]"
-    :new-button="getPermission === 1 ? 'New Monitor' : undefined"
-    :edit-initialization="editInitialization"
-    :edit-fields="editFields"
-    @edit="editItem"
+    title="Monitors"
     @delete="deleteItem"
+    @edit="editItem"
   >
     <template #[`item.admin`]="{ item }">
       <v-chip
+        class="capitalized"
         :color="(roles.find((v) => v.value === item.admin) || {}).color"
         variant="elevated"
-        class="capitalized"
       >
         {{ (roles.find((v) => v.value === item.admin) || {}).title }}
       </v-chip>
     </template>
+
     <template #[`item.active`]="{ item }">
       <v-chip
+        class="capitalized"
         :color="(states.find((v) => v.value === item.active) || {}).color"
         variant="elevated"
-        class="capitalized"
       >
         {{ (states.find((v) => v.value === item.active) || {}).title }}
       </v-chip>
@@ -33,98 +34,98 @@
 </template>
 
 <script>
-import { createUser, deleteUser, updateUser } from '@/api/user.api';
-import { mapState } from 'pinia'
-import { useUserStore } from '@/stores/user.js';
-import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue';
+  import { mapState } from 'pinia'
+  import { createUser, deleteUser, updateUser } from '@/api/user.api'
+  import DashboardTable from '@/components/Dashboard/DashboardDataTable/DashboardTable.vue'
+  import { useUserStore } from '@/stores/user.js'
 
-export default {
-  name: 'MonitorTable',
-  components: { DashboardTable },
-  props: {
-    members: {
-      type: Array,
-      default() {
-        return [
-          {
-            id: Number,
-            name: String,
-            istId: String,
-            active: Number,
-            admin: Number,
-          },
-        ];
+  export default {
+    name: 'MonitorTable',
+    components: { DashboardTable },
+    props: {
+      members: {
+        type: Array,
+        default () {
+          return [
+            {
+              id: Number,
+              name: String,
+              istId: String,
+              active: Number,
+              admin: Number,
+            },
+          ]
+        },
       },
     },
-  },
-  data: () => ({
-    monitors: [],
-    headers: [
-      { title: 'Member', key: 'name' },
-      { title: 'IST Id', key: 'istId' },
-      { title: 'Role', key: 'admin', filterable: false },
-      { title: 'State', key: 'active', filterable: false },
-      { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
-    ],
-    roles: [
-      { title: 'Admin', value: true, color: 'yellow-darken-4' },
-      { title: 'User', value: false, color: 'blue' },
-    ],
-    states: [
-      { title: 'Active', value: true, color: 'success' },
-      { title: 'Inactive', value: false, color: 'error' },
-    ],
-  }),
-  computed: {
-    editFields() {
-      return [
-        [
-          { key: 'name', label: 'Name', required: true, props: { variant: 'filled' }},
-        ],
-        [
-          { key: 'istId', label: 'Id', required: true, props: { variant: 'filled' } },
-          { key: 'admin', type: 'select', items: 'roles', required: true, props: { items: this.roles, variant: 'filled' } },
-          { key: 'active', type: 'select', items: 'states', required: true, props: { items: this.states, variant: 'filled' } },
-        ],
-      ];
+    data: () => ({
+      monitors: [],
+      headers: [
+        { title: 'Member', key: 'name' },
+        { title: 'IST Id', key: 'istId' },
+        { title: 'Role', key: 'admin', filterable: false },
+        { title: 'State', key: 'active', filterable: false },
+        { title: 'Actions', key: 'actions', sortable: false, filterable: false, permission: 1 },
+      ],
+      roles: [
+        { title: 'Admin', value: true, color: 'yellow-darken-4' },
+        { title: 'User', value: false, color: 'blue' },
+      ],
+      states: [
+        { title: 'Active', value: true, color: 'success' },
+        { title: 'Inactive', value: false, color: 'error' },
+      ],
+    }),
+    computed: {
+      editFields () {
+        return [
+          [
+            { key: 'name', label: 'Name', required: true, props: { variant: 'filled' } },
+          ],
+          [
+            { key: 'istId', label: 'Id', required: true, props: { variant: 'filled' } },
+            { key: 'admin', type: 'select', items: 'roles', required: true, props: { items: this.roles, variant: 'filled' } },
+            { key: 'active', type: 'select', items: 'states', required: true, props: { items: this.states, variant: 'filled' } },
+          ],
+        ]
+      },
+      ...mapState(useUserStore, ['getPermission']),
     },
-    ...mapState(useUserStore, ['getPermission']),
-  },
-  mounted() {
-    this.monitors = this.members;
-  },
-  methods: {
-    editInitialization(item) {
-      return Object.assign({}, item);
+    mounted () {
+      this.monitors = this.members
     },
-    async editItem(item, values) {
-      if (item) {
-        const response = await updateUser(item.id, values);
-        this.monitors.splice(this.monitors.indexOf(item), 1, response.data);
+    methods: {
+      editInitialization (item) {
+        return Object.assign({}, item)
+      },
+      async editItem (item, values) {
+        if (item) {
+          const response = await updateUser(item.id, values)
+          this.monitors.splice(this.monitors.indexOf(item), 1, response.data)
+          this.$notify({
+            type: 'success',
+            title: 'User updated',
+            text: `You have updated user ${response.data.name}`,
+          })
+        } else {
+          const response = await createUser(values)
+          this.monitors.push(response.data)
+          this.$notify({
+            type: 'success',
+            title: 'User created',
+            text: `You have created user ${response.data.name}`,
+          })
+        }
+      },
+      async deleteItem (item) {
+        await deleteUser(item.id)
+        const deleted = this.monitors.splice(this.monitors.indexOf(item), 1)
         this.$notify({
           type: 'success',
-          title: 'User updated',
-          text: `You have updated user ${response.data.name}`,
-        });
-      } else {
-        const response = await createUser(values);
-        this.monitors.push(response.data);
-        this.$notify({
-          type: 'success',
-          title: 'User created',
-          text: `You have created user ${response.data.name}`,
-        });
-      }
+          title: 'User deleted',
+          text: `You have deleted user ${deleted[0].name}`,
+        })
+      },
     },
-    async deleteItem(item) {
-      await deleteUser(item.id);
-      const deleted = this.monitors.splice(this.monitors.indexOf(item), 1);
-      this.$notify({
-        type: 'success',
-        title: 'User deleted',
-        text: `You have deleted user ${deleted[0].name}`,
-      });
-    },
-  },
-};
+  }
 </script>

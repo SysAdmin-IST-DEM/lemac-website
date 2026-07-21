@@ -5,6 +5,7 @@
   >
     <notifications />
     <component :is="$route.meta.navBar" />
+
     <v-main>
       <router-view />
     </v-main>
@@ -12,24 +13,24 @@
 </template>
 
 <script>
-import { mapActions } from 'pinia'
-import { getProfile } from '@/api/auth.api';
-import { useUserStore } from '@/stores/user.js';
-export default {
-  name: 'App',
+  import { mapActions } from 'pinia'
+  import { getProfile } from '@/api/auth.api'
+  import { useUserStore } from '@/stores/user.js'
+  export default {
+    name: 'App',
 
-  async mounted() {
-    const jwt = localStorage.getItem('token');
-    if (jwt) {
-      const profile = await getProfile();
-      if (profile) this.loginUser(profile);
-    }
-  },
+    async mounted () {
+      const jwt = localStorage.getItem('token')
+      if (jwt) {
+        const profile = await getProfile()
+        if (profile) this.loginUser(profile)
+      }
+    },
 
-  methods: {
-    ...mapActions(useUserStore, ['loginUser']),
-  },
-};
+    methods: {
+      ...mapActions(useUserStore, ['loginUser']),
+    },
+  }
 </script>
 
 <style>

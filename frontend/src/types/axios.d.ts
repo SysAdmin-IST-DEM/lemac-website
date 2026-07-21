@@ -9,5 +9,3 @@ declare module 'axios' {
     skipInterceptor?: boolean
   }
 }
-
-export {}

@@ -42,12 +42,9 @@ async function getDepartmentCourses(department: string) {
   >(`${FENIX_BASE_URL}tecnico-api/v2/departments/${department}/execution-courses`)).data;
 }
 
-export async function getPersonIfDEM(access_token: string):
-  Promise<paths["/person"]["get"]["responses"]["200"]["content"]["application/json"] | null> {
-  const person = await getPersonData(access_token);
-
+async function isDEM(person: Awaited<ReturnType<typeof getPersonData>>, access_token: string): Promise<boolean> {
   if(person.roles.teacher) {
-    return person.roles.teacher.department.acronym === "DEM" ? person : null;
+    return person.roles.teacher.department.acronym === "DEM";
   }
 
   const employeeRole =
@@ -56,7 +53,7 @@ export async function getPersonIfDEM(access_token: string):
     person.roles.grantOwner;
   if(employeeRole && employeeRole.workingPlace) {
     for(const place of employeeRole.workingPlace) {
-      if(place.acronym === "DEM") return person;
+      if(place.acronym === "DEM") return true;
     }
   }
 
@@ -66,34 +63,41 @@ export async function getPersonIfDEM(access_token: string):
 
     for(const enrollment of enrollments) {
       if(enrollment.state !== "NOT_ENROLLED") {
-        if(coursesIds.includes(enrollment.course.id)) return person;
+        if(coursesIds.includes(enrollment.course.id)) return true;
       }
     }
   }
 
-  if(person.username === 'ist1113807') return person;
+  if(person.username === 'ist1113807') return true; // Hardcode SysADM as DEM
 
-  return null;
+  return false;
 }
 
-export async function createStudentOrNull(access_token: string) {
-  const person = await getPersonIfDEM(access_token);
+export async function getStudentDetails(access_token: string) {
+  const person = await getPersonData(access_token);
+  const dem = await isDEM(person, access_token);
 
-  if(!person) return null;
+  let cards = [];
+  try {
+    const { data: cardsData } = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person/cards`, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+    cards = cardsData;
+  } catch (err) {
+    console.error(err);
+    cards = [];
+  }
 
-  const { data: card } = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person/cards`, {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-
-  if(card) console.log(`CARDS OF PERSON ${person.name}: ${JSON.stringify(card)}`);
+  if(cards) console.log(`CARDS OF PERSON ${person.name}: ${JSON.stringify(cards)}`);
 
   return {
     id: -1,
     istId: person.username,
     name: person.name,
     email: person.email,
-    mifareNumber: card && card.length > 0 && card[0].mifareNumber ? BigInt(card[0].mifareNumber) : null
+    isDEM: dem,
+    mifareNumber: cards && cards.length > 0 && cards[0].mifareNumber ? BigInt(cards[0].mifareNumber) : null
   }
 }

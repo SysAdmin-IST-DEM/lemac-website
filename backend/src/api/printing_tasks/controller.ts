@@ -1,29 +1,43 @@
 import { prisma } from '../../index.js';
-import type { PrintTaskStatus, Unit } from '@lemac/data-model';
+import { type PrintTaskStatus, Prisma, type Unit } from '@lemac/data-model';
 
-export async function addPrintTask(name: string, modelFile: string, amount: number, studentName: string, studentId: string,
-                                   email: string, unit: Unit, materialId: number, price: number, observations?: string) {
-  return prisma.printTask.create({
-    data: {
-      name,
-      modelFiles: [ modelFile ],
-      amount,
-      studentName,
-      studentId,
-      email,
-      unit,
-      price,
-      observations,
-      material: {
-        connect: {
-          id: materialId
+export async function addPrintTask(name: string, modelFile: string, amount: number, istId: string,
+                                   unit: Unit, materialId: number, price: number, observations?: string) {
+  try {
+    return await prisma.printTask.create({
+      data: {
+        name,
+        modelFiles: [ modelFile ],
+        amount,
+        unit,
+        price,
+        observations,
+        material: {
+          connect: {
+            id: materialId
+          }
+        },
+        student: {
+          connect:  {
+            istId
+          }
         }
+      },
+      include: {
+        material: true,
+        student: true
       }
-    },
-    include: {
-      material: true
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
+
+      if (e.meta?.relation === 'PrintTaskToStudent') {
+        throw new Error('STUDENT_NOT_FOUND');
+      }
     }
-  });
+
+    throw e;
+  }
 }
 
 export async function getPrintingTask(id: number) {
@@ -33,7 +47,8 @@ export async function getPrintingTask(id: number) {
     },
     include: {
       material: true,
-      assigned: true
+      assigned: true,
+      student: true
     }
   });
 }
@@ -42,14 +57,14 @@ export async function getPrintingTasks() {
   return prisma.printTask.findMany({
     include: {
       material: true,
-      assigned: true
+      assigned: true,
+      student: true
     }
   });
 }
 
 export async function editPrintingTask(id: number, name?: string, materialId?: number,
-                                       status?: PrintTaskStatus, amount?: number, studentName?: string,
-                                       studentId?: string, email?: string, unit?: Unit,
+                                       status?: PrintTaskStatus, amount?: number, unit?: Unit,
                                        price?: number, deadline?: Date | null,
                                        observations?: string, assignedId?: number | null,
                                        completedAt?: Date | null) {
@@ -61,9 +76,6 @@ export async function editPrintingTask(id: number, name?: string, materialId?: n
       name,
       status,
       amount,
-      studentName,
-      studentId,
-      email,
       unit,
       price,
       deadline,
@@ -82,7 +94,8 @@ export async function editPrintingTask(id: number, name?: string, materialId?: n
     },
     include: {
       material: true,
-      assigned: true
+      assigned: true,
+      student: true
     }
   });
 }

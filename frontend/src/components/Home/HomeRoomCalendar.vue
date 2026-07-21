@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import RoomCalendar from '@/components/RoomCalendar.vue';
+  import RoomCalendar from '@/components/RoomCalendar.vue'
 
-export default {
-  name: 'HomeRoomCalendar',
-  components: { RoomCalendar },
-};
+  export default {
+    name: 'HomeRoomCalendar',
+    components: { RoomCalendar },
+  }
 </script>

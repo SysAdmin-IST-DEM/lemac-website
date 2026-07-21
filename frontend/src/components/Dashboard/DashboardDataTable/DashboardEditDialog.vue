@@ -9,13 +9,16 @@
         <slot name="prepend-title">
           {{ item ? 'Edit ' : 'New ' }}
         </slot>
+
         <slot name="title">
           Element
         </slot>
       </v-card-title>
+
       <v-card-subtitle class="whitespace-normal! overflow-visible! [text-overflow:unset]!">
         <slot name="subtitle" />
       </v-card-subtitle>
+
       <v-card-text class="!p-0">
         <v-form
           ref="form"
@@ -39,15 +42,16 @@
                   >
                     <DashboardDynamicField
                       v-if="field.permission ? field.permission >= getPermission : true"
-                      v-model="valuesAny[field.key]"
-                      :type="field.type"
-                      :wrapper="field.type === 'date' || field.type === 'time' ? 'menu' : ''"
-                      :props="field.props"
                       :label="field.label"
                       :label-icon="field.labelIcon"
+                      :model-value="getNestedValue(valuesAny, field.key)"
+                      :props="field.props"
+                      :readonly="readonly"
                       :required="field.required"
                       :rules="field.rules"
-                      :readonly="readonly"
+                      :type="field.type"
+                      :wrapper="field.type === 'date' || field.type === 'time' ? 'menu' : ''"
+                      @update:model-value="setNestedValue(valuesAny, field.key, $event)"
                     />
                   </v-col>
                 </v-row>
@@ -58,9 +62,11 @@
           </v-container>
         </v-form>
       </v-card-text>
+
       <v-card-actions>
-        <slot name="footer"></slot>
+        <slot name="footer" />
         <v-spacer />
+
         <v-btn
           :color="cancelColor"
           variant="text"
@@ -68,10 +74,11 @@
         >
           {{ cancelText }}
         </v-btn>
+
         <v-btn
           :color="saveColor"
-          variant="text"
           :disabled="saveDisabled"
+          variant="text"
           @click="confirm"
         >
           {{ saveText }}
@@ -82,160 +89,178 @@
 </template>
 
 <script setup lang="ts">
-import DashboardDynamicField from '@/components/Dashboard/DashboardDataTable/DashboardDynamicField.vue';
-import { useUserStore } from '@/stores/user.js';
-import { computed, onMounted, type Ref, ref, watch } from 'vue';
-import { useNotification } from '@kyvg/vue3-notification';
-import { VCol, VForm } from 'vuetify/components';
-import type { DynamicFieldProps, DynamicModelValue } from '@/types/Dashboard/DashboardDynamicField';
+  import type { DynamicFieldProps, DynamicModelValue } from '@/types/Dashboard/DashboardDynamicField'
+  import { useNotification } from '@kyvg/vue3-notification'
+  import { computed, onMounted, type Ref, ref, watch } from 'vue'
+  import { VCol, VForm } from 'vuetify/components'
+  import DashboardDynamicField from '@/components/Dashboard/DashboardDataTable/DashboardDynamicField.vue'
+  import { useUserStore } from '@/stores/user.js'
 
-export type EditField = {
-  key: string,
-  permission?: number,
-  default?: DynamicModelValue,
-  colProps?: PropsOf<typeof VCol>
-} & Omit<DynamicFieldProps, 'modelValue'>;
+  export type EditField = {
+    key: string
+    permission?: number
+    default?: DynamicModelValue
+    colProps?: PropsOf<typeof VCol>
+  } & Omit<DynamicFieldProps, 'modelValue'>
 
-export type EditItem = any;
+  export type EditItem = any
 
-const { notify } = useNotification();
+  const { notify } = useNotification()
 
-defineOptions({
-  name: 'DashboardEditDialog',
-});
+  defineOptions({
+    name: 'DashboardEditDialog',
+  })
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: boolean,
-    item: EditItem | null,
-    fields: EditField[][],
-    onInitialization?: (item: EditItem) => EditItem,
-    maxWidth?: string | number,
-    shouldDisableSave?: boolean
-    cancelText?: string,
-    cancelColor?: string,
-    cancelAction?: () => void,
-    saveText?: string,
-    saveColor?: string,
-    onSaveError?: (e: unknown) => void,
-    readonly?: boolean
-    persistent?: boolean
-  }>(),
-  {
-    onInitialization: () => {return {} as EditItem},
-    maxWidth: '550px',
-    shouldDisableSave: false,
-    cancelText: 'Cancel',
-    cancelColor: 'primary',
-    cancelAction: undefined,
-    saveText: 'Save',
-    saveColor: 'primary',
-    onSaveError: undefined,
-    readonly: false,
-    persistent: false
+  const props = withDefaults(
+    defineProps<{
+      modelValue: boolean
+      item: EditItem | null
+      fields: EditField[][]
+      onInitialization?: (item: EditItem) => EditItem
+      maxWidth?: string | number
+      shouldDisableSave?: boolean
+      cancelText?: string
+      cancelColor?: string
+      cancelAction?: () => void
+      saveText?: string
+      saveColor?: string
+      onSaveError?: (e: unknown) => void
+      readonly?: boolean
+      persistent?: boolean
+    }>(),
+    {
+      onInitialization: () => {
+        return {} as EditItem
+      },
+      maxWidth: '550px',
+      shouldDisableSave: false,
+      cancelText: 'Cancel',
+      cancelColor: 'primary',
+      cancelAction: undefined,
+      saveText: 'Save',
+      saveColor: 'primary',
+      onSaveError: undefined,
+      readonly: false,
+      persistent: false,
+    },
+  )
+
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: boolean): void
+    (e: 'edit', item: EditItem | null, values: EditItem): void
+  }>()
+
+  const values = ref<EditItem>({} as EditItem)
+  const valuesAny = values as unknown as Ref<Record<string, unknown>>
+  const form = ref<InstanceType<typeof VForm> | null>(null)
+
+  const isOpen = computed({
+    get: () => {
+      return props.modelValue
+    },
+    set: (value: boolean) => {
+      emit('update:modelValue', value)
+    },
+  })
+
+  function handleCancel () {
+    if (props.cancelAction) {
+      props.cancelAction()
+    } else {
+      isOpen.value = false
+    }
   }
-);
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void,
-  (e: 'edit', item: EditItem | null, values: EditItem): void
-}>()
-
-const values = ref<EditItem>({} as EditItem);
-const valuesAny = values as unknown as Ref<Record<string, unknown>>;
-const form = ref<InstanceType<typeof VForm> | null>(null);
-
-const isOpen = computed({
-  get: () => {
-    return props.modelValue
-  },
-  set: (value: boolean) => {
-    emit('update:modelValue', value)
-  }
-})
-
-const handleCancel = () => {
-  if (props.cancelAction) {
-    props.cancelAction();
-  } else {
-    isOpen.value = false;
-  }
-}
-
-const saveDisabled = computed(() => {
-  if(props.shouldDisableSave) {
-    for(const row of props.fields) {
-      for (const field of row) {
-        if(field.required && (values.value[field.key] == null || values.value[field.key] === '')) {
-          return true;
-        }
-        for(const rule of field.rules ?? []) {
-          if (!rule(values.value[field.key])) {
-            return true;
+  const saveDisabled = computed(() => {
+    if (props.shouldDisableSave) {
+      for (const row of props.fields) {
+        for (const field of row) {
+          if (field.required && (values.value[field.key] == null || values.value[field.key] === '')) {
+            return true
+          }
+          for (const rule of field.rules ?? []) {
+            if (!rule(values.value[field.key])) {
+              return true
+            }
           }
         }
       }
     }
-  }
-  return false;
-})
+    return false
+  })
 
-const getPermission = computed(() => useUserStore().getPermission);
+  const getPermission = computed(() => useUserStore().getPermission)
 
-onMounted(() => {
-  initializeEmpty();
-});
+  onMounted(() => {
+    initializeEmpty()
+  })
 
-function handleSaveError(e: unknown) {
-  if(props.onSaveError) {
-    props.onSaveError(e);
-  } else {
-    console.error(e);
-    notify({
-      type: 'error',
-      title: 'Server error',
-      text: 'The server threw an error while handling the request',
-    });
-  }
-}
-
-async function confirm() {
-  if(!form.value) return;
-  const { valid } = await form.value.validate()
-  if (!valid) return
-  try {
-    emit('edit', props.item, values.value);
-  } catch(e) {
-    console.error(e);
-    notify({
-      type: 'error',
-      title: 'Server error',
-      text: 'The server threw an error while handling the request',
-    })
-    handleSaveError(e);
-  } finally {
-    isOpen.value = false;
-  }
-}
-
-function initializeEmpty() {
-  values.value = {};
-  for(const row of props.fields) {
-    for (const field of row) {
-      values.value[field.key] = field.default ?? null;
-    }
-  }
-}
-
-watch(() => props.modelValue,
-  (newValue) => {
-    if(props.item === null || !newValue) {
-      initializeEmpty();
+  function handleSaveError (e: unknown) {
+    if (props.onSaveError) {
+      props.onSaveError(e)
     } else {
-      values.value = props.onInitialization(props.item);
+      console.error(e)
+      notify({
+        type: 'error',
+        title: 'Server error',
+        text: 'The server threw an error while handling the request',
+      })
     }
   }
-)
 
-defineExpose({ values });
+  async function confirm () {
+    if (!form.value) return
+    const { valid } = await form.value.validate()
+    if (!valid) return
+    try {
+      emit('edit', props.item, values.value)
+    } catch (error) {
+      console.error(error)
+      notify({
+        type: 'error',
+        title: 'Server error',
+        text: 'The server threw an error while handling the request',
+      })
+      handleSaveError(error)
+    } finally {
+      isOpen.value = false
+    }
+  }
+
+  function initializeEmpty () {
+    values.value = {}
+    for (const row of props.fields) {
+      for (const field of row) {
+        values.value[field.key] = field.default ?? null
+      }
+    }
+  }
+
+  watch(() => props.modelValue,
+        newValue => {
+          if (props.item === null || !newValue) {
+            initializeEmpty()
+          } else {
+            values.value = props.onInitialization(props.item)
+          }
+        },
+  )
+
+  defineExpose({ values })
+
+  function getNestedValue (obj: any, path: string) {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj)
+  }
+
+  function setNestedValue (obj: any, path: string, value: any) {
+    const parts = path.split('.')
+    const lastPart = parts.pop()
+
+    const target = parts.reduce((acc, part) => {
+      if (!acc[part]) acc[part] = {}
+      return acc[part]
+    }, obj)
+
+    if (lastPart) target[lastPart!] = value
+  }
 </script>

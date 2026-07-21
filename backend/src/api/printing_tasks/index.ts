@@ -19,34 +19,41 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
   const base = path.basename(req.file.originalname, ext).replace(/[^a-z0-9_-]/gi, "_");
   const filename = `${base}-${Date.now()}${ext}`;
 
-    await minio.putObject(
-    bucket,
+  try {
+    const data = await controller.addPrintTask(
+      req.file.originalname,
       filename,
-    req.file.buffer,
-    req.file.size,
-    { "Content-Type": req.file.mimetype }
-  );
+      req.body.amount ?? 1,
+      req.body.istId,
+      req.body.unit,
+      req.body.materialId,
+      Math.round(req.body.price * 100) / 100,
+      req.body.observations
+    );
 
-  const data = await controller.addPrintTask(
-    req.file.originalname,
-    filename,
-    req.body.amount ?? 1,
-    req.body.studentName,
-    req.body.studentId,
-    req.body.email,
-    req.body.unit,
-    req.body.materialId,
-    Math.round(req.body.price * 100) / 100,
-    req.body.observations
-  );
+    await minio.putObject(
+      bucket,
+      filename,
+      req.file.buffer,
+      req.file.size,
+      { "Content-Type": req.file.mimetype }
+    );
 
-  console.log(data);
+    console.log(data);
 
-  // Send emails
-  await sendSubmissionCustomerEmail(req.body.email, data);
-  await sendSubmissionStaffEmail(data);
+    // Send emails
+    await sendSubmissionCustomerEmail(data.student.email, data);
+    await sendSubmissionStaffEmail(data);
 
-  return res.json(data);
+    return res.json(data);
+  } catch (err) {
+    if(err instanceof Error && err.message === 'STUDENT_NOT_FOUND') {
+      return res.status(404).json({ error: 'STUDENT_NOT_FOUND' });
+    }
+
+    console.error(err)
+  }
+
 }
 
 export async function getPrintTasks(req: Request, res: Response) {
@@ -77,9 +84,6 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
     req.body.materialId,
     req.body.status,
     req.body.amount,
-    req.body.studentName,
-    req.body.studentId,
-    req.body.email,
     req.body.unit,
     req.body.price,
     req.body.deadline,
@@ -91,7 +95,7 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
   // Status changed, send email to customer
   if(beforeStatus !== data.status) {
     if(data.status !== 'PENDING' && data.status !== 'WAITING') {
-      await sendStatusChangedCustomerEmail(data.email, data);
+      await sendStatusChangedCustomerEmail(data.student.email, data);
     }
   }
 
