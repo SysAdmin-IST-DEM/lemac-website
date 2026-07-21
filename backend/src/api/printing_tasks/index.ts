@@ -19,32 +19,41 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
   const base = path.basename(req.file.originalname, ext).replace(/[^a-z0-9_-]/gi, "_");
   const filename = `${base}-${Date.now()}${ext}`;
 
-    await minio.putObject(
-    bucket,
+  try {
+    const data = await controller.addPrintTask(
+      req.file.originalname,
       filename,
-    req.file.buffer,
-    req.file.size,
-    { "Content-Type": req.file.mimetype }
-  );
+      req.body.amount ?? 1,
+      req.body.istId,
+      req.body.unit,
+      req.body.materialId,
+      Math.round(req.body.price * 100) / 100,
+      req.body.observations
+    );
 
-  const data = await controller.addPrintTask(
-    req.file.originalname,
-    filename,
-    req.body.amount ?? 1,
-    req.body.istId,
-    req.body.unit,
-    req.body.materialId,
-    Math.round(req.body.price * 100) / 100,
-    req.body.observations
-  );
+    await minio.putObject(
+      bucket,
+      filename,
+      req.file.buffer,
+      req.file.size,
+      { "Content-Type": req.file.mimetype }
+    );
 
-  console.log(data);
+    console.log(data);
 
-  // Send emails
-  await sendSubmissionCustomerEmail(data.student.email, data);
-  await sendSubmissionStaffEmail(data);
+    // Send emails
+    await sendSubmissionCustomerEmail(data.student.email, data);
+    await sendSubmissionStaffEmail(data);
 
-  return res.json(data);
+    return res.json(data);
+  } catch (err) {
+    if(err instanceof Error && err.message === 'STUDENT_NOT_FOUND') {
+      return res.status(404).json({ error: 'STUDENT_NOT_FOUND' });
+    }
+
+    console.error(err)
+  }
+
 }
 
 export async function getPrintTasks(req: Request, res: Response) {

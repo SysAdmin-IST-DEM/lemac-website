@@ -8,8 +8,6 @@
 
       <v-row>
         <div class="m-auto!">
-          <span>Automatic Fill Form</span>
-
           <AuthenticateButton
             class="ml-3"
             page="printing"
@@ -18,39 +16,48 @@
         </div>
       </v-row>
 
+      <v-row>
+        <span class="ml-1 text-l text-primary">Técnico ID Details (authenticate):</span>
+      </v-row>
+
       <!-- Form Fields -->
       <v-row>
         <v-text-field
           v-model="values.studentName"
           class="m-1!"
+          disabled
           label="Full Name"
           prepend-icon="mdi-account"
           required
-          :rules="[requiredRule]"
           variant="underlined"
         />
       </v-row>
 
       <v-row>
         <v-text-field
-          v-model="values.studentId"
+          v-model="values.istId"
           class="m-1!"
+          disabled
           label="IST-ID"
           prepend-icon="mdi-id-card"
           required
-          :rules="[(v: string) => (/^ist[12]\d{5,6}$/.test(v) ? true : 'Invalid format for IST-ID'), requiredRule]"
+          :rules="[(v: string) => (/^ist[12]\d{5,6}$/.test(v) ? true : 'Invalid format for IST-IDInvalid format for IST-ID'), requiredRule]"
           variant="underlined"
         />
 
         <v-text-field
           v-model="values.email"
           class="m-1!"
+          disabled
           label="Técnico Webmail"
           prepend-icon="mdi-at"
           required
-          :rules="[requiredRule]"
           variant="underlined"
         />
+      </v-row>
+
+      <v-row>
+        <span class="ml-1 text-l text-primary">Object Information (manual):</span>
       </v-row>
 
       <v-row>
@@ -154,6 +161,7 @@
 
 <script lang="ts">
   import { type AddPrintTaskBody, type PrintMaterial, Unit } from '@lemac/data-model/browser'
+  import { AxiosError } from 'axios'
   import * as THREE from 'three'
   import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js'
   import { getPrintingMaterials } from '@/api/printingMaterials.api.ts'
@@ -167,21 +175,22 @@
     METERS: 1,
   }
 
-  const initialData: AddPrintTaskBody = {
+  const initialData = {
     studentName: '',
-    studentId: '',
+    istId: '',
     email: '',
     unit: Unit.MILIMETERS,
     price: 0,
     materialId: 0,
     amount: 1,
+    observations: '',
   }
 
   export default {
     name: 'HomePrinting',
     components: { AuthenticateButton, PrintingConfirmationDialog },
     data (): {
-      values: AddPrintTaskBody
+      values: typeof initialData
       modelFile: File | null
       units: Unit[]
       materials: PrintMaterial[]
@@ -270,20 +279,31 @@
         if (valid) this.submitDialog = true
       },
       async submit () {
-        const task = (await addPrintTask(this.modelFile!, this.values)).data
-        this.submitDialog = false;
-        (this.$refs.printingDialog as typeof PrintingConfirmationDialog).loading = false
-        this.values = initialData
-        this.modelFile = null
-        this.$notify({
-          type: 'success',
-          title: 'Submission Successful',
-          text: `Your printing task (ID: ${task.id}) has been submitted successfully! Please check your email for further instructions.`,
-        })
+        try {
+          const task = (await addPrintTask(this.modelFile!, this.values)).data
+          this.submitDialog = false;
+          (this.$refs.printingDialog as typeof PrintingConfirmationDialog).loading = false
+          this.values = initialData
+          this.modelFile = null
+          this.$notify({
+            type: 'success',
+            title: 'Submission Successful',
+            text: `Your printing task (ID: ${task.id}) has been submitted successfully! Please check your email for further instructions.`,
+          })
+        } catch (error) {
+          if (error instanceof AxiosError && error.response && error.response.status === 404 && error.response.data?.error === 'STUDENT_NOT_FOUND') {
+            return this.$notify({
+              type: 'error',
+              title: 'Student not registered',
+              text: 'You must complete Student Registration to submit a printing task.',
+              duration: 8000,
+            })
+          }
+        }
       },
       fillForm (data: { name: string, username: string, institutionalEmail: string }) {
         this.values.studentName = data.name
-        this.values.studentId = data.username
+        this.values.istId = data.username
         this.values.email = data.institutionalEmail
       },
       // Volume calculation from STL
