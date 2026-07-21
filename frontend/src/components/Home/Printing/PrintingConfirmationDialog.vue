@@ -10,7 +10,7 @@
       <v-card-text>
         <p>Please confirm the information you have entered is correct:</p>
         <p>Full Name: {{ values.studentName }}</p>
-        <p>IST ID: {{ values.studentId }}</p>
+        <p>IST ID: {{ values.istId }}</p>
         <p>Técnico Webmail: {{ values.email }}</p>
         <p>Quantity: {{ values.amount }}</p>
         <p>Model STL: {{ file ? file.name : '-' }}</p>
@@ -51,7 +51,7 @@
         required: true,
       },
       values: {
-        type: Object as PropType<AddPrintTaskBody>,
+        type: Object as PropType<AddPrintTaskBody & { studentName: string, email: string }>,
         required: true,
       },
       file: {

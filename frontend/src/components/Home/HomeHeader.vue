@@ -173,8 +173,8 @@
     color="warning"
     icon="$warning"
   >
-    All students are now required to register in LEMAC’s entrance system to access
-    the room. Please <RouterLink to="/student-registration">complete your registration</RouterLink>.
+    All students are now required to register in LEMAC’s system to access
+    the room and other services. Please <RouterLink to="/student-registration">complete your registration</RouterLink>.
   </v-alert>
 </template>
 
