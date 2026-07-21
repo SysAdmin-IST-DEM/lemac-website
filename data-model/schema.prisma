@@ -34,13 +34,16 @@ model User {
 }
 
 model Student {
-  id           Int           @id @default(autoincrement())
-  istId        String        @unique() @map("ist_id") @db.VarChar(12)
-  name         String        @db.VarChar(255)
-  email        String        @db.Text
-  lastRenewed  DateTime      @default(now()) @map("last_renewed") @db.Date
-  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
-  studentCards StudentCard[]
+  id                  Int                  @id @default(autoincrement())
+  istId               String               @unique() @map("ist_id") @db.VarChar(12)
+  name                String               @db.VarChar(255)
+  email               String               @db.Text
+  isDEM               Boolean              @map("is_dem")
+  lastRenewed         DateTime             @default(now()) @map("last_renewed") @db.Date
+  createdAt           DateTime             @default(now()) @map("created_at") @db.Timestamp(0)
+  studentCards        StudentCard[]
+  studentTransactions StudentTransaction[]
+  printTasks          PrintTask[]
 
   @@map("students")
 }
@@ -210,24 +213,24 @@ enum PrintTaskStatus {
 }
 
 model PrintTask {
-  id           Int             @id @default(autoincrement())
-  name         String          @db.VarChar(255)
-  modelFiles   Json            @map("model_files")
-  materialId   Int             @map("material_id")
-  material     PrintMaterial   @relation(fields: [materialId], references: [id], onUpdate: Restrict)
-  status       PrintTaskStatus @default(WAITING)
-  amount       Int             @default(1)
-  studentName  String          @map("student_name") @db.VarChar(255)
-  studentId    String          @map("student_id") @db.VarChar(12)
-  email        String          @db.VarChar(255)
-  unit         Unit
-  price        Float
-  deadline     DateTime?       @db.Date
-  observations String          @default("") @db.Text
-  assignedId   Int?            @map("assigned_id")
-  assigned     User?           @relation(fields: [assignedId], references: [id], onUpdate: Restrict)
-  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamp(0)
-  completedAt  DateTime?       @map("completed_at") @db.Timestamp(0)
+  id                 Int                 @id @default(autoincrement())
+  name               String              @db.VarChar(255)
+  modelFiles         Json                @map("model_files")
+  materialId         Int                 @map("material_id")
+  material           PrintMaterial       @relation(fields: [materialId], references: [id], onUpdate: Restrict)
+  status             PrintTaskStatus     @default(WAITING)
+  amount             Int                 @default(1)
+  studentId          Int                 @map("student_id")
+  student            Student             @relation(fields: [studentId], references: [id], onUpdate: Restrict)
+  unit               Unit
+  price              Float
+  deadline           DateTime?           @db.Date
+  observations       String              @default("") @db.Text
+  assignedId         Int?                @map("assigned_id")
+  assigned           User?               @relation(fields: [assignedId], references: [id], onUpdate: Restrict)
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(0)
+  completedAt        DateTime?           @map("completed_at") @db.Timestamp(0)
+  studentTransaction StudentTransaction?
 
   @@map("print_tasks")
 }
@@ -241,4 +244,23 @@ model PrintMaterial {
   PrintTask       PrintTask[]
 
   @@map("print_materials")
+}
+
+enum StudentTransactionType {
+  CHARGE
+  PAYMENT
+  ADJUSTMENT
+}
+
+model StudentTransaction {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  student   Student  @relation(fields: [studentId], references: [id], onUpdate: Restrict)
+  amount    Int
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+
+  printTaskId Int?       @unique @map("print_task_id")
+  printTask   PrintTask? @relation(fields: [printTaskId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+
+  @@map("student_transactions")
 }

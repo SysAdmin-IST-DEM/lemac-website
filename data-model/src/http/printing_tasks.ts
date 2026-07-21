@@ -12,10 +12,12 @@ export const AddPrintTaskBody = PrintTaskUncheckedCreateInputObjectZodSchema.omi
   createdAt: true,
   price: true,
   name: true,
+  studentId: true
 }).extend({
   materialId: z.coerce.number(),
   price: z.coerce.number(),
   amount: z.coerce.number(),
+  istId: z.string()
 });
 
 export type AddPrintTaskBody = z.infer<typeof AddPrintTaskBody>;
@@ -26,6 +28,7 @@ export const EditPrintTaskBody = PrintTaskUncheckedCreateInputObjectZodSchema.pa
   id: true,
   modelFiles: true,
   createdAt: true,
+  studentId: true
 });
 
 export type EditPrintTaskBody = z.infer<typeof EditPrintTaskBody>;
