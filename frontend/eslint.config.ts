@@ -25,6 +25,8 @@ export default vuetify(
       'unicorn/no-array-sort': 'off',
       '@stylistic/quotes': 'off',
       'unicorn/no-this-outside-of-class': 'off',
+      'vue/block-lang': 'off',
+      'import/first': 'off',
     },
   },
 )
