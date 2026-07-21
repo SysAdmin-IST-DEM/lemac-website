@@ -1,9 +1,9 @@
 <template>
   <DashboardTable
-    :headers="headers"
-    :edit-initialization="editInitialization"
-    :items="publications"
     :edit-fields="editFields"
+    :edit-initialization="editInitialization"
+    :headers="headers"
+    :items="publications"
     new-button="New Announcement"
     search
     :sort-by="[{ key: 'id', order: 'desc' }]"
