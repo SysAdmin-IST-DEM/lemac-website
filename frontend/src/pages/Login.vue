@@ -3,8 +3,8 @@
     <DashboardEditDialog
       ref="editDialog"
       v-model="showEditDialog"
-      cancel-color="success"
       :cancel-action="() => { confirmationDialog = true }"
+      cancel-color="success"
       cancel-text="Skip"
       :fields="editFields"
       :item="defaultEntry"

@@ -1,13 +1,13 @@
 <template>
   <DashboardTable
-    :headers="headers"
-    :edit-initialization="editInitialization"
-    :items="workstations"
-    :edit-fields="editFields"
-    :new-button="getPermission === 1 ? 'New Workstation' : undefined"
-    expand
-    search
     :custom-filter="filterWorkstations"
+    :edit-fields="editFields"
+    :edit-initialization="editInitialization"
+    expand
+    :headers="headers"
+    :items="workstations"
+    :new-button="getPermission === 1 ? 'New Workstation' : undefined"
+    search
     :sort-by="[{ key: 'name' }]"
     title="Workstations"
     @delete="deleteItem"
