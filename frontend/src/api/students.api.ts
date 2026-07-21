@@ -1,9 +1,11 @@
-import httpClient from './httpClient.api';
-import type { Student, StudentCard } from '@lemac/data-model/browser';
-const ENDPOINT = '/students';
+import type { Student, StudentCard } from '@lemac/data-model/browser'
+import httpClient from './httpClient.api'
+const ENDPOINT = '/students'
 
-export const getStudents = () =>
-  httpClient.get<Student[]>(ENDPOINT);
+export function getStudents () {
+  return httpClient.get<Student[]>(ENDPOINT)
+}
 
-export const assignStudentCard = (studentId: number, mifareNumber: bigint) =>
-  httpClient.post<StudentCard>(`${ENDPOINT}/assign-card`, {studentId, mifareNumber});
+export function assignStudentCard (studentId: number, mifareNumber: bigint) {
+  return httpClient.post<StudentCard>(`${ENDPOINT}/assign-card`, { studentId, mifareNumber })
+}

@@ -5,14 +5,14 @@ export const useLoadingStore = defineStore('loading', {
     loadingBar: false,
   }),
   getters: {
-    isLoading: (state) => state.loadingBar,
+    isLoading: state => state.loadingBar,
   },
   actions: {
-    showLoadingBar() {
-      this.loadingBar = true;
+    showLoadingBar () {
+      this.loadingBar = true
     },
-    hideLoadingBar() {
-      this.loadingBar = false;
+    hideLoadingBar () {
+      this.loadingBar = false
     },
-  }
-});
+  },
+})

@@ -10,27 +10,27 @@
 </template>
 
 <script>
-import PublicationsTable from '@/components/Dashboard/Publications/PublicationsTable.vue';
-import { getPublications } from '@/api/publications.api';
-import { mapState } from 'pinia'
-import { useUserStore } from '@/stores/user.js';
+  import { mapState } from 'pinia'
+  import { getPublications } from '@/api/publications.api'
+  import PublicationsTable from '@/components/Dashboard/Publications/PublicationsTable.vue'
+  import { useUserStore } from '@/stores/user.js'
 
-export default {
-  name: 'PublicationsPage',
-  components: { PublicationsTable },
-  data() {
-    return {
-      publications: null,
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ['getPermission']),
-  },
-  async mounted() {
-    this.$loading.show();
-    const response = await getPublications();
-    this.publications = response.data;
-    this.$loading.hide();
-  },
-};
+  export default {
+    name: 'PublicationsPage',
+    components: { PublicationsTable },
+    data () {
+      return {
+        publications: null,
+      }
+    },
+    computed: {
+      ...mapState(useUserStore, ['getPermission']),
+    },
+    async mounted () {
+      this.$loading.show()
+      const response = await getPublications()
+      this.publications = response.data
+      this.$loading.hide()
+    },
+  }
 </script>

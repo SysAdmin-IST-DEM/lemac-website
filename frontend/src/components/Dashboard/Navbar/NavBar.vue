@@ -5,9 +5,9 @@
         <v-list-item
           v-for="(route, index) in filteredRoutes"
           :key="index"
-          :value="index"
-          :to="route.link"
           class="mb-1"
+          :to="route.link"
+          :value="index"
         >
           <v-icon v-if="route.icon" start>
             {{ route.icon }}
@@ -15,19 +15,21 @@
           {{ route.text }}
           <v-chip
             v-if="route.notifications && route.notifications > 0"
-            size="small"
             class="bg-red"
             color="white"
+            size="small"
           >
             {{ route.notifications }}
           </v-chip>
         </v-list-item>
       </v-list>
+
       <template #append>
         <div class="pa-2">
           <v-btn block color="error" @click="onLogout">
             <v-icon start> mdi-logout </v-icon>Logout
           </v-btn>
+
           <div class="py-2 text-center">
             LEMAC
             <v-icon size="x-small"> mdi-copyright </v-icon>
@@ -36,148 +38,150 @@
         </div>
       </template>
     </v-navigation-drawer>
+
     <v-app-bar density="compact" :order="mdAndDown ? 0 : -1">
       <v-app-bar-nav-icon v-if="mdAndDown" color="primary" @click.stop="drawer = !drawer" />
       <v-spacer />
+
       <v-progress-linear
-        :active="isLoading"
-        :indeterminate="isLoading"
         absolute
-        location="bottom"
+        :active="isLoading"
         color="primary"
+        :indeterminate="isLoading"
+        location="bottom"
       />
     </v-app-bar>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from 'vuetify';
-const { lgAndUp, mdAndDown } = useDisplay();
+  import { useDisplay } from 'vuetify'
 </script>
 
 <script lang="ts">
-import { mapState, mapActions } from 'pinia'
-import { useUserStore } from '@/stores/user.js';
-import { useLoadingStore } from '@/stores/loading.js';
-import { getPrintTasks } from '@/api/printingTasks.api.ts';
-import { PrintTaskStatus } from '@lemac/data-model/browser';
+  import { PrintTaskStatus } from '@lemac/data-model/browser'
+  import { mapActions, mapState } from 'pinia'
+  import { getPrintTasks } from '@/api/printingTasks.api.ts'
+  import { useLoadingStore } from '@/stores/loading.js'
+  import { useUserStore } from '@/stores/user.js'
+  const { lgAndUp, mdAndDown } = useDisplay()
 
-export default {
-  name: 'NavBar',
+  export default {
+    name: 'NavBar',
 
-  data() {
-    return {
-      drawer: true,
-      group: null,
-      routes: [
-        {
-          text: 'Home',
-          icon: 'mdi-home',
-          link: '/',
-        },
-        {
-          text: 'Dashboard',
-          icon: 'mdi-view-dashboard',
-          link: '/dashboard',
-        },
-        {
-          text: "Hours' Registry",
-          icon: 'mdi-clock',
-          link: '/dashboard/hours',
-        },
-        {
-          text: "Monitor's Schedule",
-          icon: 'mdi-calendar-clock',
-          link: '/dashboard/schedule',
-        },
-        {
-          text: "Student Management",
-          icon: 'mdi-smart-card',
-          link: '/dashboard/students'
-        },
-        {
-          text: 'Monitors Accounts',
-          icon: 'mdi-account-multiple',
-          link: '/dashboard/monitors',
-        },
-        {
-          text: 'Workstations',
-          icon: 'mdi-desktop-classic',
-          link: '/dashboard/workstations',
-        },
-        {
-          text: 'Announcements',
-          icon: 'mdi-bullhorn-variant',
-          link: '/dashboard/publications',
-          permission: 1,
-        },
-        {
-          text: 'Room Management',
-          icon: 'mdi-table-chair',
-          link: '/dashboard/rooms',
-        },
-        {
-          text: '3D Printing',
-          icon: 'mdi-printer-3d',
-          link: '/dashboard/printing',
-          notifications: undefined
-        },
-      ],
-    };
-  },
-  computed: {
-    filteredRoutes() {
-      return this.routes.filter(
-        (route) => this.getPermission >= (route.permission || 0)
-      );
-    },
-    ...mapState(useUserStore, ['getId', 'getPermission']),
-    ...mapState(useLoadingStore, ['isLoading']),
-  },
-  watch: {
-    group() {
-      this.drawer = true;
-    },
-  },
-  async mounted() {
-    const printingRoute = this.routes.find(route => route.link === '/dashboard/printing');
-    if (printingRoute) {
-      const count = await this.updateNotifications(printingRoute);
-      if(count > 0) {
-        this.$notify({
-          type: 'info',
-          title: 'Printing Notifications',
-          text: `You have ${count} pending print tasks.`,
-        });
+    data () {
+      return {
+        drawer: true,
+        group: null,
+        routes: [
+          {
+            text: 'Home',
+            icon: 'mdi-home',
+            link: '/',
+          },
+          {
+            text: 'Dashboard',
+            icon: 'mdi-view-dashboard',
+            link: '/dashboard',
+          },
+          {
+            text: "Hours' Registry",
+            icon: 'mdi-clock',
+            link: '/dashboard/hours',
+          },
+          {
+            text: "Monitor's Schedule",
+            icon: 'mdi-calendar-clock',
+            link: '/dashboard/schedule',
+          },
+          {
+            text: "Student Management",
+            icon: 'mdi-smart-card',
+            link: '/dashboard/students',
+          },
+          {
+            text: 'Monitors Accounts',
+            icon: 'mdi-account-multiple',
+            link: '/dashboard/monitors',
+          },
+          {
+            text: 'Workstations',
+            icon: 'mdi-desktop-classic',
+            link: '/dashboard/workstations',
+          },
+          {
+            text: 'Announcements',
+            icon: 'mdi-bullhorn-variant',
+            link: '/dashboard/publications',
+            permission: 1,
+          },
+          {
+            text: 'Room Management',
+            icon: 'mdi-table-chair',
+            link: '/dashboard/rooms',
+          },
+          {
+            text: '3D Printing',
+            icon: 'mdi-printer-3d',
+            link: '/dashboard/printing',
+            notifications: undefined,
+          },
+        ],
       }
-      setInterval(this.updateNotifications, 10000, printingRoute);
-    }
-  },
-  methods: {
-    async updateNotifications(route: { notifications?: number }) {
-      const tasks = (await getPrintTasks()).data;
-      const count = tasks.filter(task =>
-        task.status !== PrintTaskStatus.DELIVERED &&
-        task.status !== PrintTaskStatus.CANCELLED &&
-        (task.status === PrintTaskStatus.WAITING || task.assignedId === this.getId)).length;
-      if(route.notifications !== undefined && count > route.notifications) {
-        this.$notify({
-          type: 'info',
-          title: 'Printing Notifications',
-          text: `There are new print tasks pending your attention.`,
-        });
+    },
+    computed: {
+      filteredRoutes () {
+        return this.routes.filter(
+          route => this.getPermission >= (route.permission || 0),
+        )
+      },
+      ...mapState(useUserStore, ['getId', 'getPermission']),
+      ...mapState(useLoadingStore, ['isLoading']),
+    },
+    watch: {
+      group () {
+        this.drawer = true
+      },
+    },
+    async mounted () {
+      const printingRoute = this.routes.find(route => route.link === '/dashboard/printing')
+      if (printingRoute) {
+        const count = await this.updateNotifications(printingRoute)
+        if (count > 0) {
+          this.$notify({
+            type: 'info',
+            title: 'Printing Notifications',
+            text: `You have ${count} pending print tasks.`,
+          })
+        }
+        setInterval(this.updateNotifications, 10_000, printingRoute)
       }
-      route.notifications = count;
-      console.log("Updated with " + route.notifications + " printing notifications.");
-      return count;
     },
-    onLogout: function () {
-      localStorage.removeItem('token');
-      this.logoutUser();
-      this.$router.push('/');
-      window.open('https://fenix.tecnico.ulisboa.pt/logout', '_blank')?.focus();
+    methods: {
+      async updateNotifications (route: { notifications?: number }) {
+        const tasks = (await getPrintTasks()).data
+        const count = tasks.filter(task =>
+          task.status !== PrintTaskStatus.DELIVERED
+          && task.status !== PrintTaskStatus.CANCELLED
+          && (task.status === PrintTaskStatus.WAITING || task.assignedId === this.getId)).length
+        if (route.notifications !== undefined && count > route.notifications) {
+          this.$notify({
+            type: 'info',
+            title: 'Printing Notifications',
+            text: `There are new print tasks pending your attention.`,
+          })
+        }
+        route.notifications = count
+        console.log("Updated with " + route.notifications + " printing notifications.")
+        return count
+      },
+      onLogout: function () {
+        localStorage.removeItem('token')
+        this.logoutUser()
+        this.$router.push('/')
+        window.open('https://fenix.tecnico.ulisboa.pt/logout', '_blank')?.focus()
+      },
+      ...mapActions(useUserStore, ['loginUser', 'logoutUser']),
     },
-    ...mapActions(useUserStore, ['loginUser', 'logoutUser'])
-  },
-};
+  }
 </script>

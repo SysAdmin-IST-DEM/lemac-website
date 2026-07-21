@@ -2,17 +2,19 @@
   <v-menu location="bottom right">
     <template #activator="{ props }">
       <v-btn
+        :class="css"
         color="secondary"
         variant="elevated"
-        :class="css"
         v-bind="props"
       >
         <span>{{ valueRaw ? valueRaw[itemLabel] : defaultLabel }}</span>
+
         <v-icon end>
           mdi-menu-down
         </v-icon>
       </v-btn>
     </template>
+
     <v-list>
       <v-list-item
         v-for="(o, index) in objects"
@@ -26,78 +28,72 @@
 </template>
 
 <script>
-export default {
-  name: 'DashboardSelect',
-  props: {
-    modelValue: {
-      type: [String, Number],
-      default: null,
-      required: false
-    },
-    items: {
-      type: Array,
-      required: true,
-    },
-    defaultLabel: {
-      type: String,
-      default: '',
-    },
-    itemLabel: {
-      type: String,
-      default: 'label',
-    },
-    itemValue: {
-      type: String,
-      default: 'value',
-    },
-    css: {
-      type: String,
-      default: 'mr-4',
-    },
-  },
-  emits: ['update:modelValue'],
-  computed: {
-    value: {
-      get() {
-        return this.modelValue;
+  export default {
+    name: 'DashboardSelect',
+    props: {
+      modelValue: {
+        type: [String, Number],
+        default: null,
+        required: false,
       },
-      set(v) {
-        this.$emit('update:modelValue', v);
+      items: {
+        type: Array,
+        required: true,
+      },
+      defaultLabel: {
+        type: String,
+        default: '',
+      },
+      itemLabel: {
+        type: String,
+        default: 'label',
+      },
+      itemValue: {
+        type: String,
+        default: 'value',
+      },
+      css: {
+        type: String,
+        default: 'mr-4',
       },
     },
-    valueRaw() {
-      const found = this.objects.find(
-        (o) => o[this.itemValue] === this.value,
-      );
-      return found || null;
-    },
-    objects: {
-      get() {
-        return this.items.map((item) => {
-          if (typeof item === 'object') {
-            return item;
-          } else {
-            const obj = {};
-            obj[this.itemLabel] = item;
-            obj[this.itemValue] = item;
-            return obj;
-          }
-        });
+    emits: ['update:modelValue'],
+    computed: {
+      value: {
+        get () {
+          return this.modelValue
+        },
+        set (v) {
+          this.$emit('update:modelValue', v)
+        },
+      },
+      valueRaw () {
+        const found = this.objects.find(
+          o => o[this.itemValue] === this.value,
+        )
+        return found || null
+      },
+      objects: {
+        get () {
+          return this.items.map(item => {
+            if (typeof item === 'object') {
+              return item
+            } else {
+              const obj = { [this.itemLabel]: item, [this.itemValue]: item }
+              return obj
+            }
+          })
+        },
+      },
+      labels: {
+        get () {
+          return this.items.map(item => {
+            return typeof item === 'object' ? item[this.itemLabel] : item
+          })
+        },
       },
     },
-    labels: {
-      get() {
-        return this.items.map((item) => {
-          if (typeof item === 'object') {
-            return item[this.itemLabel];
-          } else {
-            return item;
-          }
-        });
-      },
-    },
-  },
-};
+  }
 </script>
 
 <style scoped></style>

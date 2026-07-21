@@ -7,9 +7,9 @@
       >
         <template #extra-dropdowns>
           <v-btn
+            class="mr-4"
             color="secondary"
             variant="elevated"
-            class="mr-4"
             @click="
               selectedEvent = null;
               editEventDialog = true;
@@ -20,8 +20,8 @@
 
           <DashboardEditDialog
             v-model="editEventDialog"
-            :item="selectedEvent"
             :fields="fields"
+            :item="selectedEvent"
             :on-initialization="editInitialization"
             @edit="editEvent"
           >
@@ -34,6 +34,7 @@
         <template #extra-event-details="{ event }">
           <span v-if="typeof event.details.id === 'number'">
             <b>Observations:</b>
+
             <span
               v-for="e in event.details.events"
               :key="e.id"
@@ -46,6 +47,7 @@
               </span>
             </span>
           </span>
+
           <p v-else>
             Description: {{ event.details.description }}
           </p>
@@ -64,6 +66,7 @@
             >
               <v-icon>mdi-pencil-outline</v-icon>
             </v-btn>
+
             <v-spacer />
 
             <v-btn
@@ -72,6 +75,7 @@
             >
               {{ !event.givenKey ? 'Give key' : 'Receive key' }}
             </v-btn>
+
             <v-btn
               color="primary"
               variant="text"
@@ -87,144 +91,144 @@
 </template>
 
 <script>
-import {
-  createHours,
-  deleteHours,
-  updateHours,
-} from '@/api/room_hours.api';
-import { createEvent } from '@/api/room_events.api';
-import RoomCalendar from '@/components/RoomCalendar.vue';
-import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue';
-import { DateTime } from 'luxon';
-import { RoomEventType } from '@lemac/data-model/browser';
+  import { RoomEventType } from '@lemac/data-model/browser'
+  import { DateTime } from 'luxon'
+  import { createEvent } from '@/api/room_events.api'
+  import {
+    createHours,
+    deleteHours,
+    updateHours,
+  } from '@/api/room_hours.api'
+  import DashboardEditDialog from '@/components/Dashboard/DashboardDataTable/DashboardEditDialog.vue'
+  import RoomCalendar from '@/components/RoomCalendar.vue'
 
-export default {
-  components: { DashboardEditDialog, RoomCalendar },
-  data: () => ({
-    selectedEvent: null,
-    editEventDialog: false,
-    fields: [
-      [
-        { key: "date", type: "date", label: "Date for reservation", labelIcon: "mdi-calendar", required: true}
+  export default {
+    components: { DashboardEditDialog, RoomCalendar },
+    data: () => ({
+      selectedEvent: null,
+      editEventDialog: false,
+      fields: [
+        [
+          { key: "date", type: "date", label: "Date for reservation", labelIcon: "mdi-calendar", required: true },
+        ],
+        [
+          { key: "entry", type: "time", label: "Entry Hour", labelIcon: "mdi-clock-time-four-outline", required: true },
+          { key: "exit", type: "time", label: "Exit Hour", labelIcon: "mdi-clock-time-four-outline", required: true },
+        ],
+        [
+          { key: "name", label: "Name for reservation", required: true },
+          { key: "istId", label: "Ist ID (ist*)", required: true },
+        ],
+        [
+          { key: "room", type: "select", label: "Room for reservation", labelIcon: "mdi-home-outline", required: true, props: { items: ['SDM', 'MOM', 'LTI'] } },
+        ],
       ],
-      [
-        { key: "entry", type: "time", label: "Entry Hour", labelIcon: "mdi-clock-time-four-outline", required: true },
-        { key: "exit", type: "time", label: "Exit Hour", labelIcon: "mdi-clock-time-four-outline", required: true }
-      ],
-      [
-        { key: "name", label: "Name for reservation", required: true},
-        { key: "istId", label: "Ist ID (ist*)", required: true},
-      ],
-      [
-        { key: "room", type: "select", label: "Room for reservation", labelIcon: "mdi-home-outline", required: true, props: { items: ['SDM', 'MOM', 'LTI'] } }
-      ]
-    ]
-  }),
-  methods: {
-    editInitialization(event) {
-      return {
-        entry: DateTime.fromJSDate(event.start).toFormat("HH:mm"),
-        exit: DateTime.fromJSDate(event.end).toFormat("HH:mm"),
-        date: DateTime.fromJSDate(event.start).startOf('day'),
-        istId: event.details.istId,
-        name: event.details.name,
-        room: event.details.room
-      };
-    },
-    async editEvent(event, values) {
-      values.entry = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.entry;
-      values.exit = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.exit;
+    }),
+    methods: {
+      editInitialization (event) {
+        return {
+          entry: DateTime.fromJSDate(event.start).toFormat("HH:mm"),
+          exit: DateTime.fromJSDate(event.end).toFormat("HH:mm"),
+          date: DateTime.fromJSDate(event.start).startOf('day'),
+          istId: event.details.istId,
+          name: event.details.name,
+          room: event.details.room,
+        }
+      },
+      async editEvent (event, values) {
+        values.entry = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.entry
+        values.exit = DateTime.fromISO(values.date).toFormat('yyyy-MM-dd') + 'T' + values.exit
 
-      if (event) {
-        values.givenKey = event.givenKey;
-        const response = await updateHours(event.details.id, values);
+        if (event) {
+          values.givenKey = event.givenKey
+          const response = await updateHours(event.details.id, values)
+          await createEvent({
+            type: RoomEventType.RES_UPDATED,
+            roomReservationId: response.data.id,
+          })
+
+          event.title = `Reservation of ${response.data.name}`
+          event.start = DateTime.fromISO(response.data.entry).toFormat("yyyy-MM-dd HH:mm")
+          event.end = DateTime.fromISO(response.data.exit).toFormat("yyyy-MM-dd HH:mm")
+          event.customColor = this.$refs.calendar.colors[response.data.room] + (event.givenKey ? ' darken-4' : '')
+          event.class = "bg-" + this.$refs.calendar.colors[response.data.room] + (event.givenKey ? '-darken-4' : '')
+          event.details = response.data
+          this.$notify({
+            type: 'success',
+            title: 'Entry updated',
+            text: `You have updated entry ${response.data.id}`,
+          })
+        } else {
+          const response = await createHours(values)
+          await createEvent({
+            type: RoomEventType.RES_CREATED,
+            roomReservationId: response.data.id,
+          })
+
+          const event = response.data
+          event.title = `Reservation of ${event.name}`
+          this.$refs.calendar.events.push({
+            id: event.id,
+            title: event.title,
+            start: DateTime.fromISO(event.entry).toFormat("yyyy-MM-dd HH:mm"),
+            end: DateTime.fromISO(event.exit).toFormat("yyyy-MM-dd HH:mm"),
+            customColor: this.$refs.calendar.colors[event.room],
+            class: 'bg-' + this.$refs.calendar.colors[event.room],
+            givenKey: false,
+            details: event,
+          })
+          this.$notify({
+            type: 'success',
+            title: 'Entry created',
+            text: `You have created entry ${response.data.id}`,
+          })
+        }
+      },
+      async giveKey (event) {
+        const values = {
+          entry: event.details.entry,
+          exit: event.details.exit,
+          istId: event.details.istId,
+          room: event.details.room,
+          name: event.details.user.name,
+          givenKey: !event.givenKey,
+        }
+
+        event.givenKey = !event.givenKey
+        event.customColor = this.$refs.calendar.colors[event.details.room] + (event.givenKey ? ' darken-4' : '')
+        event.class = "bg-" + this.$refs.calendar.colors[event.details.room] + (event.givenKey ? '-darken-4' : '')
+        this.$refs.calendar.$refs.lemacCalendar.closeEvent()
+
+        const response = await updateHours(event.details.id, values)
         await createEvent({
-          type: RoomEventType.RES_UPDATED,
+          type: event.givenKey ? RoomEventType.KEY_RECEIVED : RoomEventType.KEY_GIVEN,
           roomReservationId: response.data.id,
-        });
+        })
 
-        event.title = `Reservation of ${response.data.name}`;
-        event.start = DateTime.fromISO(response.data.entry).toFormat("yyyy-MM-dd HH:mm");
-        event.end = DateTime.fromISO(response.data.exit).toFormat("yyyy-MM-dd HH:mm");
-        event.customColor = this.$refs.calendar.colors[response.data.room] + (event.givenKey ? ' darken-4' : '');
-        event.class = "bg-" + this.$refs.calendar.colors[response.data.room] + (event.givenKey ? '-darken-4' : '');
-        event.details = response.data
         this.$notify({
           type: 'success',
-          title: 'Entry updated',
-          text: `You have updated entry ${response.data.id}`,
-        });
-      } else {
-        const response = await createHours(values);
-        await createEvent({
-          type: RoomEventType.RES_CREATED,
-          roomReservationId: response.data.id,
-        });
+          title: 'Key was given/received',
+          text: `You have sucessfully given/received the key`,
+        })
+      },
+      async deleteEvent (event) {
+        await deleteHours(event.id)
+        this.$refs.calendar.events = this.$refs.calendar.events.filter(val => val.id !== event.id)
+        this.$refs.calendar.$refs.lemacCalendar.closeEvent()
 
-        const event = response.data;
-        event.title = `Reservation of ${event.name}`;
-        this.$refs.calendar.events.push({
-          id: event.id,
-          title: event.title,
-          start: DateTime.fromISO(event.entry).toFormat("yyyy-MM-dd HH:mm"),
-          end: DateTime.fromISO(event.exit).toFormat("yyyy-MM-dd HH:mm"),
-          customColor: this.$refs.calendar.colors[event.room],
-          class: 'bg-' + this.$refs.calendar.colors[event.room],
-          givenKey: false,
-          details: event,
-        });
+        await createEvent({
+          type: RoomEventType.RES_DELETED,
+          roomReservationId: event.id,
+        })
+
         this.$notify({
           type: 'success',
-          title: 'Entry created',
-          text: `You have created entry ${response.data.id}`,
-        });
-      }
+          title: 'Entry deleted',
+          text: `You have deleted entry ${event.id}`,
+        })
+      },
     },
-    async giveKey(event) {
-      const values = {
-        entry: event.details.entry,
-        exit: event.details.exit,
-        istId: event.details.istId,
-        room: event.details.room,
-        name: event.details.user.name,
-        givenKey: !event.givenKey,
-      }
-
-      event.givenKey = !event.givenKey;
-      event.customColor = this.$refs.calendar.colors[event.details.room] + (event.givenKey ? ' darken-4' : '');
-      event.class = "bg-" + this.$refs.calendar.colors[event.details.room] + (event.givenKey ? '-darken-4' : '');
-      this.$refs.calendar.$refs.lemacCalendar.closeEvent();
-
-      const response = await updateHours(event.details.id, values);
-      await createEvent({
-        type: event.givenKey ? RoomEventType.KEY_RECEIVED : RoomEventType.KEY_GIVEN,
-        roomReservationId: response.data.id,
-      });
-
-      this.$notify({
-        type: 'success',
-        title: 'Key was given/received',
-        text: `You have sucessfully given/received the key`,
-      });
-    },
-    async deleteEvent(event) {
-      await deleteHours(event.id);
-      this.$refs.calendar.events = this.$refs.calendar.events.filter((val) => val.id !== event.id);
-      this.$refs.calendar.$refs.lemacCalendar.closeEvent();
-
-      await createEvent({
-        type: RoomEventType.RES_DELETED,
-        roomReservationId: event.id,
-      });
-
-      this.$notify({
-        type: 'success',
-        title: 'Entry deleted',
-        text: `You have deleted entry ${event.id}`,
-      });
-    }
-  },
-};
+  }
 </script>
 
 <style scoped>

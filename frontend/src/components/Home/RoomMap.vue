@@ -7,19 +7,21 @@
         Monitor
         <div class="absolute my-auto right-[-48px]">
           <v-icon
-            size="48"
             color="black"
+            size="48"
           >
             mdi-account
           </v-icon>
         </div>
       </div>
+
       <div
         v-for="val in stations"
         :class="[val.class]"
       >
         {{ val.number !== -1 ? val.number : '' }}
       </div>
+
       <div class="row-span-3 col-span-18 xl:row-span-2">
         <div class="grid grid-rows-1 grid-cols-18 border border-[#a5a5a5] my-4 py-4">
           <div
@@ -27,25 +29,31 @@
           >
             Legenda:
           </div>
+
           <div class="col-start-3 base pc-normal">
             LTI-PC
           </div>
+
           <div
             class="flex items-center justify-center col-span-3 col-start-4 px-2 text-xs text-center lg:text-base"
           >
             Computador Livre para estudo sem portátil
           </div>
+
           <div class="col-start-7 base pc-laptop">
             LTI-PC
           </div>
+
           <div
             class="flex items-center justify-center col-span-3 col-start-8 px-2 text-xs text-center lg:text-base"
           >
             Computador Livre para estudo com portátil
           </div>
+
           <div class="col-start-11 base pc-active">
             LTI-PC
           </div>
+
           <div
             class="flex items-center justify-center col-span-3 col-start-12 px-2 text-xs text-center lg:text-base"
           >
@@ -54,6 +62,7 @@
         </div>
       </div>
     </div>
+
     <div class="text-center mx-auto mt-2 max-w-200">
       <div class="">
         <div
@@ -69,317 +78,317 @@
 </template>
 
 <script>
-import { getWorkstations } from '@/api/workstations.api';
-import { getPublications } from '@/api/publications.api';
-import { addEntry, getEntries, updateEntry } from '@/api/entries.api';
+  import { addEntry, getEntries, updateEntry } from '@/api/entries.api'
+  import { getPublications } from '@/api/publications.api'
+  import { getWorkstations } from '@/api/workstations.api'
 
-export default {
-  name: 'RoomMap',
-  data: () => ({
-    order: [
-      30,
-      28,
-      -1,
-      26,
-      24,
-      -1,
-      22,
-      20,
-      -1,
-      18,
-      16,
-      -1,
-      14,
-      12,
-      -1,
-      -1,
-      10,
-      7,
-      29,
-      27,
-      -1,
-      25,
-      23,
-      -1,
-      21,
-      19,
-      -1,
-      17,
-      15,
-      -1,
-      13,
-      11,
-      -1,
-      -1,
-      9,
-      6,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      8,
-      5,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      31,
-      33,
-      -1,
-      35,
-      37,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      4,
-      2,
-      32,
-      34,
-      -1,
-      36,
-      38,
-      -1,
-      -1,
-      -1,
-      -1,
-      -1,
-      3,
-      1,
-    ],
-    classData: [
-      'l',
-      'r',
-      '',
-      'l',
-      'r',
-      '',
-      'l',
-      'r',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      'l',
-      'r',
-      '',
-      'l',
-      'r',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      'l',
-      'r',
-      '',
-      '',
-    ],
-    stations: '',
-    publications: '',
-    message: 'WAITING',
-    entryModal: null,
-    entrySelected: null,
-    entryStations: '',
-    entryId: null,
-    socket: null,
-    modelType: 'offline',
-    userData: null,
-    mifareId: null,
-  }),
-  async mounted() {
-    await this.update();
-    setInterval(this.update, 30000);
-  },
-
-  unmounted() {
-    console.log('Test');
-    if(this.socket) this.socket.close();
-  },
-  methods: {
-    async update() {
-      const { data } = await getWorkstations();
-
-      this.stations = this.order.map((val, index) => {
-        const station = data.find((station) => station.name.match(/\d+/)[0] == val);
-        const returnVal = {
-          number: station ? station.name : '',
-          class: 'base',
-          id: station ? station.id : '',
-          capacity: station ? station.capacity : '',
-          occupation: station ? station.occupation : '',
-        };
-
-        if (val != -1) returnVal.class = 'base pc-normal';
-        if (!station) return returnVal;
-
-        if (station.capacity == 1) returnVal.class = 'base pc-laptop';
-        if (station.capacity == 2 && Math.abs(station.occupation - station.capacity) == 1)
-          returnVal.class += ' pc-semiactive';
-        if (Math.abs(station.occupation - station.capacity) == 0)
-          returnVal.class = 'base pc-active';
-
-        return returnVal;
-      });
-
-      this.stations = this.stations.map((val, index) => {
-        const returnVal = val;
-        returnVal.class =
-          this.classData[index] == 'l'
-            ? `border-r-2! border-r-black! ${returnVal.class}`
-            : this.classData[index] == 'r'
-            ? `border-l-2! border-l-black! ${returnVal.class}`
-            : `${returnVal.class}`;
-
-        return returnVal;
-      });
-
-      const publicationData = (await getPublications()).data;
-      this.publications = publicationData.filter((val) => val.active);
+  export default {
+    name: 'RoomMap',
+    data: () => ({
+      order: [
+        30,
+        28,
+        -1,
+        26,
+        24,
+        -1,
+        22,
+        20,
+        -1,
+        18,
+        16,
+        -1,
+        14,
+        12,
+        -1,
+        -1,
+        10,
+        7,
+        29,
+        27,
+        -1,
+        25,
+        23,
+        -1,
+        21,
+        19,
+        -1,
+        17,
+        15,
+        -1,
+        13,
+        11,
+        -1,
+        -1,
+        9,
+        6,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        8,
+        5,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        31,
+        33,
+        -1,
+        35,
+        37,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        4,
+        2,
+        32,
+        34,
+        -1,
+        36,
+        38,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        3,
+        1,
+      ],
+      classData: [
+        'l',
+        'r',
+        '',
+        'l',
+        'r',
+        '',
+        'l',
+        'r',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        'l',
+        'r',
+        '',
+        'l',
+        'r',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'l',
+        'r',
+        '',
+        '',
+      ],
+      stations: '',
+      publications: '',
+      message: 'WAITING',
+      entryModal: null,
+      entrySelected: null,
+      entryStations: '',
+      entryId: null,
+      socket: null,
+      modelType: 'offline',
+      userData: null,
+      mifareId: null,
+    }),
+    async mounted () {
+      await this.update()
+      setInterval(this.update, 30_000)
     },
-    async close(action) {
-      if (action == 'save') {
-        const { data } = await addEntry({
-          istId: 'ist1' + this.userData.ist_id,
-          workstationId: this.entrySelected.id,
-        });
-        this.$notify({
-          type: 'success',
-          title: 'Entry created',
-          text: `You have created an entry for workstation ${data.workstation.name}`,
-        });
-      } else if (action == 'close') {
-        const entrie = (await getEntries()).data.filter(
-          (val) => val.closedAt === null && val.istId === 'ist1' + this.userData.ist_id
-        )[0];
-        try {
-          await updateEntry(entrie.id, { active: 0 });
+
+    unmounted () {
+      console.log('Test')
+      if (this.socket) this.socket.close()
+    },
+    methods: {
+      async update () {
+        const { data } = await getWorkstations()
+
+        this.stations = this.order.map((val, index) => {
+          const station = data.find(station => station.name.match(/\d+/)[0] == val)
+          const returnVal = {
+            number: station ? station.name : '',
+            class: 'base',
+            id: station ? station.id : '',
+            capacity: station ? station.capacity : '',
+            occupation: station ? station.occupation : '',
+          }
+
+          if (val != -1) returnVal.class = 'base pc-normal'
+          if (!station) return returnVal
+
+          if (station.capacity == 1) returnVal.class = 'base pc-laptop'
+          if (station.capacity == 2 && Math.abs(station.occupation - station.capacity) == 1)
+            returnVal.class += ' pc-semiactive'
+          if (Math.abs(station.occupation - station.capacity) == 0)
+            returnVal.class = 'base pc-active'
+
+          return returnVal
+        })
+
+        this.stations = this.stations.map((val, index) => {
+          const returnVal = val
+          returnVal.class
+            = this.classData[index] == 'l'
+              ? `border-r-2! border-r-black! ${returnVal.class}`
+              : (this.classData[index] == 'r'
+                ? `border-l-2! border-l-black! ${returnVal.class}`
+                : `${returnVal.class}`)
+
+          return returnVal
+        })
+
+        const publicationData = (await getPublications()).data
+        this.publications = publicationData.filter(val => val.active)
+      },
+      async close (action) {
+        if (action == 'save') {
+          const { data } = await addEntry({
+            istId: 'ist1' + this.userData.ist_id,
+            workstationId: this.entrySelected.id,
+          })
           this.$notify({
             type: 'success',
-            title: 'Entry closed',
-            text: `You have closed entry the entry on ${closed[0].workstation.name}`,
-          });
-        } catch (error) {}
-      }
-      this.update();
-      this.entryModal = false;
-    },
-    select(val) {
-      const index = this.entryStations.indexOf(val);
-      this.entryStations = JSON.parse(JSON.stringify(this.stations));
-
-      if (this.entryStations[index].number) {
-        if (this.entryStations[index].capacity - this.entryStations[index].occupation === 0) {
-          this.entrySelected = -1;
-          return;
+            title: 'Entry created',
+            text: `You have created an entry for workstation ${data.workstation.name}`,
+          })
+        } else if (action == 'close') {
+          const entrie = (await getEntries()).data.find(
+            val => val.closedAt === null && val.istId === 'ist1' + this.userData.ist_id,
+          )
+          try {
+            await updateEntry(entrie.id, { active: 0 })
+            this.$notify({
+              type: 'success',
+              title: 'Entry closed',
+              text: `You have closed entry the entry on ${closed[0].workstation.name}`,
+            })
+          } catch {}
         }
+        this.update()
+        this.entryModal = false
+      },
+      select (val) {
+        const index = this.entryStations.indexOf(val)
+        this.entryStations = JSON.parse(JSON.stringify(this.stations))
 
-        const classes = this.entryStations[index].class.split(' ');
-        classes[classes.length - 1] = 'pc-selected';
+        if (this.entryStations[index].number) {
+          if (this.entryStations[index].capacity - this.entryStations[index].occupation === 0) {
+            this.entrySelected = -1
+            return
+          }
 
-        this.entryStations[index].class = classes.reduce((val, acc) => `${acc} ${val}`, '');
-        this.entrySelected = this.entryStations[index];
-      } else {
-        this.entrySelected = -1;
-      }
+          const classes = this.entryStations[index].class.split(' ')
+          classes[classes.length - 1] = 'pc-selected'
+
+          this.entryStations[index].class = classes.reduce((val, acc) => `${acc} ${val}`, '')
+          this.entrySelected = this.entryStations[index]
+        } else {
+          this.entrySelected = -1
+        }
+      },
     },
-  },
-};
+  }
 </script>
