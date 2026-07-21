@@ -29,11 +29,11 @@ export async function sendEmail(to: string, subject: string, text: string): Prom
 
 // PRINTING EMAILS
 
-type PrintTaskWithMaterial = Prisma.PrintTaskGetPayload<{
-  include: { material: true };
+type PrintTaskWithMaterialAndStudent = Prisma.PrintTaskGetPayload<{
+  include: { material: true, student: true };
 }>;
 
-export async function sendSubmissionCustomerEmail(to: string, task: PrintTaskWithMaterial): Promise<boolean> {
+export async function sendSubmissionCustomerEmail(to: string, task: PrintTaskWithMaterialAndStudent): Promise<boolean> {
   return sendEmail(
     to,
     `[LEMAC] #${task.id} 3D Printing Submission`,
@@ -43,7 +43,7 @@ export async function sendSubmissionCustomerEmail(to: string, task: PrintTaskWit
           A follow up message will be sent to you soon, please wait further instructions.
           
                 Task Name: ${task.name}
-                Student Name: ${task.studentName}
+                Student Name: ${task.student.name}
                 IST ID: ${task.studentId}
                 Unit of file: ${task.unit}
                 Material: ${task.material.name}
@@ -60,7 +60,7 @@ export async function sendSubmissionCustomerEmail(to: string, task: PrintTaskWit
   );
 }
 
-export async function sendStatusChangedCustomerEmail(to: string, task: PrintTaskWithMaterial): Promise<boolean> {
+export async function sendStatusChangedCustomerEmail(to: string, task: PrintTaskWithMaterialAndStudent): Promise<boolean> {
   const status = {
     'WAITING': 'Waiting',
     'PENDING': 'Pending',
@@ -89,7 +89,7 @@ export async function sendStatusChangedCustomerEmail(to: string, task: PrintTask
   );
 }
 
-export async function sendSubmissionStaffEmail(task: PrintTaskWithMaterial): Promise<boolean> {
+export async function sendSubmissionStaffEmail(task: PrintTaskWithMaterialAndStudent): Promise<boolean> {
   return sendEmail(
     'monitores.lemac@dem.tecnico.ulisboa.pt',
     `[LEMAC] #${task.id} 3D Printing Submission`,
@@ -99,7 +99,7 @@ export async function sendSubmissionStaffEmail(task: PrintTaskWithMaterial): Pro
           Submission details:
           
                 Task Name: ${task.name}
-                Student Name: ${task.studentName}
+                Student Name: ${task.student.name}
                 IST ID: ${task.studentId}
                 Unit of file: ${task.unit}
                 Material: ${task.material.name}
