@@ -27,6 +27,7 @@ export default vuetify(
       'unicorn/no-this-outside-of-class': 'off',
       'vue/block-lang': 'off',
       'import/first': 'off',
+      'unicorn/no-confusing-array-splice': 'off',
     },
   },
 )
