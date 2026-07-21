@@ -2,6 +2,7 @@
   <div>
     <v-container class="card">
       <h1>Page Not Found</h1>
+
       <v-btn
         class="bg-primary"
         @click="goHome"
@@ -13,14 +14,14 @@
 </template>
 
 <script>
-export default {
-  name: 'NotFoundPage',
-  methods: {
-    goHome() {
-      window.location = '/';
+  export default {
+    name: 'NotFoundPage',
+    methods: {
+      goHome () {
+        window.location = '/'
+      },
     },
-  },
-};
+  }
 </script>
 
 <style>

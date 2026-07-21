@@ -5,20 +5,20 @@
 </template>
 
 <script>
-import ScheduleCalendar from '@/components/Dashboard/Schedule/ScheduleCalendar.vue';
-import { mapState } from 'pinia'
-import { useUserStore } from '@/stores/user.js';
+  import { mapState } from 'pinia'
+  import ScheduleCalendar from '@/components/Dashboard/Schedule/ScheduleCalendar.vue'
+  import { useUserStore } from '@/stores/user.js'
 
-export default {
-  name: 'Rooms',
-  components: { ScheduleCalendar },
-  computed: {
-    ...mapState(useUserStore, ['getPermission']),
-  },
-  methods: {
-    goHome() {
-      window.location = '/';
+  export default {
+    name: 'Rooms',
+    components: { ScheduleCalendar },
+    computed: {
+      ...mapState(useUserStore, ['getPermission']),
     },
-  },
-};
+    methods: {
+      goHome () {
+        window.location = '/'
+      },
+    },
+  }
 </script>

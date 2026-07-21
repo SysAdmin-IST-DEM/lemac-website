@@ -13,8 +13,10 @@
               ?.replace(/\b\w/g, (match) => match.toUpperCase()) ?? ''
           }}
         </div>
+
         <div><span class="text-xl font-medium">Course</span>: {{ getCourse(personData) }}</div>
       </div>
+
       <div class="grid h-full my-auto w-52 place-content-center">
         <v-select
           v-model="selected_software"
@@ -23,6 +25,7 @@
         />
       </div>
     </div>
+
     <Solidworks v-if="selected_software == 'Solidworks' && isDEMStudent(getCourse(personData))" />
     <Siemens_NX v-if="selected_software == 'Siemens NX' && isDEMStudent(getCourse(personData))" />
     <SolidEdge v-if="selected_software == 'SolidEdge' && isDEMStudent(getCourse(personData))" />
@@ -30,49 +33,49 @@
 </template>
 
 <script>
-import Solidworks from '@/components/Home/Softwares/Solidworks.vue';
-import Siemens_NX from '@/components/Home/Softwares/Siemens_NX.vue';
-import SolidEdge from '@/components/Home/Softwares/SolidEdge.vue';
+  import Siemens_NX from '@/components/Home/Softwares/Siemens_NX.vue'
+  import SolidEdge from '@/components/Home/Softwares/SolidEdge.vue'
+  import Solidworks from '@/components/Home/Softwares/Solidworks.vue'
 
-export default {
-  name: 'HomeSoftware',
-  components: {
-    Solidworks,
-    Siemens_NX,
-    SolidEdge,
-  },
-  props: {
-    personData: Object,
-  },
-  data: () => ({
-    items: ['Solidworks', 'Siemens NX', 'SolidEdge'],
-    selected_software: 'Solidworks',
-  }),
-  methods: {
-    getCourse(data) {
-      if (!data) {
-        return '';
-      }
-
-      const role = data.roles[Object.keys(data.roles).find((val) => {
-        return data.roles[val].registrations;
-      })];
-
-      return role.registrations[0]?.degree.name["pt-PT"];
+  export default {
+    name: 'HomeSoftware',
+    components: {
+      Solidworks,
+      Siemens_NX,
+      SolidEdge,
     },
-
-    isDEMStudent(name) {
-      return (
-        name.includes('Aeroespacial') ||
-        name.includes('Mecânica') ||
-        name.includes('Naval') ||
-        name.includes('Materiais') ||
-        name.includes('Ambiente') ||
-        name.includes('Energia') ||
-        name.includes('Biomédica') ||
-        name.includes('Investigação')
-      ) || this.personData.username === 'ist1113807';
+    props: {
+      personData: Object,
     },
-  },
-};
+    data: () => ({
+      items: ['Solidworks', 'Siemens NX', 'SolidEdge'],
+      selected_software: 'Solidworks',
+    }),
+    methods: {
+      getCourse (data) {
+        if (!data) {
+          return ''
+        }
+
+        const role = data.roles[Object.keys(data.roles).find(val => {
+          return data.roles[val].registrations
+        })]
+
+        return role.registrations[0]?.degree.name["pt-PT"]
+      },
+
+      isDEMStudent (name) {
+        return (
+          name.includes('Aeroespacial')
+          || name.includes('Mecânica')
+          || name.includes('Naval')
+          || name.includes('Materiais')
+          || name.includes('Ambiente')
+          || name.includes('Energia')
+          || name.includes('Biomédica')
+          || name.includes('Investigação')
+        ) || this.personData.username === 'ist1113807'
+      },
+    },
+  }
 </script>

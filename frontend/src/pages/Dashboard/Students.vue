@@ -1,14 +1,15 @@
 <template>
   <v-tabs
     v-model="tab"
-    color="primary"
     bg-color="white"
-    slider-color="primary"
+    color="primary"
     grow
+    slider-color="primary"
   >
     <v-tab value="1">
       Assign
     </v-tab>
+
     <v-tab value="2">
       Students (WIP)
     </v-tab>
@@ -27,20 +28,20 @@
 </template>
 
 <script>
-import CardAssigner from '@/components/Dashboard/Students/CardAssigner.vue';
-import { getStudents } from '@/api/students.api.ts';
+  import { getStudents } from '@/api/students.api.ts'
+  import CardAssigner from '@/components/Dashboard/Students/CardAssigner.vue'
 
-export default {
-  name: 'StudentsPage',
-  components: { CardAssigner },
-  data: () => ({
-    tab: null,
-    students: null,
-  }),
-  async mounted() {
-    this.$loading.show();
-    this.students = (await getStudents()).data;
-    this.$loading.hide();
+  export default {
+    name: 'StudentsPage',
+    components: { CardAssigner },
+    data: () => ({
+      tab: null,
+      students: null,
+    }),
+    async mounted () {
+      this.$loading.show()
+      this.students = (await getStudents()).data
+      this.$loading.hide()
+    },
   }
-};
 </script>

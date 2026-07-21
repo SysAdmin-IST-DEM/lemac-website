@@ -1,5 +1,5 @@
-import 'vuetify';
-import LuxonAdapter from '@date-io/luxon';
+import type LuxonAdapter from '@date-io/luxon'
+import 'vuetify'
 
 declare module 'vuetify' {
   namespace DateModule {

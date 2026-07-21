@@ -1,10 +1,10 @@
 <template>
   <v-tabs
     v-model="tab"
-    color="primary"
     bg-color="white"
-    slider-color="primary"
+    color="primary"
     grow
+    slider-color="primary"
   >
     <v-tab value="1">
       Monitors
@@ -24,21 +24,21 @@
 </template>
 
 <script>
-import MonitorTable from '@/components/Dashboard/Users/MonitorTable.vue';
-import { getUsers } from '@/api/user.api';
+  import { getUsers } from '@/api/user.api'
+  import MonitorTable from '@/components/Dashboard/Users/MonitorTable.vue'
 
-export default {
-  name: 'MonitorPage',
-  components: { MonitorTable },
-  data: () => ({
-    tab: null,
-    monitors: null,
-  }),
-  async mounted() {
-    this.$loading.show();
-    this.monitors = (await getUsers()).data;
+  export default {
+    name: 'MonitorPage',
+    components: { MonitorTable },
+    data: () => ({
+      tab: null,
+      monitors: null,
+    }),
+    async mounted () {
+      this.$loading.show()
+      this.monitors = (await getUsers()).data
 
-    this.$loading.hide();
-  },
-};
+      this.$loading.hide()
+    },
+  }
 </script>

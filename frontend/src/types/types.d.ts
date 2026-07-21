@@ -6,22 +6,22 @@ declare module '*.vue' {
   export default component
 }
 
-type VueComponentCtor<Props = any> =
-  abstract new (...args: any[]) => { $props: Props };
+type VueComponentCtor<Props = any>
+  = abstract new (...args: any[]) => { $props: Props }
 
-type PropsOf<Ctor extends VueComponentCtor> =
-  Ctor extends VueComponentCtor<infer P> ? P : never;
+type PropsOf<Ctor extends VueComponentCtor>
+  = Ctor extends VueComponentCtor<infer P> ? P : never
 
 type PropOrDefault<
   T,
   K extends PropertyKey,
-  D
-> = K extends keyof T ? T[K] : D;
+  D,
+> = K extends keyof T ? T[K] : D
 
 type EnsureProp<
   T,
   K extends PropertyKey,
-  D
+  D,
 > = Omit<T, K> & {
   [P in K]: PropOrDefault<T, P, D>;
-};
+}

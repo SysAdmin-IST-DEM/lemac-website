@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 
 export enum OnScanCardResultCode {
   STUDENT_NOT_FOUND = "STUDENT_NOT_FOUND",
+  STUDENT_NOT_PERMITTED = "STUDENT_NOT_PERMITTED",
   STUDENT_REQUIRES_RENEWAL = "STUDENT_REQUIRES_RENEWAL",
   NO_ACTIVE_ENTRY = "NO_ACTIVE_ENTRY",
   ACTIVE_ENTRY_FOUND = "ACTIVE_ENTRY_FOUND",
@@ -32,6 +33,13 @@ export async function getActiveEntry(mifareNumber: bigint): Promise<{
     }
 
     const student = studentCard.student;
+
+    if(!student.isDEM) {
+      return {
+        ok: false,
+        code: OnScanCardResultCode.STUDENT_NOT_PERMITTED
+      }
+    }
 
     const now = DateTime.now();
     const schoolYearStart = DateTime.fromObject({

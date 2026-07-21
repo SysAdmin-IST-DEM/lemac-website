@@ -1,21 +1,21 @@
-import { ComponentCustomProperties } from 'vue';
-import type { Router, RouteLocationNormalizedLoaded } from 'vue-router';
+import type { RouteLocationNormalizedLoaded, Router } from 'vue-router'
+import { ComponentCustomProperties } from 'vue'
 
 interface NotifyOptions {
-  type?: 'success' | 'error' | 'info';
-  text?: string;
-  title?: string;
-  duration?: number;
+  type?: 'success' | 'error' | 'info'
+  text?: string
+  title?: string
+  duration?: number
 }
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $loading: {
-      show: () => void;
-      hide: () => void;
-    },
-    $notify: (NotifyOptions) => void;
-    $router: Router;
-    $route: RouteLocationNormalizedLoaded;
+      show: () => void
+      hide: () => void
+    }
+    $notify: (NotifyOptions) => void
+    $router: Router
+    $route: RouteLocationNormalizedLoaded
   }
 }

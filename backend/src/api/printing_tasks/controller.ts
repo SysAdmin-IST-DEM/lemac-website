@@ -1,16 +1,13 @@
 import { prisma } from '../../index.js';
 import type { PrintTaskStatus, Unit } from '@lemac/data-model';
 
-export async function addPrintTask(name: string, modelFile: string, amount: number, studentName: string, studentId: string,
-                                   email: string, unit: Unit, materialId: number, price: number, observations?: string) {
+export async function addPrintTask(name: string, modelFile: string, amount: number, istId: string,
+                                   unit: Unit, materialId: number, price: number, observations?: string) {
   return prisma.printTask.create({
     data: {
       name,
       modelFiles: [ modelFile ],
       amount,
-      studentName,
-      studentId,
-      email,
       unit,
       price,
       observations,
@@ -18,10 +15,16 @@ export async function addPrintTask(name: string, modelFile: string, amount: numb
         connect: {
           id: materialId
         }
+      },
+      student: {
+        connect:  {
+          istId
+        }
       }
     },
     include: {
-      material: true
+      material: true,
+      student: true
     }
   });
 }
@@ -33,7 +36,8 @@ export async function getPrintingTask(id: number) {
     },
     include: {
       material: true,
-      assigned: true
+      assigned: true,
+      student: true
     }
   });
 }
@@ -42,14 +46,14 @@ export async function getPrintingTasks() {
   return prisma.printTask.findMany({
     include: {
       material: true,
-      assigned: true
+      assigned: true,
+      student: true
     }
   });
 }
 
 export async function editPrintingTask(id: number, name?: string, materialId?: number,
-                                       status?: PrintTaskStatus, amount?: number, studentName?: string,
-                                       studentId?: string, email?: string, unit?: Unit,
+                                       status?: PrintTaskStatus, amount?: number, unit?: Unit,
                                        price?: number, deadline?: Date | null,
                                        observations?: string, assignedId?: number | null,
                                        completedAt?: Date | null) {
@@ -61,9 +65,6 @@ export async function editPrintingTask(id: number, name?: string, materialId?: n
       name,
       status,
       amount,
-      studentName,
-      studentId,
-      email,
       unit,
       price,
       deadline,
@@ -82,7 +83,8 @@ export async function editPrintingTask(id: number, name?: string, materialId?: n
     },
     include: {
       material: true,
-      assigned: true
+      assigned: true,
+      student: true
     }
   });
 }

@@ -1,17 +1,19 @@
 <template>
   <v-tabs
     v-model="tab"
-    color="primary"
     bg-color="white"
-    slider-color="primary"
+    color="primary"
     grow
+    slider-color="primary"
   >
     <v-tab value="1">
       Registration
     </v-tab>
+
     <v-tab value="2">
       Occurences
     </v-tab>
+
     <v-tab value="3">
       Visualisation
     </v-tab>
@@ -23,11 +25,13 @@
         <EntriesList />
       </v-container>
     </v-tabs-window-item>
+
     <v-tabs-window-item value="2">
       <v-container>
         <Occurences />
       </v-container>
     </v-tabs-window-item>
+
     <v-tabs-window-item value="3">
       <v-container>
         <WorkstationData />
@@ -37,16 +41,16 @@
 </template>
 
 <script>
-import EntriesList from '@/components/Dashboard/Entries/EntriesList.vue';
-import Occurences from '@/components/Dashboard/Entries/Occurences.vue';
-import WorkstationData from '@/components/Dashboard/Entries/WorkstationData.vue';
+  import EntriesList from '@/components/Dashboard/Entries/EntriesList.vue'
+  import Occurences from '@/components/Dashboard/Entries/Occurences.vue'
+  import WorkstationData from '@/components/Dashboard/Entries/WorkstationData.vue'
 
-export default {
-  components: { EntriesList, Occurences, WorkstationData },
-  data: () => ({
-    tab: null,
-  }),
-};
+  export default {
+    components: { EntriesList, Occurences, WorkstationData },
+    data: () => ({
+      tab: null,
+    }),
+  }
 </script>
 
 <style></style>

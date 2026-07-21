@@ -10,27 +10,27 @@
 </template>
 
 <script>
-import WorkstationsTable from '@/components/Dashboard/Workstations/WorkstationsTable.vue';
-import { getWorkstations } from '@/api/workstations.api';
-import { mapState } from 'pinia'
-import { useUserStore } from '@/stores/user.js';
+  import { mapState } from 'pinia'
+  import { getWorkstations } from '@/api/workstations.api'
+  import WorkstationsTable from '@/components/Dashboard/Workstations/WorkstationsTable.vue'
+  import { useUserStore } from '@/stores/user.js'
 
-export default {
-  name: 'WorkstationsPage',
-  components: { WorkstationsTable },
-  data() {
-    return {
-      workstations: null,
-    };
-  },
-  computed: {
-    ...mapState(useUserStore, ['getPermission']),
-  },
-  async mounted() {
-    this.$loading.show();
-    const response = await getWorkstations();
-    this.workstations = response.data;
-    this.$loading.hide();
-  },
-};
+  export default {
+    name: 'WorkstationsPage',
+    components: { WorkstationsTable },
+    data () {
+      return {
+        workstations: null,
+      }
+    },
+    computed: {
+      ...mapState(useUserStore, ['getPermission']),
+    },
+    async mounted () {
+      this.$loading.show()
+      const response = await getWorkstations()
+      this.workstations = response.data
+      this.$loading.hide()
+    },
+  }
 </script>

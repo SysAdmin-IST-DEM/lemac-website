@@ -1,5 +1,6 @@
 <template>
   <HomeHeader disable-login />
+
   <v-container>
     <v-row
       v-if="userData == null"
@@ -8,8 +9,10 @@
       <p class="mb-0 text-xl">
         Please login in order to request a software:
       </p>
+
       <AuthenticateButton @authenticated="onAuthenticated" />
     </v-row>
+
     <HomeSoftware
       v-if="userComputed"
       :person-data="userComputed"
@@ -18,31 +21,31 @@
 </template>
 
 <script>
-import HomeHeader from '@/components/Home/HomeHeader.vue';
-import HomeSoftware from '@/components/Home/HomeSoftware.vue';
-import AuthenticateButton from '@/components/Home/AuthenticateButton.vue';
+  import AuthenticateButton from '@/components/Home/AuthenticateButton.vue'
+  import HomeHeader from '@/components/Home/HomeHeader.vue'
+  import HomeSoftware from '@/components/Home/HomeSoftware.vue'
 
-export default {
-  name: 'Software',
-  components: {
-    AuthenticateButton,
-    HomeHeader,
-    HomeSoftware,
-  },
-  data: () => ({
-    loading: false,
-    loadingOut: false,
-    userData: null,
-  }),
-  computed: {
-    userComputed() {
-      return this.userData;
+  export default {
+    name: 'Software',
+    components: {
+      AuthenticateButton,
+      HomeHeader,
+      HomeSoftware,
     },
-  },
-  methods: {
-    onAuthenticated(data) {
-      this.userData = data;
+    data: () => ({
+      loading: false,
+      loadingOut: false,
+      userData: null,
+    }),
+    computed: {
+      userComputed () {
+        return this.userData
+      },
     },
-  },
-};
+    methods: {
+      onAuthenticated (data) {
+        this.userData = data
+      },
+    },
+  }
 </script>
