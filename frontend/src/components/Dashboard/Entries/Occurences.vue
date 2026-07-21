@@ -1,10 +1,10 @@
 <template>
   <DashboardTable
     v-model:items-per-page="itemsPerPage"
+    class="elevation-1"
     :headers="headers"
     :items="data"
     :items-length="totalItems"
-    class="elevation-1"
     :loading="tableLoading"
     :sort-by="[{ key: 'date', order: 'desc' }]"
     title="Occurrence List"

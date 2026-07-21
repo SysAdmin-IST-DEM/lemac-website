@@ -1,9 +1,9 @@
 <template>
   <DashboardTable
-    :headers="headers"
-    :edit-initialization="editInitialization"
-    :items="monitors"
     :edit-fields="editFields"
+    :edit-initialization="editInitialization"
+    :headers="headers"
+    :items="monitors"
     :new-button="getPermission === 1 ? 'New Monitor' : undefined"
     search
     :sort-by="[{ key: 'name'}]"

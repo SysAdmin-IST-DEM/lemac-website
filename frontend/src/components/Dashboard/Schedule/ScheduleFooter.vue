@@ -52,6 +52,7 @@
         <v-card-text class="divide-y">
           <DashboardTable
             ref="targetsTable"
+            :edit-fields="editTargetsFields"
             :edit-initialization="editTargetsInitialization"
             :headers="[
               { title: 'Start', key: 'dateStart' },
@@ -59,7 +60,6 @@
               { title: 'Target Hours', key: 'targetHours' },
               { title: '', key: 'buttons' },
             ]"
-            :edit-fields="editTargetsFields"
             hide-default-footer
             hide-header
             :items="userTargets"
