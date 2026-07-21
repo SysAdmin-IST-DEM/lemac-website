@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
   import { useDisplay } from 'vuetify'
+  const { mobile, mdAndDown, lgAndUp } = useDisplay()
 </script>
 
 <script lang="ts">
@@ -64,7 +65,6 @@
   import { getPrintTasks } from '@/api/printingTasks.api.ts'
   import { useLoadingStore } from '@/stores/loading.js'
   import { useUserStore } from '@/stores/user.js'
-  const { lgAndUp, mdAndDown } = useDisplay()
 
   export default {
     name: 'NavBar',
