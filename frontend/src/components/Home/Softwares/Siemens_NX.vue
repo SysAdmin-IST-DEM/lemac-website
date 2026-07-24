@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-start justify-start w-full">
     <h2 class="m-6 text-4xl font-semibold">
-      Siemens NX 2212
+      Siemens NX 2606 (Designcenter)
     </h2>
 
     <span class="indent-12">
