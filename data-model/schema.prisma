@@ -60,6 +60,25 @@ model StudentCard {
   @@map("student_cards")
 }
 
+enum StudentTransactionType {
+  CHARGE // should be <0
+  PAYMENT // should be >0
+  ADJUSTMENT
+}
+
+model StudentTransaction {
+  id          Int                    @id @default(autoincrement())
+  type        StudentTransactionType
+  amount      Float
+  studentId   Int                    @map("student_id")
+  student     Student                @relation(fields: [studentId], references: [id], onUpdate: Restrict)
+  printTaskId Int?                   @unique @map("print_task_id")
+  printTask   PrintTask?             @relation(fields: [printTaskId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  createdAt   DateTime               @default(now()) @map("created_at") @db.Timestamp(0)
+
+  @@map("student_transactions")
+}
+
 enum WorkstationStatus {
   ACTIVE
   DISABLED
@@ -244,23 +263,4 @@ model PrintMaterial {
   PrintTask       PrintTask[]
 
   @@map("print_materials")
-}
-
-enum StudentTransactionType {
-  CHARGE
-  PAYMENT
-  ADJUSTMENT
-}
-
-model StudentTransaction {
-  id        Int      @id @default(autoincrement())
-  studentId Int      @map("student_id")
-  student   Student  @relation(fields: [studentId], references: [id], onUpdate: Restrict)
-  amount    Int
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-
-  printTaskId Int?       @unique @map("print_task_id")
-  printTask   PrintTask? @relation(fields: [printTaskId], references: [id], onUpdate: Restrict, onDelete: Restrict)
-
-  @@map("student_transactions")
 }

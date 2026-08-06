@@ -13,6 +13,7 @@ import roomhours from './rooms/routes.js';
 import roomevents from './room_events/routes.js';
 import schedule from './schedule/routes.js';
 import students from './students/routes.js';
+import studentTransactions from './student_transactions/routes.js';
 
 export default {  /*export all routes into the main express file*/
   init: (app: Express) => {
@@ -29,5 +30,6 @@ export default {  /*export all routes into the main express file*/
     roomevents.init(app);
     schedule.init(app);
     students.init(app);
+    studentTransactions.init(app);
   },
 };
