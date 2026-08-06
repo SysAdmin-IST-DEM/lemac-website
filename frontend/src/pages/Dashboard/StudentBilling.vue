@@ -16,7 +16,7 @@
   </v-tabs>
 
   <v-tabs-window v-model="tab">
-    <v-tabs-window-item value="1"></v-tabs-window-item>
+    <v-tabs-window-item value="1" />
 
     <v-tabs-window-item value="2">
       <StudentBalanceLookup />
@@ -25,8 +25,8 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue';
-  import StudentBalanceLookup from '@/components/Dashboard/StudentBilling/StudentBalanceLookup.vue';
+  import { defineComponent } from 'vue'
+  import StudentBalanceLookup from '@/components/Dashboard/StudentBilling/StudentBalanceLookup.vue'
 
   export default defineComponent({
     name: 'Billing',
