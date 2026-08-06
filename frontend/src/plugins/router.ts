@@ -10,6 +10,7 @@ import Printing from '@/pages/Dashboard/Printing.vue'
 import Publications from '@/pages/Dashboard/Publications.vue'
 import Rooms from '@/pages/Dashboard/Rooms.vue'
 import Schedule from '@/pages/Dashboard/Schedule.vue'
+import StudentBilling from '@/pages/Dashboard/StudentBilling.vue'
 import Students from '@/pages/Dashboard/Students.vue'
 import Workstations from '@/pages/Dashboard/Workstations.vue'
 import About from '@/pages/Home/About.vue'
@@ -19,7 +20,6 @@ import Reservations from '@/pages/Home/Reservations.vue'
 import Software from '@/pages/Home/Software.vue'
 import StudentRegistration from '@/pages/Home/StudentRegistration.vue'
 import Login from '@/pages/Login.vue'
-import StudentBilling from '@/pages/Dashboard/StudentBilling.vue';
 
 const routes: RouteRecordRaw[] = [
   {
