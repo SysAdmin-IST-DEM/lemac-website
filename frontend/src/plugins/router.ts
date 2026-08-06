@@ -19,6 +19,7 @@ import Reservations from '@/pages/Home/Reservations.vue'
 import Software from '@/pages/Home/Software.vue'
 import StudentRegistration from '@/pages/Home/StudentRegistration.vue'
 import Login from '@/pages/Login.vue'
+import StudentBilling from '@/pages/Dashboard/StudentBilling.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -120,6 +121,12 @@ const routes: RouteRecordRaw[] = [
         name: 'dashboard-printing',
         component: Printing,
         meta: { title: '3D Printing' },
+      },
+      {
+        path: 'student-billing',
+        name: 'dashboard-student-billing',
+        component: StudentBilling,
+        meta: { title: 'Student Billing' },
       },
       {
         path: 'drive',

@@ -9,6 +9,7 @@ import {
   sendSubmissionCustomerEmail,
   sendSubmissionStaffEmail,
 } from '../../services/mail.js';
+import { addPrintTaskAndTransaction } from './services.js';
 
 export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBody>, res: Response) {
   if(!req.file) {
@@ -20,7 +21,7 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
   const filename = `${base}-${Date.now()}${ext}`;
 
   try {
-    const data = await controller.addPrintTask(
+    const data = await addPrintTaskAndTransaction(
       req.file.originalname,
       filename,
       req.body.amount ?? 1,

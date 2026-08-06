@@ -3,6 +3,7 @@ export * from './printing_materials.js'
 export * from './users.js'
 export * from './reader.js'
 export * from './student.js'
+export * from './student_transactions.js'
 
 // Delete Value
 

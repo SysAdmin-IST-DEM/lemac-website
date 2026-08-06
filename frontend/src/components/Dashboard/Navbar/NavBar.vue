@@ -126,6 +126,11 @@
             link: '/dashboard/printing',
             notifications: undefined,
           },
+          {
+            text: 'Student Billing',
+            icon: 'mdi-cash-clock',
+            link: '/dashboard/student-billing',
+          },
         ],
       }
     },

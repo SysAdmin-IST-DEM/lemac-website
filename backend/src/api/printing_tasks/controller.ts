@@ -2,9 +2,9 @@ import { prisma } from '../../index.js';
 import { type PrintTaskStatus, Prisma, type Unit } from '@lemac/data-model';
 
 export async function addPrintTask(name: string, modelFile: string, amount: number, istId: string,
-                                   unit: Unit, materialId: number, price: number, observations?: string) {
+                                   unit: Unit, materialId: number, price: number, observations?: string, tx?: Prisma.TransactionClient) {
   try {
-    return await prisma.printTask.create({
+    return await (tx || prisma).printTask.create({
       data: {
         name,
         modelFiles: [ modelFile ],
