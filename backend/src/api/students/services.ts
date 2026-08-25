@@ -69,7 +69,7 @@ async function isDEM(person: Awaited<ReturnType<typeof getPersonData>>, access_t
     }
   }
 
-  console.log(person, "\n\n\n\n\n");
+  console.log(JSON.stringify(person), "\n\n\n\n\n");
 
   if(person.username === 'ist1113807') return true; // Hardcode SysADM as DEM
 
