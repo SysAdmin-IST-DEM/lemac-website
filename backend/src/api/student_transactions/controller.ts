@@ -37,21 +37,34 @@ export async function getSumStudentTransactions(studentId: number) {
 }
 
 export async function getAllSumStudentsTransactions(onlyNegative: boolean) {
-  let filter = {};
-  if(onlyNegative) filter = { lt: 0 };
+  let filter = undefined;
+  if(onlyNegative) filter = {
+    amount: {
+      _sum: { lt: 0 }
+    }
+  }
+
+  // TODO: Improve this
 
   const result = await prisma.studentTransaction.groupBy({
     by: ['studentId'],
     _sum: { amount: true },
-    having: {
-      amount: {
-        _sum: filter
-      }
-    }
+    having: filter,
   });
+
+  const studentIds = result.map(item => item.studentId);
+
+  const students = await prisma.student.findMany({
+    where: {
+      id: { in: studentIds },
+    },
+  });
+
+  const studentMap = new Map(students.map(s => [s.id, s]));
 
   return result.map(d => ({
     studentId: d.studentId,
-    balance: Math.abs(d._sum.amount ?? 0),
+    balance: d._sum.amount,
+    student: studentMap.get(d.studentId)
   }));
 }

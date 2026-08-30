@@ -16,7 +16,9 @@
   </v-tabs>
 
   <v-tabs-window v-model="tab">
-    <v-tabs-window-item value="1" />
+    <v-tabs-window-item value="1">
+      <StudentDebtors />
+    </v-tabs-window-item>
 
     <v-tabs-window-item value="2">
       <StudentBalanceLookup />
@@ -24,17 +26,12 @@
   </v-tabs-window>
 </template>
 
-<script lang="ts">
-  import { defineComponent } from 'vue'
+<script lang="ts" setup>
+  import { ref } from 'vue'
   import StudentBalanceLookup from '@/components/Dashboard/StudentBilling/StudentBalanceLookup.vue'
+  import StudentDebtors from '@/components/Dashboard/StudentBilling/StudentDebtors.vue'
 
-  export default defineComponent({
-    name: 'Billing',
-    components: { StudentBalanceLookup },
-    data: () => ({
-      tab: null,
-    }),
-  })
+  const tab = ref<number>(1)
 </script>
 
 <style scoped>

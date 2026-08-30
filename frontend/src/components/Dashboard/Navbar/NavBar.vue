@@ -21,6 +21,15 @@
           >
             {{ route.notifications }}
           </v-chip>
+
+          <v-chip
+            v-if="route.beta"
+            class="bg-secondary"
+            color="white"
+            size="small"
+          >
+            BETA
+          </v-chip>
         </v-list-item>
       </v-list>
 
@@ -130,6 +139,7 @@
             text: 'Student Billing',
             icon: 'mdi-cash-clock',
             link: '/dashboard/student-billing',
+            beta: true,
           },
         ],
       }

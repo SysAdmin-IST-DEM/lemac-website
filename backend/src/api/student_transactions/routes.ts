@@ -7,7 +7,7 @@ import { AddStudentTransactionBody } from '@lemac/data-model';
 
 export default {
   init: (app: Express) => {
-    app.get('/api/student-balance/:id', requiresAuth(), getStudentBalance);
+    app.get('/api/student-balances/:id', requiresAuth(), getStudentBalance);
     app.get('/api/student-balances/', requiresAuth(), getAllStudentsBalances);
     app.post('/api/student-transaction', requiresAuth(),  parseBody(AddStudentTransactionBody), addStudentTransaction);
   },
