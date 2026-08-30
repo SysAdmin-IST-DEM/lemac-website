@@ -60,6 +60,7 @@ async function isDEM(person: Awaited<ReturnType<typeof getPersonData>>, access_t
   if (person.roles.student) {
     const coursesIds = (await getDepartmentCourses("811748818948")).map(c => c.id);
     const enrollments = await getAttending(access_token);
+    console.log("\n\n\n\n\nPERSON", enrollments);
 
     for(const enrollment of enrollments) {
       if(enrollment.state !== "NOT_ENROLLED") {
@@ -67,6 +68,8 @@ async function isDEM(person: Awaited<ReturnType<typeof getPersonData>>, access_t
       }
     }
   }
+
+  console.log(JSON.stringify(person), "\n\n\n\n\n");
 
   if(person.username === 'ist1113807') return true; // Hardcode SysADM as DEM
 
