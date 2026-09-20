@@ -8,7 +8,7 @@ import type { RequestWithBody } from '../../middleware/parseBody.js';
 export async function addStudentTransaction(req: RequestWithBody<typeof AddStudentTransactionBody>, res: Response) {
   const data = await controller.addStudentTransaction(
     req.body.type,
-    req.body.amount,
+    Number(req.body.amount),
     req.body.studentId
   );
 

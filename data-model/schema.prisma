@@ -69,7 +69,7 @@ enum StudentTransactionType {
 model StudentTransaction {
   id          Int                    @id @default(autoincrement())
   type        StudentTransactionType
-  amount      Float
+  amount      Decimal                @db.Decimal(10, 2)
   studentId   Int                    @map("student_id")
   student     Student                @relation(fields: [studentId], references: [id], onUpdate: Restrict)
   printTaskId Int?                   @unique @map("print_task_id")
@@ -242,7 +242,7 @@ model PrintTask {
   studentId          Int                 @map("student_id")
   student            Student             @relation(fields: [studentId], references: [id], onUpdate: Restrict)
   unit               Unit
-  price              Float
+  price              Decimal             @db.Decimal(10, 2)
   deadline           DateTime?           @db.Date
   observations       String              @default("") @db.Text
   assignedId         Int?                @map("assigned_id")

@@ -86,7 +86,7 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
     req.body.status,
     req.body.amount,
     req.body.unit,
-    req.body.price,
+    Number(req.body.price),
     req.body.deadline,
     req.body.observations,
     req.body.assignedId,
