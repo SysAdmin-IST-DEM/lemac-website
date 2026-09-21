@@ -68,6 +68,7 @@ export async function editPrintingTask(id: number, name?: string, materialId?: n
                                        price?: number, deadline?: Date | null,
                                        observations?: string, assignedId?: number | null,
                                        completedAt?: Date | null) {
+  console.log("WHAT?: ", price)
   return prisma.printTask.update({
     where: {
       id

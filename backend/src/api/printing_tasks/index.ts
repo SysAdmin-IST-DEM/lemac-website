@@ -46,7 +46,10 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
     await sendSubmissionCustomerEmail(data.student.email, data);
     await sendSubmissionStaffEmail(data);
 
-    return res.json(data);
+    return res.json({
+      ...data,
+      price: data.price.toNumber()
+    });
   } catch (err) {
     if(err instanceof Error && err.message === 'STUDENT_NOT_FOUND') {
       return res.status(404).json({ error: 'STUDENT_NOT_FOUND' });
@@ -59,7 +62,7 @@ export async function addPrintingTask(req: RequestWithBody<typeof AddPrintTaskBo
 
 export async function getPrintTasks(req: Request, res: Response) {
   const data = await controller.getPrintingTasks();
-  return res.json(data);
+  return res.json(data.map(d => { return {...d, price: d.price.toNumber()} }));
 }
 
 export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTaskBody>, res: Response) {
@@ -86,7 +89,7 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
     req.body.status,
     req.body.amount,
     req.body.unit,
-    Number(req.body.price),
+    req.body.price ? Number(req.body.price) : undefined,
     req.body.deadline,
     req.body.observations,
     req.body.assignedId,
@@ -100,7 +103,10 @@ export async function updatePrintingTask(req: RequestWithBody<typeof EditPrintTa
     }
   }
 
-  res.json(data);
+  return res.json({
+    ...data,
+    price: data.price.toNumber()
+  });
 }
 
 export async function dowloadModelFile(req: Request, res: Response) {
