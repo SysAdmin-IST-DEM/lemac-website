@@ -6,12 +6,12 @@
 
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
-      <a :href="url">{{ url }}</a>
+      <a :href="software.url">{{ software.url }}</a>
     </span>
 
     <span class="indent-12">
       <span class="text-xl font-medium">Password: </span>
-      {{ pass }}
+      {{ software.password }}
     </span>
 
     <h3 class="m-4 text-3xl font-medium">
@@ -81,10 +81,10 @@
   export default {
     name: 'SolidEdge',
     components: {},
-    props: {},
+    props: {
+      software: Object,
+    },
     data: () => ({
-      url: null,
-      pass: null,
       currentPlace: 0,
       installInstructions: [''],
       installPhotos: [photo1, photo2, photo3],

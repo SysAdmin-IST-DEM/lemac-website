@@ -3,7 +3,7 @@ import type { paths } from '../../types/fenix.js';
 
 const FENIX_BASE_URL = process.env.FENIX_BASE_URL || 'https://fenix.tecnico.ulisboa.pt/';
 
-export async function getAccessTokenCard(code: string): Promise<string> {
+export async function getAccessToken(code: string): Promise<string> {
   const { data: response } = await axios.post(
     `${FENIX_BASE_URL}oauth/access_token?client_id=${encodeURIComponent(
       process.env.FENIX_CLIENT_ID_STUDENT || ''
@@ -76,10 +76,19 @@ async function isDEM(person: Awaited<ReturnType<typeof getPersonData>>, access_t
   return false;
 }
 
-export async function getStudentDetails(access_token: string) {
+export async function getStudentDetails(access_token: string, lookup_dem: boolean) {
   const person = await getPersonData(access_token);
-  const dem = await isDEM(person, access_token);
 
+  return {
+    id: -1,
+    istId: person.username,
+    name: person.name,
+    email: person.email,
+    isDEM: lookup_dem ? await isDEM(person, access_token) : null,
+  }
+}
+
+export async function getStudentCards(access_token: string) {
   let cards = [];
   try {
     const { data: cardsData } = await axios.get(`${FENIX_BASE_URL}tecnico-api/v2/person/cards`, {
@@ -93,14 +102,5 @@ export async function getStudentDetails(access_token: string) {
     cards = [];
   }
 
-  if(cards) console.log(`CARDS OF PERSON ${person.name}: ${JSON.stringify(cards)}`);
-
-  return {
-    id: -1,
-    istId: person.username,
-    name: person.name,
-    email: person.email,
-    isDEM: dem,
-    mifareNumber: cards && cards.length > 0 && cards[0].mifareNumber ? BigInt(cards[0].mifareNumber) : null
-  }
+  return cards && cards.length > 0 && cards[0].mifareNumber ? BigInt(cards[0].mifareNumber) : null;
 }

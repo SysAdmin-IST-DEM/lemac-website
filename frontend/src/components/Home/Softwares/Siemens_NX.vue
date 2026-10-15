@@ -6,7 +6,7 @@
 
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
-      <a :href="url">{{ url }}</a>
+      <a :href="software.url">{{ software.url }}</a>
     </span>
 
     <h3 class="m-4 text-3xl font-medium">
@@ -77,10 +77,10 @@
   export default {
     name: 'SiemensNX',
     components: {},
-    props: {},
+    props: {
+      software: Object,
+    },
     data: () => ({
-      url: null,
-      serial: null,
       currentPlace: 0,
       installInstructions: [''],
       installPhotos: [photo1, photo2, photo3, photo4],

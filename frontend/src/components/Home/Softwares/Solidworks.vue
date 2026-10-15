@@ -6,12 +6,12 @@
 
     <span class="indent-12">
       <span class="text-xl font-medium">Download URL: </span>
-      <a :href="url">{{ url }}</a>
+      <a :href="software.url">{{ software.url }}</a>
     </span>
 
     <span class="indent-12">
       <span class="text-xl font-medium">Serial Number: </span>
-      {{ serial }}
+      {{ software.license }}
     </span>
 
     <h3 class="m-4 text-3xl font-medium">
@@ -82,10 +82,10 @@
   export default {
     name: 'Solidworks',
     components: {},
-    props: {},
+    props: {
+      software: Object,
+    },
     data: () => ({
-      url: null,
-      serial: null,
       currentPlace: 0,
       installInstructions: [''],
       installPhotos: [photo1, photo2, photo3, photo4],
@@ -95,9 +95,6 @@
     },
     methods: {
       test () {
-        this.url = import.meta.env.VITE_SOLIDWORKS_URL
-        this.serial = import.meta.env.VITE_SOLIDWORKS_LICENSE
-
         this.installInstructions = [
           `<p class="mb-0">The installation process has to be executed while connected to Eduroam on Tecnico's VPN. </p>
           <p>Go to the <a href='${import.meta.env.VITE_SOLIDWORKS_URL}'>Download URL</a> and insert your data and download the SOLIDWORKS 2026 installer. (images shown ahead might be sujected to change)</p>`,
