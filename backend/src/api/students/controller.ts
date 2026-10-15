@@ -4,6 +4,12 @@ export async function getAllStudents() {
   return prisma.student.findMany();
 }
 
+export async function getStudent(istId: string) {
+  return prisma.student.findUnique({
+    where: { istId },
+  })
+}
+
 export async function addStudentCard(studentId: number, mifareNumber: bigint) {
   return prisma.studentCard.upsert({
     where: { mifareNumber },
