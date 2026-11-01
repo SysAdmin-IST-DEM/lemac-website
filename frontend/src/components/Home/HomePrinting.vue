@@ -301,10 +301,10 @@
           }
         }
       },
-      fillForm (data: { name: string, username: string, institutionalEmail: string }) {
+      fillForm (data: { name: string, istId: string, email: string }) {
         this.values.studentName = data.name
-        this.values.istId = data.username
-        this.values.email = data.institutionalEmail
+        this.values.istId = data.istId
+        this.values.email = data.email
       },
       // Volume calculation from STL
       convertVolume (volume: number, fromUnit: Unit, toUnit: Unit) {
