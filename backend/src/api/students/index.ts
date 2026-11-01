@@ -71,12 +71,13 @@ export async function fenixCallback(req: Request, res: Response) {
       }
 
       if(state === 'software') {
-        if(!student.isDEM) {
+        if(student.isDEM) {
+          res.redirect(process.env.URL + `/${state}?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}&software=${encodeURIComponent(JSON.stringify(softwares))}`);
+        } else {
           res.redirect(process.env.URL + `/${state}?error=not_dem`);
         }
-        res.redirect(process.env.URL + `/${state}?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}&software=${encodeURIComponent(JSON.stringify(softwares))}`);
       } else {
-        res.redirect(process.env.URL + `/${state}?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}`);
+        res.redirect(process.env.URL + `/${state}?name=${encodeURIComponent(student.name)}&istId=${encodeURIComponent(student.istId)}&email=${encodeURIComponent(student.email)}`);
       }
     }
   } catch (e) {
