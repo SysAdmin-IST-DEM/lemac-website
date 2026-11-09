@@ -40,7 +40,8 @@ export async function closeEntry(entryId: number) {
   try {
     return await prisma.entry.update({
       where: {
-        id: entryId
+        id: entryId,
+        active: true
       },
       data: {
         active: false,
